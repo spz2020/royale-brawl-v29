@@ -1,0 +1,3 @@
+/home/erder/Downloads/Supercell.Laser.Server.v29/Supercell.Laser.Titan/bin/Debug/net6.0/publish/Supercell.Laser.Titan.dll
+/home/erder/Downloads/Supercell.Laser.Server.v29/Supercell.Laser.Titan/bin/Debug/net6.0/publish/Supercell.Laser.Titan.deps.json
+/home/erder/Downloads/Supercell.Laser.Server.v29/Supercell.Laser.Titan/bin/Debug/net6.0/publish/Supercell.Laser.Titan.pdb

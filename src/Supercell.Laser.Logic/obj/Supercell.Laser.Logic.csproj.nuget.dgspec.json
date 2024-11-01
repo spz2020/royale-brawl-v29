@@ -1,0 +1,134 @@
+{
+  "format": 1,
+  "restore": {
+    "/home/erder/Downloads/Supercell.Laser.Server.v29/Supercell.Laser.Logic/Supercell.Laser.Logic.csproj": {}
+  },
+  "projects": {
+    "/home/erder/Downloads/Supercell.Laser.Server.v29/Supercell.Laser.Logic/Supercell.Laser.Logic.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/erder/Downloads/Supercell.Laser.Server.v29/Supercell.Laser.Logic/Supercell.Laser.Logic.csproj",
+        "projectName": "Supercell.Laser.Logic",
+        "projectPath": "/home/erder/Downloads/Supercell.Laser.Server.v29/Supercell.Laser.Logic/Supercell.Laser.Logic.csproj",
+        "packagesPath": "/home/erder/.nuget/packages/",
+        "outputPath": "/home/erder/Downloads/Supercell.Laser.Server.v29/Supercell.Laser.Logic/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/erder/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {
+              "/home/erder/Downloads/Supercell.Laser.Server.v29/Supercell.Laser.Titan/Supercell.Laser.Titan.csproj": {
+                "projectPath": "/home/erder/Downloads/Supercell.Laser.Server.v29/Supercell.Laser.Titan/Supercell.Laser.Titan.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "dependencies": {
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.1, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/home/erder/dotnet/sdk/8.0.303/RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/home/erder/Downloads/Supercell.Laser.Server.v29/Supercell.Laser.Titan/Supercell.Laser.Titan.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/erder/Downloads/Supercell.Laser.Server.v29/Supercell.Laser.Titan/Supercell.Laser.Titan.csproj",
+        "projectName": "Supercell.Laser.Titan",
+        "projectPath": "/home/erder/Downloads/Supercell.Laser.Server.v29/Supercell.Laser.Titan/Supercell.Laser.Titan.csproj",
+        "packagesPath": "/home/erder/.nuget/packages/",
+        "outputPath": "/home/erder/Downloads/Supercell.Laser.Server.v29/Supercell.Laser.Titan/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/erder/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/home/erder/dotnet/sdk/8.0.303/RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
