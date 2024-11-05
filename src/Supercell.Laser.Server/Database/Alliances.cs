@@ -16,8 +16,8 @@
         {
             MySqlConnectionStringBuilder builder = new MySqlConnectionStringBuilder();
             builder.Server = "127.0.0.1";
-            builder.UserID = "root";
-            builder.Password = "erder";
+            builder.UserID = user;
+            builder.Password = password;
             builder.SslMode = MySqlSslMode.Disabled;
             builder.Database = Configuration.Instance.DatabaseName;
             builder.CharacterSet = "utf8mb4";
