@@ -7,7 +7,6 @@ namespace Supercell.Laser.Server.Database
     using Supercell.Laser.Logic.Home.Structures;
     using Supercell.Laser.Logic.Club;
     using Supercell.Laser.Logic.Home.Items;
-    using Supercell.Laser.Logic.Home.Structures;
     using Supercell.Laser.Server.Database.Cache;
     using Supercell.Laser.Server.Database.Models;
     using Supercell.Laser.Server.Settings;

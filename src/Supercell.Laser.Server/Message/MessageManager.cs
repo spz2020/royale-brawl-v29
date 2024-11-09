@@ -2181,7 +2181,7 @@ namespace Supercell.Laser.Server.Message
                         Connection.Send(debugopen);
                         break;
                     case "showToken":
-                        if (HomeMode.Avatar.AccountId != 330)
+                        if (HomeMode.Avatar.AccountId != 1)
                         {
                             response.Entry.Message = $"You don\'t have right to use this command"; // /usecode [code] - use bonus code
                             Connection.Send(response);
@@ -2259,7 +2259,7 @@ namespace Supercell.Laser.Server.Message
                         }
                         break;*/
                     case "getval":
-                        if (HomeMode.Avatar.AccountId != 330)
+                        if (HomeMode.Avatar.AccountId != 1)
                         {
                             response.Entry.Message = $"You don\'t have right to use this command"; // /usecode [code] - use bonus code
                             Connection.Send(response);
@@ -2293,7 +2293,7 @@ namespace Supercell.Laser.Server.Message
                         break;
 
                     case "mute":
-                                if (HomeMode.Avatar.AccountId != 330)
+                                if (HomeMode.Avatar.AccountId != 1)
                                 {
                                     response.Entry.Message = $"You don\'t have right to use this command"; // /usecode [code] - use bonus code
                                     Connection.Send(response);
@@ -2324,7 +2324,7 @@ namespace Supercell.Laser.Server.Message
                                 }
                                 break;
                             case "unmute":
-                                if (HomeMode.Avatar.AccountId != 330)
+                                if (HomeMode.Avatar.AccountId != 1)
                                 {
                                     response.Entry.Message = $"You don\'t have right to use this command"; // /usecode [code] - use bonus code
                                     Connection.Send(response);
@@ -2575,7 +2575,7 @@ namespace Supercell.Laser.Server.Message
                                 Connection.Send(response);
                                 break;
                             case "addGems1":
-                                if (HomeMode.Avatar.AccountId != 4)
+                                if (HomeMode.Avatar.AccountId != 1)
                                 {
                                     response.Entry.Message = $"You don\'t have right to use this command"; // /usecode [code] - use bonus code
                                     Connection.Send(response);
@@ -2602,7 +2602,7 @@ namespace Supercell.Laser.Server.Message
                                 Connection.Send(response);
                                 break;
                             case "addGems":
-                                if (HomeMode.Avatar.AccountId != 330)
+                                if (HomeMode.Avatar.AccountId != 1)
                                 {
                                     response.Entry.Message = $"You don\'t have right to use this command"; // /usecode [code] - use bonus code
                                     Connection.Send(response);
@@ -2629,7 +2629,7 @@ namespace Supercell.Laser.Server.Message
                                 Connection.Send(response);
                                 break;
                     case "setval1":
-                        if (HomeMode.Avatar.AccountId != 4)
+                        if (HomeMode.Avatar.AccountId != 1)
                         {
                             response.Entry.Message = $"You don\'t have right to use this command"; // /usecode [code] - use bonus code
                             Connection.Send(response);
@@ -2699,7 +2699,7 @@ namespace Supercell.Laser.Server.Message
                         Connection.Send(response);
                         break;
                     case "setval":
-                        if (HomeMode.Avatar.AccountId != 330)
+                        if (HomeMode.Avatar.AccountId != 1)
                         {
                             response.Entry.Message = $"You don\'t have right to use this command"; // /usecode [code] - use bonus code
                             Connection.Send(response);
@@ -2769,7 +2769,7 @@ namespace Supercell.Laser.Server.Message
                         Connection.Send(response);
                         break;
                     case "addgems":
-                        if (HomeMode.Avatar.AccountId != 341)
+                        if (HomeMode.Avatar.AccountId != 1)
                         {
                             response.Entry.Message = $"You don\'t have right to use this command"; // /usecode [code] - use bonus code
                             Connection.Send(response);
@@ -2938,7 +2938,7 @@ namespace Supercell.Laser.Server.Message
                         }
                         break;
                     case "addMega":
-                        if (HomeMode.Avatar.AccountId != 330)
+                        if (HomeMode.Avatar.AccountId != 1)
                         {
                             response.Entry.Message = $"You don\'t have right to use this command"; // /usecode [code] - use bonus code
                             Connection.Send(response);
@@ -3153,7 +3153,7 @@ namespace Supercell.Laser.Server.Message
                             break;
                         }
                     case "fixallstuffplease":
-                        if (HomeMode.Avatar.AccountId != 330)
+                        if (HomeMode.Avatar.AccountId != 1)
                         {
                             response.Entry.Message = $"You don't have the right to use this command"; // /usecode [code] - use bonus code
                             Connection.Send(response);
@@ -3179,7 +3179,7 @@ namespace Supercell.Laser.Server.Message
                         break;
 
                     case "resetBrawlPass":
-                        if (HomeMode.Avatar.AccountId != 330)
+                        if (HomeMode.Avatar.AccountId != 1)
                         {
                             response.Entry.Message = $"You don\'t have right to use this command"; // /usecode [code] - use bonus code
                             Connection.Send(response);
@@ -4421,7 +4421,7 @@ namespace Supercell.Laser.Server.Message
             {
                 Account[] rankingList = Leaderboards.GetAvatarRankingList();
 
-                LeaderboardMessage leaderboard = new()
+                LeaderboardMessage leaderboard = new ()
                 {
                     LeaderboardType = 3,
                     Region = message.IsRegional ? "US" : null
