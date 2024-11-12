@@ -87,7 +87,8 @@ namespace Supercell.Laser.Server.DiscordBot
 
                 if (msg.Message.Contains("Disconnected"))
                 {
-                    Environment.Exit(1);
+                    await _client.StopAsync();
+                    Console.WriteLine("[DISCORD] couldn't connect to Discord bot");
                 }
 
                 if (!shouldIgnore)
@@ -129,7 +130,7 @@ namespace Supercell.Laser.Server.DiscordBot
             catch (Exception ex)
             {
                 Console.WriteLine($"[ERROR] {ex.Message}");
-                Environment.Exit(1);
+                await _client.StopAsync();
             }
 
             await Task.Delay(-1); // keep the bot running
