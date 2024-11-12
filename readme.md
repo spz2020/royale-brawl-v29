@@ -3,7 +3,6 @@
 ## TODO
 - fix leaderboard updating
 - make the discord bot do discord bot stuff
-- upgrade to dotnet 8.0
 
 # RoyaleBrawl v29
 Private brawl stars server based on royale brawl for v29
