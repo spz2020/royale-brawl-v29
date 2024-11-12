@@ -27,7 +27,6 @@
 
         private static void Update()
         {
-            ulong counter = 0;
             while (Started)
             {
                 SaveAll();

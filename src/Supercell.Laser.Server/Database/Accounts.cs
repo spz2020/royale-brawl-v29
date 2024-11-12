@@ -7,7 +7,6 @@ namespace Supercell.Laser.Server.Database
     using Supercell.Laser.Logic.Home.Structures;
     using Supercell.Laser.Logic.Club;
     using Supercell.Laser.Logic.Home.Items;
-    using Supercell.Laser.Logic.Home.Structures;
     using Supercell.Laser.Server.Database.Cache;
     using Supercell.Laser.Server.Database.Models;
     using Supercell.Laser.Server.Settings;
@@ -22,11 +21,12 @@ namespace Supercell.Laser.Server.Database
         {
             MySqlConnectionStringBuilder builder = new MySqlConnectionStringBuilder();
             builder.Server = "127.0.0.1";
-            builder.UserID = "root";
-            builder.Password = "erder";
+            builder.UserID = user;
+            builder.Password = password;
             builder.SslMode = MySqlSslMode.Disabled;
             builder.Database = Configuration.Instance.DatabaseName;
             builder.CharacterSet = "utf8mb4";
+            builder.AllowPublicKeyRetrieval = true;
 
 
             JsonConvert.DefaultSettings = () => new JsonSerializerSettings
