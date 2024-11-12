@@ -26,7 +26,7 @@ You need to setup mysql server and import `database.sql` file from this reposito
 - Compile apk and enjoy playing the server.
 
 ### Requirements
-- dotnet 6.0
+- dotnet 8.0
 - mysql
 
 ### Features:
