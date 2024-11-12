@@ -1,7 +1,0 @@
-﻿{
-  "udp_host": "192.168.178.99",
-  "udp_port": 9449,
-  "database_username": "root",
-  "database_password": "erder",
-  "database_name": "rbdb"
-}

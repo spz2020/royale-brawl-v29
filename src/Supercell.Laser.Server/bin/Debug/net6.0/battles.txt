@@ -1,4 +1,0 @@
-[11/01/2024 16:58:43] Player #2YGP left battle!
-[11/01/2024 19:46:53] Player #R80 ended battle! Battle Result: win in 93.7282462s gamemode: CoinRush!
-[11/01/2024 19:49:05] Player #R80 ended battle! Battle Result: win in 110.3800622s gamemode: CoinRush!
-[11/01/2024 19:58:29] Player #R80 ended battle! Battle Result: win in 89.0898463s gamemode: CoinRush!

@@ -1,6 +1,0 @@
-/home/erder/Downloads/Supercell.Laser.Server.v29/Supercell.Laser.Logic/bin/Debug/net6.0/publish/Supercell.Laser.Logic.dll
-/home/erder/Downloads/Supercell.Laser.Server.v29/Supercell.Laser.Logic/bin/Debug/net6.0/publish/Supercell.Laser.Logic.deps.json
-/home/erder/Downloads/Supercell.Laser.Server.v29/Supercell.Laser.Logic/bin/Debug/net6.0/publish/Supercell.Laser.Logic.pdb
-/home/erder/Downloads/Supercell.Laser.Server.v29/Supercell.Laser.Logic/bin/Debug/net6.0/publish/Newtonsoft.Json.dll
-/home/erder/Downloads/Supercell.Laser.Server.v29/Supercell.Laser.Logic/bin/Debug/net6.0/publish/Supercell.Laser.Titan.dll
-/home/erder/Downloads/Supercell.Laser.Server.v29/Supercell.Laser.Logic/bin/Debug/net6.0/publish/Supercell.Laser.Titan.pdb
