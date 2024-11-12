@@ -9,6 +9,8 @@
     using Supercell.Laser.Server.Networking;
     using Supercell.Laser.Server.Networking.Session;
     using Supercell.Laser.Server.Settings;
+    using System.Threading.Tasks;
+    using Supercell.Laser.Server.DiscordBot;
 
     internal static class Resources
     {
@@ -46,6 +48,15 @@
             LogicServerListener.Instance = new ServerListener();
             //UDPGateway.Init("0.0.0.0", Configuration.Instance.UdpPort);
             TCPGateway.Init("0.0.0.0", 9339);
+        }
+
+        /// <summary>
+        /// Initializes the Discord bot
+        /// </summary>
+        public static async Task InitDiscord()
+        {
+            var discordBot = new Supercell.Laser.Server.DiscordBot.DiscordBot();
+            await discordBot.MainAsync();
         }
     }
 }

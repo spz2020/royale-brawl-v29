@@ -28,6 +28,7 @@
             Configuration.Instance = Configuration.LoadFromFile("config.json");
 
             Resources.InitDatabase();
+            Resources.InitDiscord();
             Resources.InitLogic();
             Resources.InitNetwork();
 
