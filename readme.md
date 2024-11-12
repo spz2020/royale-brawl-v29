@@ -2,7 +2,7 @@
 
 ## TODO
 - fix leaderboard updating
-- make the discord bot to discord bot stuff
+- make the discord bot do discord bot stuff
 - upgrade to dotnet 8.0
 
 # RoyaleBrawl v29
