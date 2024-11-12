@@ -3,13 +3,14 @@
     using Supercell.Laser.Server.Handler;
     using Supercell.Laser.Server.Settings;
     using System.Drawing;
+    using System.Threading.Tasks;
 
     static class Program
     {
         public const string SERVER_VERSION = "29.258.1";
         public const string BUILD_TYPE = "Beta";
 
-        private static void Main(string[] args)
+        private static async Task Main(string[] args)
         {
             Console.Title = "BrawlStars - server emulator v" + SERVER_VERSION + " Build: " + BUILD_TYPE;
             Directory.SetCurrentDirectory(AppContext.BaseDirectory);

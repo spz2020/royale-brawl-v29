@@ -21,12 +21,19 @@ namespace Supercell.Laser.Server.DiscordBot
             LoadConfig();
 
             using IHost host = Host.CreateDefaultBuilder()
-                .ConfigureServices((_, services) =>
-                    services.AddSingleton(x => new DiscordSocketClient(new DiscordSocketConfig
-                    {
-                        GatewayIntents = GatewayIntents.AllUnprivileged,
-                        AlwaysDownloadUsers = true,
-                    })))
+                .ConfigureServices(
+                    (_, services) =>
+                        services.AddSingleton(
+                            x =>
+                                new DiscordSocketClient(
+                                    new DiscordSocketConfig
+                                    {
+                                        GatewayIntents = GatewayIntents.AllUnprivileged,
+                                        AlwaysDownloadUsers = true,
+                                    }
+                                )
+                        )
+                )
                 .Build();
 
             await RunAsync(host);
@@ -78,6 +85,11 @@ namespace Supercell.Laser.Server.DiscordBot
                     }
                 }
 
+                if (msg.Message.Contains("Disconnected"))
+                {
+                    Environment.Exit(1);
+                }
+
                 if (!shouldIgnore)
                 {
                     Console.WriteLine("[DISCORD] " + msg.Message);
@@ -103,12 +115,22 @@ namespace Supercell.Laser.Server.DiscordBot
                 }
                 else
                 {
-                    Console.WriteLine("[DISCORD] Failed to find the channel or access it. Please check if the channel exists and if the bot has permission.");
+                    Console.WriteLine(
+                        "[DISCORD] Failed to find the channel or access it. Please check if the channel exists and if the bot has permission."
+                    );
                 }
             };
 
-            await _client.LoginAsync(TokenType.Bot, _botToken);
-            await _client.StartAsync();
+            try
+            {
+                await _client.LoginAsync(TokenType.Bot, _botToken);
+                await _client.StartAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[ERROR] {ex.Message}");
+                Environment.Exit(1);
+            }
 
             await Task.Delay(-1); // keep the bot running
         }

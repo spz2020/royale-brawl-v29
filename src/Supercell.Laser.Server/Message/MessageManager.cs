@@ -50,7 +50,6 @@ namespace Supercell.Laser.Server.Message
     using System.Linq;
     using Supercell.Laser.Logic.Command.Home;
     using Supercell.Laser.Logic.Message.Api;
-    using Ubiety.Dns.Core;
     using System.Xml.Linq;
     using Microsoft.VisualBasic;
     using Org.BouncyCastle.Cms;
