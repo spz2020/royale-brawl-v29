@@ -1,15 +1,114 @@
-using NetCord.Services.Commands;
-
-namespace Supercell.Laser.Server.Discord.commands
+namespace Supercell.Laser.Server.Discord.Commands
 {
+    using NetCord.Services.Commands;
+    using Supercell.Laser.Logic.Avatar;
+    using Supercell.Laser.Logic.Data;
+    using Supercell.Laser.Logic.Home;
+    using Supercell.Laser.Logic.Message.Account;
+    using Supercell.Laser.Logic.Message.Account.Auth;
+    using Supercell.Laser.Logic.Util;
+    using Supercell.Laser.Server.Database;
+    using Supercell.Laser.Server.Database.Cache;
+    using Supercell.Laser.Server.Database.Models;
+    using Supercell.Laser.Server.Networking.Session;
+    using Supercell.Laser.Logic.Command.Home;
+    using Supercell.Laser.Logic.Home.Items;
+
     public class ping : CommandModule<CommandContext>
     {
-        [Command("pong")]
-        public static string Pong() => "Ping!";
+        [Command("ping")]
+        public static string Pong() => "Pong!";
     }
-    public class ping1 : CommandModule<CommandContext>
+    public class ban : CommandModule<CommandContext>
     {
-        [Command("pong1")]
-        public static string Pong() => "Ping1!";
+        [Command("ban")]
+        public static string Ban([CommandParameter(Remainder = true)] string playerId)
+        {
+            if (!playerId.StartsWith("#"))
+            {
+                return "Invalid player ID. Make sure it starts with '#'.";
+            }
+            long lowID = LogicLongCodeGenerator.ToId(playerId);
+            Account accountban = Accounts.Load(lowID);
+            if (accountban == null)
+            {
+                return $"Could not find player with ID {playerId}.";
+            }
+            accountban.Avatar.Banned = true;
+            accountban.Avatar.Name = "Brawler";
+            if (Sessions.IsSessionActive(lowID))
+            {
+                var session = Sessions.GetSession(lowID);
+                session.GameListener.SendTCPMessage(
+                    new AuthenticationFailedMessage() { Message = "you have been banned!" }
+                );
+                Sessions.Remove(lowID);
+            }
+            return $"Player with ID {playerId} has been banned.";
+        }
+    }
+
+    public class unban : CommandModule<CommandContext>
+    {
+        [Command("unban")]
+        public static string Unban([CommandParameter(Remainder = true)] string playerId)
+        {
+            if (!playerId.StartsWith("#"))
+            {
+                return "Invalid player ID. Make sure it starts with '#'.";
+            }
+            long lowID = LogicLongCodeGenerator.ToId(playerId);
+            Account account = Accounts.Load(lowID);
+            if (account == null)
+            {
+                return $"Could not find player with ID {playerId}.";
+            }
+            account.Avatar.Banned = false;
+            if (Sessions.IsSessionActive(lowID))
+            {
+                var session = Sessions.GetSession(lowID);
+                session.GameListener.SendTCPMessage(
+                    new AuthenticationFailedMessage() { Message = "Your account updated!" }
+                );
+                Sessions.Remove(lowID);
+            }
+            return $"Player with ID {playerId} has been unbanned.";
+        }
+    }
+
+    public class mute : CommandModule<CommandContext>
+    {
+        [Command("mute")]
+        public static string Mute([CommandParameter(Remainder = true)] string playerId)
+        {
+            if (!playerId.StartsWith("#"))
+            {
+                return "Invalid player ID. Make sure it starts with '#'.";
+            }
+            long lowID = LogicLongCodeGenerator.ToId(playerId);
+            Account account = Accounts.Load(lowID);
+            if (account == null)
+            {
+                return $"Could not find player with ID {playerId}.";
+            }
+            account.Avatar.IsCommunityBanned = true;
+            Notification bdn =
+                new()
+                {
+                    Id = 81,
+                    MessageEntry =
+                        "Social functions have been disabled for your account\n if you think that an error has occurred, contact an administration"
+                };
+            account.Home.NotificationFactory.Add(bdn);
+            if (Sessions.IsSessionActive(lowID))
+            {
+                var session = Sessions.GetSession(lowID);
+                session.GameListener.SendTCPMessage(
+                    new AuthenticationFailedMessage() { Message = "you've been muted!" }
+                );
+                Sessions.Remove(lowID);
+            }
+            return $"Player with ID {playerId} has been muted.";
+        }
     }
 }

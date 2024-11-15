@@ -1,11 +1,11 @@
-using NetCord;
-using NetCord.Gateway;
-using NetCord.Services;
-using NetCord.Services.Commands;
-using Supercell.Laser.Server.Settings;
-
 namespace Supercell.Laser.Server.DiscordBot
 {
+    using NetCord;
+    using NetCord.Gateway;
+    using NetCord.Services;
+    using NetCord.Services.Commands;
+    using Supercell.Laser.Server.Settings;
+
     public class DiscordBot
     {
         public async Task StartAsync()
@@ -27,6 +27,10 @@ namespace Supercell.Laser.Server.DiscordBot
 
             client.MessageCreate += async message =>
             {
+                // Use the channel ID from the configuration
+                if (message.ChannelId != Configuration.Instance.ChannelId)
+                    return;
+
                 if (!message.Content.StartsWith('!') || message.Author.IsBot)
                     return;
 
