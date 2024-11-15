@@ -56,7 +56,7 @@
         public static async Task InitDiscord()
         {
             var discordBot = new Supercell.Laser.Server.DiscordBot.DiscordBot();
-            await discordBot.MainAsync();
+            await discordBot.StartAsync();
         }
     }
 }

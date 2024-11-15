@@ -200,68 +200,6 @@ namespace Supercell.Laser.Server.Database
             #endregion
         }
 
-          public static void MiokiID_DataUpdate(HomeMode homeMode)
-        {
-            using (var connection = new MySqlConnection(ConnectionString))
-            {
-                connection.Open();
-                var command = new MySqlCommand($"UPDATE accounts SET `login`='{homeMode.Avatar.Login}', `password`='{homeMode.Avatar.Password}' WHERE Id = '{homeMode.Avatar.AccountId}'", connection);
-                command.ExecuteNonQuery();
-                connection.Close();
-            }
-        }
-
-        public static void MiokiID_DataUpdate_Account(Account account)
-        {
-            using (var connection = new MySqlConnection(ConnectionString))
-            {
-                connection.Open();
-                var command = new MySqlCommand($"UPDATE accounts SET `login`='{account.Avatar.Login}', `password`='{account.Avatar.Password}' WHERE Id = '{account.AccountId}'", connection);
-                command.ExecuteNonQuery();
-                connection.Close();
-            }
-        }
-    
-                
-
-        public static Boolean LoginUsed(string Login)
-        {
-            using (var connection = new MySqlConnection(ConnectionString))
-            {
-                connection.Open();
-                MySqlCommand command = new MySqlCommand($"SELECT * FROM accounts WHERE login = '{Login}'", connection);
-                MySqlDataReader reader = command.ExecuteReader();
-                if (reader.Read())
-                {
-                    return true;
-                }
-                connection.Close();
-            }
-            return false;
-        }
-
-        public static Account MiokiID_GetAccount(string Login, string Password)
-        {
-            using (var connection = new MySqlConnection(ConnectionString))
-            {
-                connection.Open();
-                MySqlCommand command = new MySqlCommand($"SELECT * FROM accounts WHERE login = '{Login}'", connection);
-                MySqlDataReader reader = command.ExecuteReader();
-                if (reader.Read())
-                {
-                    Account account = JsonConvert.DeserializeObject<Account>((string)reader["Data"]);
-                    if (account.Avatar.Login == Login && account.Avatar.Password == Password){
-                        return account;
-                    }
-                    else {
-                        return null;
-                    }
-                }
-                connection.Close();
-            }
-            return null;
-        }
-
         public static Dictionary<int, List<Account>> GetBrawlersRankingList()
         {
             #region GetGlobal
