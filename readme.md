@@ -1,5 +1,3 @@
-# I know that discord.net is shit and I do not give a fuck
-
 ## TODO
 - fix leaderboard updating
 - make the discord bot do discord bot stuff
