@@ -158,9 +158,9 @@
 
         private static void ExecuteBanAccount(string[] args)
         {
-            if (args.Length != 5)
+            if (args.Length != 2)
             {
-                Console.WriteLine("Usage: /ban [TAG] [Reason] [Day] [Month]");
+                Console.WriteLine("Usage: /ban [TAG]");
                 return;
             }
 
@@ -173,18 +173,8 @@
             }
 
             account.Avatar.Banned = true;
-            account.Avatar.OldBans.Add(int.Parse(args[2]));
-            account.Avatar.BannedReason = int.Parse(args[2]);
-            account.Avatar.BanTime[0] = int.Parse(args[3]);
-            account.Avatar.BanTime[1] = int.Parse(args[4]);
 
-            if (account.Avatar.BanTime[1] == 99){
-                account.Avatar.ResetTrophies();
-                account.Avatar.Name = "Brawler";
-            }
-            else{
-                account.Avatar.Name = "Account temporarily banned!";
-            }
+            account.Avatar.Name = "Account temporarily banned!";
             Accounts.Save(account);
 
             if (Sessions.IsSessionActive(id))

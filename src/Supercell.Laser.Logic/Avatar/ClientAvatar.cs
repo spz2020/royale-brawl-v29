@@ -24,11 +24,6 @@ namespace Supercell.Laser.Logic.Avatar
         [JsonProperty] public long AccountIdRedirect;
         [JsonProperty] public string PassToken;
 
-        [JsonProperty] public string Login;
-        [JsonProperty] public string Password;
-
-        [JsonProperty] public bool MiokiIdConnected;
-
         [JsonProperty] public string Name;
         [JsonProperty] public bool NameSetByUser;
         [JsonProperty] public int TutorialsCompletedCount = 2;
@@ -61,9 +56,6 @@ namespace Supercell.Laser.Logic.Avatar
 
         [JsonProperty] public List<Friend> Friends;
         [JsonProperty] public bool Banned;
-        [JsonProperty] public int BannedReason;
-        [JsonProperty] public List<int> BanTime;
-        [JsonProperty] public List<int> OldBans;
         [JsonProperty] public bool DoNotDisturb;
 
         [JsonIgnore] public int PlayerStatus;
