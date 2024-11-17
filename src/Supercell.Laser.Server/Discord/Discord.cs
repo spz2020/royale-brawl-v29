@@ -5,6 +5,9 @@ namespace Supercell.Laser.Server.DiscordBot
     using NetCord.Services;
     using NetCord.Services.Commands;
     using Supercell.Laser.Server.Settings;
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
 
     public class DiscordBot
     {
@@ -51,7 +54,8 @@ namespace Supercell.Laser.Server.DiscordBot
 
             client.Log += message =>
             {
-                Console.WriteLine(message);
+                string formattedMessage = $"[DISCORD] {message}";
+                Console.WriteLine(formattedMessage);
                 return default;
             };
 

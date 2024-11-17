@@ -45,6 +45,8 @@ You need to setup mysql server and import `database.sql` file from this reposito
 - /status
 
 ### all availible Discord bot commands:
+- !help
+- !status
 - !ban
 - !unban
 - !mute

@@ -1,24 +1,48 @@
 namespace Supercell.Laser.Server.Discord.Commands
 {
     using NetCord.Services.Commands;
+    using System.Diagnostics;
     using Supercell.Laser.Logic.Avatar;
     using Supercell.Laser.Logic.Data;
     using Supercell.Laser.Logic.Home;
     using Supercell.Laser.Logic.Message.Account;
     using Supercell.Laser.Logic.Message.Account.Auth;
     using Supercell.Laser.Logic.Util;
+    using Supercell.Laser.Logic.Command.Home;
+    using Supercell.Laser.Logic.Home.Items;
     using Supercell.Laser.Server.Database;
     using Supercell.Laser.Server.Database.Cache;
     using Supercell.Laser.Server.Database.Models;
     using Supercell.Laser.Server.Networking.Session;
-    using Supercell.Laser.Logic.Command.Home;
-    using Supercell.Laser.Logic.Home.Items;
+    using Supercell.Laser.Server.Logic.Game;
+    using Supercell.Laser.Server.Settings;
 
     public class ping : CommandModule<CommandContext>
     {
         [Command("ping")]
         public static string Pong() => "Pong!";
     }
+    
+    public class help : CommandModule<CommandContext>
+    {
+        [Command("help")]
+        public static string Help()
+        {
+            string response =
+                $"# Available Commands:\n" +
+                $"!help - shows all available commands\n" +
+                $"!status - show server status\n" +
+                $"!ping - will respond with pong\n" +
+                $"!ban - ban an account (!ban [TAG])\n" +
+                $"!unban - unban an account (!unban [TAG])\n" +
+                $"!mute - mute a player (!mute [TAG])\n" +
+                $"!unmute - unmute a player (!unmute [TAG])\n" +
+                $"!userinfo - show player info (!userinfo [TAG])\n";
+
+            return response;
+        }
+    }
+
     public class ban : CommandModule<CommandContext>
     {
         [Command("ban")]
@@ -163,6 +187,41 @@ namespace Supercell.Laser.Server.Discord.Commands
         private static string ConvertInfoToData(object data)
         {
             return data?.ToString() ?? "N/A";
+        }
+    }
+
+    public class status : CommandModule<CommandContext>
+    {
+        [Command("status")]
+        public static string Status()
+        {
+            long megabytesUsed = Process.GetCurrentProcess().PrivateMemorySize64 / (1024 * 1024);
+            DateTime now = Process.GetCurrentProcess().StartTime;
+            DateTime futureDate = DateTime.Now;
+
+            TimeSpan timeDifference = futureDate - now;
+
+            string formattedTime = string.Format("{0}{1}{2}{3}",
+            timeDifference.Days > 0 ? $"{timeDifference.Days} Days, " : string.Empty,
+            timeDifference.Hours > 0 || timeDifference.Days > 0 ? $"{timeDifference.Hours} Hours, " : string.Empty,
+            timeDifference.Minutes > 0 || timeDifference.Hours > 0 ? $"{timeDifference.Minutes} Minutes, " : string.Empty,
+            timeDifference.Seconds > 0 ? $"{timeDifference.Seconds} Seconds" : string.Empty);
+
+            string response =
+                $"# server status\n" +
+                $"Server Game Version: v29.231\n" +
+                $"Server Build: v1.0 from 10.02.2024\n" +
+                $"Resources Sha: {Fingerprint.Sha}\n" +
+                $"Environment: Prod\n" +
+                $"Server Time: {DateTime.Now} UTC\n" +
+                $"Players Online: {Sessions.Count}\n" +
+                $"Memory Used: {megabytesUsed} MB\n" +
+                $"Uptime: {formattedTime}\n" +
+                $"Accounts Cached: {AccountCache.Count}\n" +
+                $"Alliances Cached: {AllianceCache.Count}\n" +
+                $"Teams Cached: {Teams.Count}\n";
+
+            return response;
         }
     }
 }
