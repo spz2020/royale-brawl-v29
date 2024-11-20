@@ -107,6 +107,15 @@ namespace Supercell.Laser.Logic.Avatar
             HighestTrophies = Math.Max(HighestTrophies, Trophies + t);
         }
 
+        public void SetTrophies(int count)
+        {
+            foreach (Hero hero in Heroes.ToArray())
+            {
+                hero.Trophies = count;
+                hero.HighestTrophies = count;
+            }
+        }
+
         public int GetUnlockedBrawlersCountWithRarity(string rarity)
         {
             return Heroes.Count(x => x.CardData.Rarity == rarity);

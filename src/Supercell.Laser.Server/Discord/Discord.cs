@@ -9,8 +9,27 @@ namespace Supercell.Laser.Server.DiscordBot
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
+    public class CustomLogger
+    {
+        public void Log(LogSeverity severity, string message, Exception? exception = null)
+        {
+            string formattedMessage = $"[DISCORD] {message}";
+
+            if (severity == LogSeverity.Info)
+            {
+                Console.WriteLine(formattedMessage);
+            }
+            else
+            {
+                Console.WriteLine($"[{severity}] {formattedMessage}");
+            }
+        }
+    }
+
     public class DiscordBot
     {
+        private readonly CustomLogger _logger = new CustomLogger();
+
         public async Task StartAsync()
         {
             GatewayClient client =
@@ -30,7 +49,6 @@ namespace Supercell.Laser.Server.DiscordBot
 
             client.MessageCreate += async message =>
             {
-                // Use the channel ID from the configuration
                 if (message.ChannelId != Configuration.Instance.ChannelId)
                     return;
 
@@ -54,8 +72,7 @@ namespace Supercell.Laser.Server.DiscordBot
 
             client.Log += message =>
             {
-                string formattedMessage = $"[DISCORD] {message}";
-                Console.WriteLine(formattedMessage);
+                _logger.Log(message.Severity, message.Message, message.Exception);
                 return default;
             };
 
