@@ -49,7 +49,7 @@
         public static void HandleReport(string log)
         {
             FileLogger.Append($"[{DateTime.Now}] " + log + "\n");
-            File.AppendAllText("./chatreports.txt", FileLogger.ToString());
+            File.AppendAllText("./reports.txt", FileLogger.ToString());
             FileLogger.Clear();
         }
     }
