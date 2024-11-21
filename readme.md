@@ -54,3 +54,4 @@ You need to setup mysql server and import `database.sql` file from this reposito
 - !resetseason
 - !settrophies
 - !addgems
+- !reports

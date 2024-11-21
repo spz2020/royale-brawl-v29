@@ -36,6 +36,7 @@ namespace Supercell.Laser.Server.Discord.Commands
                 + "!help - shows all available commands\n"
                 + "!status - show server status\n"
                 + "!ping - will respond with pong\n"
+                + "!reports - send all reported messages into discord\n"
                 + "!ban - ban an account (!ban [TAG])\n"
                 + "!unban - unban an account (!unban [TAG])\n"
                 + "!mute - mute a player (!mute [TAG])\n"
