@@ -10,7 +10,7 @@
     using Supercell.Laser.Server.Networking.Session;
     using Supercell.Laser.Server.Settings;
     using System.Threading.Tasks;
-    using Supercell.Laser.Server.DiscordBot;
+    using Supercell.Laser.Server.Discord;
 
     internal static class Resources
     {
@@ -55,7 +55,7 @@
         /// </summary>
         public static async Task InitDiscord()
         {
-            var discordBot = new Supercell.Laser.Server.DiscordBot.DiscordBot();
+            var discordBot = new Supercell.Laser.Server.Discord.DiscordBot();
             await discordBot.StartAsync();
         }
     }

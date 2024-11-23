@@ -1,4 +1,4 @@
-namespace Supercell.Laser.Server.DiscordBot
+namespace Supercell.Laser.Server.Discord
 {
     using NetCord;
     using NetCord.Gateway;
