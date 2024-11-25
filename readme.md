@@ -1,5 +1,4 @@
 ## TODO
-- fix leaderboard updating
 - fix events / modifiers
 
 # RoyaleBrawl v29

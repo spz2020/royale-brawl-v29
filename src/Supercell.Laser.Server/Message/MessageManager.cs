@@ -2728,9 +2728,11 @@ namespace Supercell.Laser.Server.Message
             {
                 Account[] rankingList = Leaderboards.GetAvatarRankingList();
 
-                LeaderboardMessage leaderboard = new LeaderboardMessage();
-                leaderboard.LeaderboardType = 1;
-                leaderboard.Region = message.IsRegional ? "US" : null;
+                LeaderboardMessage leaderboard = new()
+                {
+                    LeaderboardType = 1,
+                    Region = message.IsRegional ? "US" : null
+                };
                 foreach (Account data in rankingList)
                 {
                     leaderboard.Avatars.Add(new KeyValuePair<ClientHome, ClientAvatar>(data.Home, data.Avatar));
@@ -2743,13 +2745,16 @@ namespace Supercell.Laser.Server.Message
             {
                 Alliance[] rankingList = Leaderboards.GetAllianceRankingList();
 
-                LeaderboardMessage leaderboard = new LeaderboardMessage();
-                leaderboard.LeaderboardType = 2;
-                leaderboard.Region = message.IsRegional ? "US" : null;
+                LeaderboardMessage leaderboard = new()
+                {
+                    LeaderboardType = 2,
+                    Region = message.IsRegional ? "US" : null
+                };
                 leaderboard.AllianceList.AddRange(rankingList);
 
                 Connection.Send(leaderboard);
-            }            else if (message.LeaderboardType == 0)
+            }
+            else if (message.LeaderboardType == 0)
             {
                 Dictionary<int, List<Account>> rankingList = Leaderboards.GetBrawlersRankingList();
 

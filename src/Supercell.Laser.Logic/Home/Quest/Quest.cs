@@ -36,7 +36,7 @@
         public void Encode(ChecksumEncoder encoder)
         {
             encoder.WriteVInt(0);  // Unknown
-            encoder.WriteVInt(1);  // Brawl pass season
+            encoder.WriteVInt(2);  // Brawl pass season
             encoder.WriteVInt(MissionType);  // Mission Type
 
             encoder.WriteVInt(CurrentGoal);  // Achieved Goal

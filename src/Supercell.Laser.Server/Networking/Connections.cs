@@ -32,7 +32,7 @@
                         ActiveConnections.Remove(connection);
                     }
                 }
-                Thread.Sleep(100000);
+                Thread.Sleep(1000);
             }
         }
 
