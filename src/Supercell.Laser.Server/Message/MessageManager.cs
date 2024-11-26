@@ -304,9 +304,6 @@ namespace Supercell.Laser.Server.Message
                     RequestServerReceived((RequestServerStatus)message);
                     break;
 
-
-                    Logger.Print($"[MessageManager::ReceiveMessage] Message received! PacketName: {message.GetType().Name}, PacketID: {message.GetMessageType()}");
-
                 default:
                     Logger.Print($"MessageManager::ReceiveMessage - no case for {message.GetType().Name} ({message.GetMessageType()})");
                     break;
@@ -622,72 +619,6 @@ namespace Supercell.Laser.Server.Message
                 if (Connection.Avatar.IsTutorialState())
                 {
                     Connection.Avatar.SkipTutorial();
-                }
-                if (false)//(HomeMode.Avatar.BattleStartTime != new DateTime())
-                {
-                    Hero h = HomeMode.Avatar.GetHero(HomeMode.Home.CharacterId);
-                    int lose = 0;
-                    int brawlerTrophies = h.Trophies;
-                    if (brawlerTrophies <= 49)
-                    {
-                        lose = 0;
-                    }
-                    else if (50 <= brawlerTrophies && brawlerTrophies <= 99)
-                    {
-                        lose = -1;
-                    }
-                    else if (100 <= brawlerTrophies && brawlerTrophies <= 199)
-                    {
-                        lose = -2;
-                    }
-                    else if (200 <= brawlerTrophies && brawlerTrophies <= 299)
-                    {
-                        lose = -3;
-                    }
-                    else if (300 <= brawlerTrophies && brawlerTrophies <= 399)
-                    {
-                        lose = -4;
-                    }
-                    else if (400 <= brawlerTrophies && brawlerTrophies <= 499)
-                    {
-                        lose = -5;
-                    }
-                    else if (500 <= brawlerTrophies && brawlerTrophies <= 599)
-                    {
-                        lose = -6;
-                    }
-                    else if (600 <= brawlerTrophies && brawlerTrophies <= 699)
-                    {
-                        lose = -7;
-                    }
-                    else if (700 <= brawlerTrophies && brawlerTrophies <= 799)
-                    {
-                        lose = -8;
-                    }
-                    else if (800 <= brawlerTrophies && brawlerTrophies <= 899)
-                    {
-                        lose = -9;
-                    }
-                    else if (900 <= brawlerTrophies && brawlerTrophies <= 999)
-                    {
-                        lose = -10;
-                    }
-                    else if (1000 <= brawlerTrophies && brawlerTrophies <= 1099)
-                    {
-                        lose = -11;
-                    }
-                    else if (1100 <= brawlerTrophies && brawlerTrophies <= 1199)
-                    {
-                        lose = -12;
-                    }
-                    else if (brawlerTrophies >= 1200)
-                    {
-                        lose = -12;
-                    }
-                    h.AddTrophies(lose);
-                    HomeMode.Home.PowerPlayGamesPlayed = Math.Max(0, HomeMode.Home.PowerPlayGamesPlayed - 1);
-                    HomeMode.Avatar.BattleStartTime = new DateTime();
-                    Logger.BLog($"Player {LogicLongCodeGenerator.ToCode(HomeMode.Avatar.AccountId)} left battle!");
                 }
                 Connection.Home.Events = Events.GetEventsById(HomeMode.Home.PowerPlayGamesPlayed, Connection.Avatar.AccountId);
 
@@ -1611,8 +1542,6 @@ namespace Supercell.Laser.Server.Message
             stream.Entries = alliance.Stream.GetEntries();
             Connection.Send(stream);
         }
-
-        private int BotIdCounter;
 
         private void ChatToAllianceStreamReceived(ChatToAllianceStreamMessage message)
         {

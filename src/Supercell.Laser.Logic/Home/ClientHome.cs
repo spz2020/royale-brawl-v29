@@ -382,15 +382,7 @@ namespace Supercell.Laser.Logic.Home
             bool IsUpdated = false;
             int offLen = OfferBundles.Count;
             OfferBundles.RemoveAll(offer => offer.EndTime <= time);
-            bool SHOULD_STAR_BIGBOX1 = true;
-            bool SHOULD_STAR_BIGBOX2 = true;
-            bool SHOULD_STAR_MEGABOX1 = true; 
             bool SHOULD_STAR_MEGABOX2 = false;
-            bool SHOULD_STAR_MEGABOX3 = true;
-            bool SHOULD_COMPENSACIA = true;
-            bool SHOULD_COMPENSACIA1 = true;
-            bool SHOULD_FREE3 = false;
-            bool SHOULD_FREE4 = false;
             foreach (OfferBundle o in OfferBundles)
             {
 

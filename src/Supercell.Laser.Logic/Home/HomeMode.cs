@@ -217,8 +217,6 @@ namespace Supercell.Laser.Logic.Home
             }
             List<int> UnlockableBrawlers = Brawlers.Where(x => !UnlockedBrawlers.Contains(x)).ToList();
             bool isBr = false;
-
-            bool isSp = false;
             bool canDropSp = false;
             List<int> sps = new();
 

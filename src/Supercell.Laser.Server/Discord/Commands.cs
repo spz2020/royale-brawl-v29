@@ -20,8 +20,6 @@ namespace Supercell.Laser.Server.Discord
     using Supercell.Laser.Server.Networking.Session;
     using Supercell.Laser.Server.Logic.Game;
     using Supercell.Laser.Server.Settings;
-    using Supercell.Laser.Server.Database.Cache;
-    using Supercell.Laser.Server.Networking.Session;
 
     public class Ping : CommandModule<CommandContext>
     {
@@ -209,10 +207,10 @@ namespace Supercell.Laser.Server.Discord
         }
     }
 
-    public class resetseason : CommandModule<CommandContext>
+    public class ResetSeason : CommandModule<CommandContext>
     {
         [Command("resetseason")]
-        public static string ResetSeason()
+        public static string resetseason()
         {
             long lastAccId2 = Accounts.GetMaxAvatarId();
             for (int accid = 1; accid <= lastAccId2; accid++)

@@ -6,7 +6,6 @@ namespace Supercell.Laser.Logic.Avatar
     using Supercell.Laser.Logic.Helper;
     using Supercell.Laser.Logic.Home;
     using Supercell.Laser.Logic.Home.Structures;
-    using Supercell.Laser.Titan.DataStream;
 
     public enum AllianceRole
     {

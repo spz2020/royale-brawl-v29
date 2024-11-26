@@ -24,7 +24,7 @@
             try
             {
                 TCPConnection.Send(message);
-            } catch (Exception ex) { }
+            } catch (Exception) { }
         }
     }
 }

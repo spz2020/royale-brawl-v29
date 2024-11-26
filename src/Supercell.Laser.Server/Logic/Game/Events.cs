@@ -96,7 +96,7 @@
                     GenerateEvents();
                     v1 = true;
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
 
                 }

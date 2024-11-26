@@ -5,7 +5,6 @@
     using Supercell.Laser.Logic.Avatar;
     using Supercell.Laser.Logic.Avatar.Structures;
     using Supercell.Laser.Logic.Listener;
-    using Supercell.Laser.Titan.DataStream;
 
     public class PlayerDisplayData
     {

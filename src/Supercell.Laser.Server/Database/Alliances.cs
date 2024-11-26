@@ -136,7 +136,7 @@
 
                 return list;
             }
-            catch (Exception exception)
+            catch (Exception)
             {
                 return list;
             }
@@ -166,7 +166,7 @@
                     list.Add(alliance);
                     if (found == maxCount) break;
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     //Logger.Error("ff Error" + e.ToString());
                 }
@@ -184,7 +184,7 @@
             //
             //    return list;
             //}
-            //catch (Exception exception)
+            //catch (Exception)
             //{
             //    return list;
             //}

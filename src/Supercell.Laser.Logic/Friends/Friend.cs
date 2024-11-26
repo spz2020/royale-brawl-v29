@@ -6,7 +6,6 @@
     using Supercell.Laser.Logic.Avatar.Structures;
     using Supercell.Laser.Logic.Listener;
     using Supercell.Laser.Titan.DataStream;
-    using Supercell.Laser.Logic.Home;
     using Supercell.Laser.Logic.Home.Structures;
 
     public class Friend
