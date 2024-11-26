@@ -1,9 +1,9 @@
 ﻿namespace Supercell.Laser.Server
 {
-    using Supercell.Laser.Server.Handler;
-    using Supercell.Laser.Server.Settings;
     using System.Drawing;
     using System.Threading.Tasks;
+    using Supercell.Laser.Server.Handler;
+    using Supercell.Laser.Server.Settings;
 
     static class Program
     {

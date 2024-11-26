@@ -3,7 +3,6 @@
     using Supercell.Laser.Logic.Battle.Level;
     using Supercell.Laser.Logic.Data;
     using Supercell.Laser.Titan.DataStream;
-    using Supercell.Laser.Titan.Debug;
     using Supercell.Laser.Titan.Math;
 
     public class Projectile : GameObject
@@ -113,7 +112,7 @@
                 if (TicksActive < (FullTravelTicks / 2))
                 {
                     Z += (ProjectileData.Gravity / 20) * (FullTravelTicks - TicksActive);
-                   // Console.WriteLine("DELTA X: " + (FullTravelTicks - TicksActive));
+                    // Console.WriteLine("DELTA X: " + (FullTravelTicks - TicksActive));
                 }
                 else
                 {
@@ -132,7 +131,7 @@
                 SetForcedInvisible();
             }
 
-            TicksActive++; 
+            TicksActive++;
         }
 
         private int FullTravelTicks;
@@ -214,7 +213,7 @@
             effect.SetIndex(GetIndex());
             effect.SetDamage(Damage);
             effect.SetSource((Character)Source);
-            
+
             GameObjectManager.AddGameObject(effect);
         }
 

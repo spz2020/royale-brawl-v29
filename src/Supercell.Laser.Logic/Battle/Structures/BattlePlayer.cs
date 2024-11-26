@@ -10,7 +10,6 @@
     using Supercell.Laser.Logic.Listener;
     using Supercell.Laser.Titan.DataStream;
     using Supercell.Laser.Titan.Math;
-    using Supercell.Laser.Titan.Util;
 
     public class BattlePlayer
     {

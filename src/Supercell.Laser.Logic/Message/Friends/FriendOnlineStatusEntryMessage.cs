@@ -1,7 +1,5 @@
 ﻿namespace Supercell.Laser.Logic.Message.Friends
 {
-    using Supercell.Laser.Logic.Friends;
-
     public class FriendOnlineStatusEntryMessage : GameMessage
     {
         public long AvatarId;

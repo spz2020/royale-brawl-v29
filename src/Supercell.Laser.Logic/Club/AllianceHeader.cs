@@ -1,7 +1,5 @@
 ﻿namespace Supercell.Laser.Logic.Club
 {
-    using Supercell.Laser.Logic.Avatar;
-    using Supercell.Laser.Logic.Data.Helper;
     using Supercell.Laser.Logic.Helper;
     using Supercell.Laser.Titan.DataStream;
 

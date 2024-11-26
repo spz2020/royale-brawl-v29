@@ -1,19 +1,17 @@
 ﻿namespace Supercell.Laser.Logic.Message
 {
-    using Supercell.Laser.Logic.Message;
     using Supercell.Laser.Logic.Message.Account;
-    using Supercell.Laser.Logic.Message.Club;
+    using Supercell.Laser.Logic.Message.Account.Auth;
+    using Supercell.Laser.Logic.Message.Api;
     using Supercell.Laser.Logic.Message.Battle;
+    using Supercell.Laser.Logic.Message.Club;
     using Supercell.Laser.Logic.Message.Friends;
     using Supercell.Laser.Logic.Message.Home;
+    using Supercell.Laser.Logic.Message.Latency;
     using Supercell.Laser.Logic.Message.Ranking;
     using Supercell.Laser.Logic.Message.Security;
     using Supercell.Laser.Logic.Message.Team;
     using Supercell.Laser.Logic.Message.Team.Stream;
-    using Supercell.Laser.Logic.Message.Udp;
-    using Supercell.Laser.Logic.Message.Account.Auth;
-    using Supercell.Laser.Logic.Message.Latency;
-    using Supercell.Laser.Logic.Message.Api;
 
     public class MessageFactory
     {

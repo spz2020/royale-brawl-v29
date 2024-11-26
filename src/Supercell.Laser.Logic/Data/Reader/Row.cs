@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
-using Supercell.Laser.Logic.Data.Helper;
+﻿using System.Reflection;
 
 namespace Supercell.Laser.Logic.Data.Reader
 {

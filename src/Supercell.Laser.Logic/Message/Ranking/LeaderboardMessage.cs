@@ -1,9 +1,9 @@
 ﻿namespace Supercell.Laser.Logic.Message.Ranking
 {
     using Supercell.Laser.Logic.Avatar;
-    using Supercell.Laser.Logic.Home;
     using Supercell.Laser.Logic.Club;
     using Supercell.Laser.Logic.Helper;
+    using Supercell.Laser.Logic.Home;
 
     public class LeaderboardMessage : GameMessage
     {

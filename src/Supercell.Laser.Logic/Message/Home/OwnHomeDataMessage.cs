@@ -17,7 +17,7 @@
         {
             Home.Encode(Stream);
             Avatar.Encode(Stream);
-            
+
             Stream.WriteVInt(0);
         }
 

@@ -1,8 +1,6 @@
 ﻿namespace Supercell.Laser.Logic.Command.Home
 {
-    using Supercell.Laser.Logic.Helper;
     using Supercell.Laser.Logic.Home;
-    using Supercell.Laser.Logic.Home.Structures;
     using Supercell.Laser.Titan.DataStream;
 
     public class LogicClaimDailyRewardCommand : Command

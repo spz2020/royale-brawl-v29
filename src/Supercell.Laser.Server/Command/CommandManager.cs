@@ -1,13 +1,8 @@
 ﻿namespace Supercell.Laser.Server.Message
 {
-    using Supercell.Laser.Logic;
-    using Supercell.Laser.Logic.Avatar;
-    using Supercell.Laser.Logic.Avatar.Structures;
-    using Supercell.Laser.Logic.Battle;
-    using Supercell.Laser.Logic.Battle.Objects;
+    using System;
     using Supercell.Laser.Logic.Club;
     using Supercell.Laser.Logic.Command;
-    using Supercell.Laser.Logic.Command.Avatar;
     using Supercell.Laser.Logic.Command.Home;
     using Supercell.Laser.Logic.Data;
     using Supercell.Laser.Logic.Data.Helper;
@@ -18,40 +13,16 @@
     using Supercell.Laser.Logic.Home.Quest;
     using Supercell.Laser.Logic.Home.Structures;
     using Supercell.Laser.Logic.Listener;
-    using Supercell.Laser.Logic.Message;
-    using Supercell.Laser.Logic.Message.Account;
-    using Supercell.Laser.Logic.Message.Account.Auth;
-    using Supercell.Laser.Logic.Message.Battle;
     using Supercell.Laser.Logic.Message.Club;
     using Supercell.Laser.Logic.Message.Friends;
     using Supercell.Laser.Logic.Message.Home;
-    using Supercell.Laser.Logic.Message.Ranking;
-    using Supercell.Laser.Logic.Message.Security;
-    using Supercell.Laser.Logic.Message.Team;
-    using Supercell.Laser.Logic.Message.Team.Stream;
-    using Supercell.Laser.Logic.Message.Udp;
-    using Supercell.Laser.Logic.Stream;
-    using Supercell.Laser.Logic.Stream.Entry;
     using Supercell.Laser.Logic.Team;
-    using Supercell.Laser.Logic.Team.Stream;
     using Supercell.Laser.Logic.Util;
     using Supercell.Laser.Server.Database;
-    using Supercell.Laser.Server.Database.Cache;
-    using Supercell.Laser.Server.Database.Models;
-    using Supercell.Laser.Server.Logic;
     using Supercell.Laser.Server.Logic.Game;
     using Supercell.Laser.Server.Networking;
-    using Supercell.Laser.Server.Networking.Security;
-    using Supercell.Laser.Server.Networking.Session;
-    using Supercell.Laser.Server.Networking.UDP.Game;
-    using Supercell.Laser.Server.Settings;
     using Supercell.Laser.Titan.Debug;
-    using System;
     //using System.Diagnostics;
-    using System.Linq;
-    using System.Security.Cryptography;
-    using System.Security.Principal;
-    using System.Xml.Linq;
 
     public class CommandManager
     {
@@ -176,7 +147,7 @@
                 message.Command = delivery;
                 HomeMode.GameListener.SendMessage(message);
             }
-             HomeMode.Home.NotificationFactory.NotificationList[command.NotificationIndex].IsViewed = true;
+            HomeMode.Home.NotificationFactory.NotificationList[command.NotificationIndex].IsViewed = true;
             return true;
         }
         private bool LogicDeleteNotificationReceived(LogicDeleteNotificationCommand command)
@@ -510,7 +481,7 @@
                                     member.Gadget = WildCard.GetGlobalId();
                                     break;
                                 }
-                                
+
                             }
                         }
                     }
@@ -571,7 +542,7 @@
             if (HomeMode.Avatar.AllianceId > 0)
             {
                 Alliance alliance = Alliances.Load(HomeMode.Avatar.AllianceId);
-                if (alliance == null) 
+                if (alliance == null)
                 {
                     HomeMode.Avatar.AllianceId = -1;
                     return true;

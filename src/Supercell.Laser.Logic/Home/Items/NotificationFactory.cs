@@ -1,7 +1,6 @@
 ﻿namespace Supercell.Laser.Logic.Home.Items
 {
     using Newtonsoft.Json;
-    using Supercell.Laser.Logic.Helper;
     using Supercell.Laser.Titan.DataStream;
 
     public class NotificationFactory

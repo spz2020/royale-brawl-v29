@@ -1,6 +1,4 @@
-﻿using Supercell.Laser.Logic.Home.Quest;
-
-namespace Supercell.Laser.Logic.Message.Api
+﻿namespace Supercell.Laser.Logic.Message.Api
 {
     public class RequestSyncSSID : GameMessage
     {

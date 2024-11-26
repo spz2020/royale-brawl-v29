@@ -50,7 +50,7 @@
                         drop.DoDrop(homeMode);
                         drop.IsExecuted = true;
                     }
-                    
+
                 }
             }
 

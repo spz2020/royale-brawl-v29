@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-namespace Supercell.Laser.Titan.Util
+﻿namespace Supercell.Laser.Titan.Util
 {
     public static class StringUtil
     {

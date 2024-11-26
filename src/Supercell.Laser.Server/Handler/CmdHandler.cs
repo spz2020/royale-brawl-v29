@@ -1,16 +1,15 @@
 ﻿namespace Supercell.Laser.Server.Handler
 {
+    using System.Reflection;
     using Supercell.Laser.Logic.Avatar;
     using Supercell.Laser.Logic.Data;
     using Supercell.Laser.Logic.Home;
-    using Supercell.Laser.Logic.Message.Account;
     using Supercell.Laser.Logic.Message.Account.Auth;
     using Supercell.Laser.Logic.Util;
     using Supercell.Laser.Server.Database;
     using Supercell.Laser.Server.Database.Cache;
     using Supercell.Laser.Server.Database.Models;
     using Supercell.Laser.Server.Networking.Session;
-    using System.Reflection;
 
     public static class CmdHandler
     {

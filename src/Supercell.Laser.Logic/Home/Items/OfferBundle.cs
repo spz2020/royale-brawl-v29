@@ -1,6 +1,5 @@
 namespace Supercell.Laser.Logic.Home.Items
 {
-    using Supercell.Laser.Logic.Helper;
     using Supercell.Laser.Titan.DataStream;
 
     public class OfferBundle
@@ -40,7 +39,7 @@ namespace Supercell.Laser.Logic.Home.Items
             Stream.WriteVInt(Cost); // cost
 
             Stream.WriteVInt((int)(EndTime - DateTime.UtcNow).TotalSeconds); // Seconds left
-            
+
             Stream.WriteVInt(State); // State
             Stream.WriteVInt(0); // ??
 

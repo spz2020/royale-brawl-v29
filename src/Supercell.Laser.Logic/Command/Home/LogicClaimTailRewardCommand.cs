@@ -1,8 +1,6 @@
 ﻿namespace Supercell.Laser.Logic.Command.Home
 {
     using Supercell.Laser.Logic.Home;
-    using Supercell.Laser.Logic.Home.Gatcha;
-    using Supercell.Laser.Logic.Message.Home;
     using Supercell.Laser.Titan.DataStream;
 
     public class LogicClaimTailRewardCommand : Command
@@ -17,7 +15,7 @@
 
         public override int Execute(HomeMode homeMode)
         {
-            
+
             return 0;
         }
 

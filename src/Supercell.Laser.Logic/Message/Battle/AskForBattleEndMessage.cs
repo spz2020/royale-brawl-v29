@@ -1,11 +1,8 @@
 ﻿namespace Supercell.Laser.Logic.Message.Battle
 {
-    using Supercell.Laser.Logic.Battle.Input;
+    using Supercell.Laser.Logic.Battle.Structures;
     using Supercell.Laser.Logic.Helper;
     using Supercell.Laser.Logic.Message;
-    using Supercell.Laser.Titan.DataStream;
-    using Supercell.Laser.Logic.Battle.Structures;
-    using Supercell.Laser.Logic.Home;
 
     public class AskForBattleEndMessage : GameMessage
     {

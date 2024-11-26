@@ -1,19 +1,18 @@
 ﻿namespace Supercell.Laser.Server.Logic.Game
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using Supercell.Laser.Logic.Battle;
     using Supercell.Laser.Logic.Battle.Structures;
     using Supercell.Laser.Logic.Data;
     using Supercell.Laser.Logic.Home.Items;
-    using Supercell.Laser.Logic.Listener;
     using Supercell.Laser.Logic.Message.Battle;
     using Supercell.Laser.Logic.Message.Home;
     using Supercell.Laser.Logic.Team;
     using Supercell.Laser.Logic.Util;
     using Supercell.Laser.Server.Networking;
     using Supercell.Laser.Server.Networking.Session;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
 
     public static class Matchmaking
     {
@@ -84,7 +83,7 @@
 
                     team.TeamUpdated();
                 }
-            } 
+            }
         }
     }
 
@@ -182,7 +181,8 @@
                         entry.Connection.Messaging.Send(message);
                     }
                 }
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 Console.WriteLine("GameMatchmakingManager exception!");
                 Console.WriteLine($"{e.GetType().Name}, {e.Message}\n{e.StackTrace}");

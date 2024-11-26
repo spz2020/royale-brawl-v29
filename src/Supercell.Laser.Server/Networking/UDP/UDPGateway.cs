@@ -1,9 +1,9 @@
 ﻿namespace Supercell.Laser.Server.Networking
 {
-    using Supercell.Laser.Server.Networking.UDP.Game;
-    using Supercell.Laser.Titan.DataStream;
     using System.Net;
     using System.Net.Sockets;
+    using Supercell.Laser.Server.Networking.UDP.Game;
+    using Supercell.Laser.Titan.DataStream;
 
     public static class UDPGateway
     {
@@ -47,10 +47,10 @@
                 Console.WriteLine("EXCEPTION: " + e.GetType().Name);
                 Console.WriteLine(e.Message);
             }
-            
+
 
             if (r <= 0) return;
-            
+
 
             try
             {
@@ -73,7 +73,7 @@
 
                 client.ProcessReceive(stream);
             }
-            catch (Exception e) 
+            catch (Exception e)
             {
                 Logger.Error($"EXCEPTION: {e.GetType().Name} - {e.Message}\n{e.StackTrace}");
             }

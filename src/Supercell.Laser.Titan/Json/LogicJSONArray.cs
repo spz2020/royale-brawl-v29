@@ -35,7 +35,7 @@
                 return null;
             }
 
-            return (LogicJSONArray) node;
+            return (LogicJSONArray)node;
         }
 
         public LogicJSONBoolean GetJSONBoolean(int index)
@@ -47,7 +47,7 @@
                 return null;
             }
 
-            return (LogicJSONBoolean) node;
+            return (LogicJSONBoolean)node;
         }
 
         public LogicJSONNumber GetJSONNumber(int index)
@@ -59,7 +59,7 @@
                 return null;
             }
 
-            return (LogicJSONNumber) node;
+            return (LogicJSONNumber)node;
         }
 
         public LogicJSONObject GetJSONObject(int index)
@@ -71,7 +71,7 @@
                 return null;
             }
 
-            return (LogicJSONObject) node;
+            return (LogicJSONObject)node;
         }
 
         public LogicJSONString GetJSONString(int index)
@@ -83,7 +83,7 @@
                 return null;
             }
 
-            return (LogicJSONString) node;
+            return (LogicJSONString)node;
         }
 
         public int Size()

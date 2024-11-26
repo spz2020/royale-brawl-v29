@@ -1,7 +1,7 @@
 ﻿namespace Supercell.Laser.Logic.Home.Quest
 {
-    using Supercell.Laser.Titan.DataStream;
     using Supercell.Laser.Logic.Helper;
+    using Supercell.Laser.Titan.DataStream;
 
     public class Quest
     {

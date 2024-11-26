@@ -1,7 +1,7 @@
 ﻿namespace Supercell.Laser.Server.Settings
 {
-    using Newtonsoft.Json;
     using System.IO;
+    using Newtonsoft.Json;
 
     public class Configuration
     {

@@ -1,7 +1,7 @@
 ﻿namespace Supercell.Laser.Logic.Helper
 {
-    using Supercell.Laser.Titan.DataStream;
     using Supercell.Laser.Logic.Data.Helper;
+    using Supercell.Laser.Titan.DataStream;
 
     public static class ByteStreamHelper
     {

@@ -1,7 +1,6 @@
 ﻿namespace Supercell.Laser.Server.Database.Cache
 {
     using Supercell.Laser.Logic.Club;
-    using System.Diagnostics.CodeAnalysis;
 
     public static class AllianceCache
     {

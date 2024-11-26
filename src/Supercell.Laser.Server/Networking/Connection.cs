@@ -1,13 +1,12 @@
 ﻿namespace Supercell.Laser.Server.Networking
 {
+    using System;
+    using System.Net.Sockets;
     using Supercell.Laser.Logic.Avatar;
-    using Supercell.Laser.Logic.Battle;
     using Supercell.Laser.Logic.Home;
     using Supercell.Laser.Logic.Message;
     using Supercell.Laser.Server.Logic.Game;
     using Supercell.Laser.Server.Message;
-    using System;
-    using System.Net.Sockets;
 
     public class Connection
     {

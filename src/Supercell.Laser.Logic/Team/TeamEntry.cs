@@ -56,7 +56,7 @@
 
         public void StreamUpdated()
         {
-            
+
         }
 
         public TeamMember GetMember(long id)

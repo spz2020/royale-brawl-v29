@@ -1,6 +1,4 @@
-﻿using Supercell.Laser.Logic.Command.Home;
-
-namespace Supercell.Laser.Logic.Message.Account.Auth
+﻿namespace Supercell.Laser.Logic.Message.Account.Auth
 {
     public class AuthenticationMessage : GameMessage
     {

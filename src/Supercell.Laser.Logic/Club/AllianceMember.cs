@@ -3,7 +3,6 @@
     using Newtonsoft.Json;
     using Supercell.Laser.Logic.Avatar;
     using Supercell.Laser.Logic.Avatar.Structures;
-    using Supercell.Laser.Logic.Data.Helper;
     using Supercell.Laser.Logic.Listener;
     using Supercell.Laser.Titan.DataStream;
 
@@ -15,7 +14,8 @@
         [JsonProperty("DoNotDisturb")] public bool DoNotDisturb { get; set; }
         [JsonProperty("role")] public AllianceRole Role { get; set; }
 
-        [JsonIgnore] public ClientAvatar Avatar
+        [JsonIgnore]
+        public ClientAvatar Avatar
         {
             get
             {
@@ -58,7 +58,7 @@
             stream.WriteVInt(IsOnline ? -1 : (int)(DateTime.UtcNow - avatar.LastOnline).TotalSeconds);
 
             stream.WriteBoolean(DoNotDisturb); // ??
-            
+
             DisplayData.Encode(stream);
         }
     }

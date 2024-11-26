@@ -1,10 +1,4 @@
-﻿using Supercell.Laser.Logic.Home.Structures;
-using Supercell.Laser.Titan.DataStream;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Supercell.Laser.Titan.DataStream;
 
 namespace Supercell.Laser.Logic.Home.Items
 {
@@ -55,7 +49,7 @@ namespace Supercell.Laser.Logic.Home.Items
                     stream.WriteVInt(HeroesTrophiesReseted[i]);
                     stream.WriteVInt(StarpointsAwarded[i]);
                 }
-                
+
             }
             else
             {

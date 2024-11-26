@@ -1,6 +1,4 @@
-﻿using Supercell.Laser.Logic.Data.Reader;
-
-namespace Supercell.Laser.Logic.Data.Helper
+﻿namespace Supercell.Laser.Logic.Data.Helper
 {
     public class DataTable
     {
@@ -75,7 +73,7 @@ namespace Supercell.Laser.Logic.Data.Helper
 
         public int GetIndex()
         {
-            return (int) Index;
+            return (int)Index;
         }
     }
 }

@@ -57,7 +57,7 @@
 
             if (node.GetJSONNodeType() == LogicJSONNodeType.ARRAY)
             {
-                return (LogicJSONArray) node;
+                return (LogicJSONArray)node;
             }
 
             //Debugger.Warning(string.Format("LogicJSONObject::getJSONArray type is {0}, key {1}", node.GetJSONNodeType(), key));
@@ -78,7 +78,7 @@
 
             if (node.GetJSONNodeType() == LogicJSONNodeType.BOOLEAN)
             {
-                return (LogicJSONBoolean) node;
+                return (LogicJSONBoolean)node;
             }
 
             //Debugger.Warning(string.Format("LogicJSONObject::getJSONBoolean type is {0}, key {1}", node.GetJSONNodeType(), key));
@@ -99,7 +99,7 @@
 
             if (node.GetJSONNodeType() == LogicJSONNodeType.NUMBER)
             {
-                return (LogicJSONNumber) node;
+                return (LogicJSONNumber)node;
             }
 
             //Debugger.Warning(string.Format("LogicJSONObject::getJSONNumber type is {0}, key {1}", node.GetJSONNodeType(), key));
@@ -120,7 +120,7 @@
 
             if (node.GetJSONNodeType() == LogicJSONNodeType.OBJECT)
             {
-                return (LogicJSONObject) node;
+                return (LogicJSONObject)node;
             }
 
             //Debugger.Warning(string.Format("LogicJSONObject::getJSONObject type is {0}, key {1}", node.GetJSONNodeType(), key));
@@ -141,7 +141,7 @@
 
             if (node.GetJSONNodeType() == LogicJSONNodeType.STRING)
             {
-                return (LogicJSONString) node;
+                return (LogicJSONString)node;
             }
 
             //Debugger.Warning(string.Format("LogicJSONObject::getJSONString type is {0}, key {1}", node.GetJSONNodeType(), key));

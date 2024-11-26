@@ -1,7 +1,7 @@
 ﻿namespace Supercell.Laser.Server.Logic.Game
 {
-    using Supercell.Laser.Logic.Battle;
     using System.Collections.Concurrent;
+    using Supercell.Laser.Logic.Battle;
 
     public static class Battles
     {

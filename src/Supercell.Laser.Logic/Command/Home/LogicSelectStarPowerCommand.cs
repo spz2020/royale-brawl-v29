@@ -1,7 +1,5 @@
 ﻿namespace Supercell.Laser.Logic.Command.Home
 {
-    using Supercell.Laser.Logic.Data;
-    using Supercell.Laser.Logic.Data.Helper;
     using Supercell.Laser.Logic.Home;
     using Supercell.Laser.Titan.DataStream;
 

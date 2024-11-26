@@ -1,5 +1,6 @@
 ﻿namespace Supercell.Laser.Server
 {
+    using System.Threading.Tasks;
     using Supercell.Laser.Logic.Data;
     using Supercell.Laser.Logic.Listener;
     using Supercell.Laser.Server.Database;
@@ -9,8 +10,6 @@
     using Supercell.Laser.Server.Networking;
     using Supercell.Laser.Server.Networking.Session;
     using Supercell.Laser.Server.Settings;
-    using System.Threading.Tasks;
-    using Supercell.Laser.Server.Discord;
 
     internal static class Resources
     {

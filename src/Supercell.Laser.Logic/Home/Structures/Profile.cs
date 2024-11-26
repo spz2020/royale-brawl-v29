@@ -48,7 +48,7 @@
             Profile profile = new Profile();
 
             profile.AccountId = avatar.AccountId;
-            
+
             PlayerDisplayData playerDisplayData = new PlayerDisplayData();
             playerDisplayData.ThumbnailId = home.ThumbnailId;
             playerDisplayData.NameColorId = home.NameColorId;

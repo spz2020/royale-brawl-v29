@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace Supercell.Laser.Logic.Data.Reader
+﻿namespace Supercell.Laser.Logic.Data.Reader
 {
     public class Column
     {

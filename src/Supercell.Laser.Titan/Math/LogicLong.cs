@@ -1,11 +1,6 @@
 ﻿namespace Supercell.Laser.Titan.Math
 {
     using Supercell.Laser.Titan.DataStream;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
     public class LogicLong
     {

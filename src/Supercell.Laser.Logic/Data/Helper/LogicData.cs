@@ -1,8 +1,4 @@
-﻿using System;
-using Newtonsoft.Json;
-using Supercell.Laser.Logic.Data.Reader;
-
-namespace Supercell.Laser.Logic.Data.Helper
+﻿namespace Supercell.Laser.Logic.Data.Helper
 {
     public class LogicData
     {

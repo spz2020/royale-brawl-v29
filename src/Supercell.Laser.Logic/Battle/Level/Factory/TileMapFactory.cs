@@ -1,6 +1,4 @@
-﻿using System.IO;
-
-namespace Supercell.Laser.Logic.Battle.Level.Factory
+﻿namespace Supercell.Laser.Logic.Battle.Level.Factory
 {
     using Supercell.Laser.Titan.Json;
 

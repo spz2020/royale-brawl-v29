@@ -174,7 +174,7 @@
                 }
             }
 
-            if (m_poison != null) 
+            if (m_poison != null)
             {
                 if (m_poison.Tick(this))
                 {
@@ -614,11 +614,11 @@
 
                 if (!skill.IsRapidSpreadPattern)
                 {
-                    projectile.ShootProjectile(originAngle + GetBulletAngle(i, spread, bulletsPerShot) / (a != 0 ? a : 1), this, GetAbsoluteDamage(damage), newRange+1, skill == GetUltimateSkill());
+                    projectile.ShootProjectile(originAngle + GetBulletAngle(i, spread, bulletsPerShot) / (a != 0 ? a : 1), this, GetAbsoluteDamage(damage), newRange + 1, skill == GetUltimateSkill());
                 }
                 else
                 {
-                    projectile.ShootProjectile(originAngle + skill.ATTACK_PATTERN_TABLE[SpreadIndex] / (a != 0 ? a : 1), this, GetAbsoluteDamage(damage), newRange+1, skill == GetUltimateSkill());
+                    projectile.ShootProjectile(originAngle + skill.ATTACK_PATTERN_TABLE[SpreadIndex] / (a != 0 ? a : 1), this, GetAbsoluteDamage(damage), newRange + 1, skill == GetUltimateSkill());
                     SpreadIndex++;
                     if (SpreadIndex >= skill.ATTACK_PATTERN_TABLE.Length) SpreadIndex = 0;
                 }
@@ -939,8 +939,8 @@
                     bitStream.WriteBoolean(false); // 0xa1aff8
                     bitStream.WriteBoolean(false);
                     {
-                       // bitStream.WritePositiveInt(Angle, 9);
-                       // bitStream.WritePositiveInt(Angle, 9);
+                        // bitStream.WritePositiveInt(Angle, 9);
+                        // bitStream.WritePositiveInt(Angle, 9);
                     }
                 }
                 else

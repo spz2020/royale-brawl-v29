@@ -2,7 +2,6 @@
 {
     using Supercell.Laser.Logic.Battle.Structures;
     using Supercell.Laser.Logic.Helper;
-    using Supercell.Laser.Titan.Util;
 
     public class StartLoadingMessage : GameMessage
     {

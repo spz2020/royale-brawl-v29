@@ -1,9 +1,8 @@
 ﻿namespace Supercell.Laser.Server.Message
 {
-    using Supercell.Laser.Server.Networking;
-    using Supercell.Laser.Server.Message;
     using System.Collections.Concurrent;
     using Supercell.Laser.Logic.Message;
+    using Supercell.Laser.Server.Networking;
 
     public static class Processor
     {

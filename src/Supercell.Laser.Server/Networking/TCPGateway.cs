@@ -1,8 +1,8 @@
 ﻿namespace Supercell.Laser.Server.Networking
 {
-    using Supercell.Laser.Server.Networking.Session;
     using System.Net;
     using System.Net.Sockets;
+    using Supercell.Laser.Server.Networking.Session;
 
     public static class TCPGateway
     {
@@ -49,7 +49,7 @@
                 Logger.Print("New connection!");
                 Connections.AddConnection(connection);
                 client.BeginReceive(connection.ReadBuffer, 0, 1024, SocketFlags.None, new AsyncCallback(OnReceive), connection);
-            } 
+            }
             catch (Exception)
             {
                 ;

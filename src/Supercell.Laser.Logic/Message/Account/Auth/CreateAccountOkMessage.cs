@@ -10,7 +10,7 @@
         {
             Stream.WriteStringReference(PassToken);
             Stream.WriteLong(AccountId);
-            
+
         }
 
         public override int GetMessageType()

@@ -1,7 +1,5 @@
 ﻿namespace Supercell.Laser.Logic.Util
 {
-    using Supercell.Laser.Titan.Debug;
-    using Supercell.Laser.Titan.Math;
     using System.Numerics;
 
     public static class LogicBitHelper

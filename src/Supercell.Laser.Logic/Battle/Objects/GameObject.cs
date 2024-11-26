@@ -16,7 +16,7 @@
 
         protected LogicVector2 Position;
         protected int Z;
-        
+
         public GameObject(int classId, int instanceId)
         {
             DataId = GlobalId.CreateGlobalId(classId, instanceId);

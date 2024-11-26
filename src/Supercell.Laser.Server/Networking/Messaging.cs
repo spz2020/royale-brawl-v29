@@ -3,14 +3,12 @@ using Supercell.Laser.Titan.Library.Blake;
 
 namespace Supercell.Laser.Server.Networking
 {
-    using Supercell.Laser.Logic.Message.Account;
+    using System.Linq;
     using Supercell.Laser.Logic.Message;
     using Supercell.Laser.Server.Message;
     using Supercell.Laser.Titan.Cryptography;
     using Supercell.Laser.Titan.Library;
     using Supercell.Laser.Titan.Math;
-    using System.Linq;
-    using Supercell.Laser.Logic.Util;
 
     public class Messaging
     {

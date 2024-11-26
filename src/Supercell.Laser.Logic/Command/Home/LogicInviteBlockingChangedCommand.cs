@@ -1,7 +1,6 @@
 ﻿namespace Supercell.Laser.Logic.Command.Home
 {
     using Supercell.Laser.Logic.Home;
-    using Supercell.Laser.Logic.Notification;
     using Supercell.Laser.Titan.DataStream;
 
     public class LogicInviteBlockingChangedCommand : Command

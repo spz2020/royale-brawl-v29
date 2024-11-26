@@ -51,7 +51,8 @@
                     Matchmaking.RequestMatchmake(connection, team.EventSlot, team.Id);
                     member.IsReady = false;
                 }
-            } catch (Exception)
+            }
+            catch (Exception)
             {
                 ;
             }

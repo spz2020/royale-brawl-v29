@@ -1,14 +1,12 @@
 ﻿namespace Supercell.Laser.Server.Networking
 {
+    using System.Net;
+    using System.Threading.Tasks;
     using Supercell.Laser.Logic.Battle;
+    using Supercell.Laser.Logic.Battle.Input;
     using Supercell.Laser.Logic.Message;
     using Supercell.Laser.Logic.Message.Battle;
     using Supercell.Laser.Titan.DataStream;
-    using Supercell.Laser.Server.Message;
-    using System.Net;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using Supercell.Laser.Logic.Battle.Input;
 
     public class UDPSocket
     {

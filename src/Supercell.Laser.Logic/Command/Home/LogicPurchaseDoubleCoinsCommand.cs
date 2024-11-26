@@ -1,7 +1,6 @@
 ﻿namespace Supercell.Laser.Logic.Command.Home
 {
     using Supercell.Laser.Logic.Home;
-    using Supercell.Laser.Logic.Home.Items;
 
     public class LogicPurchaseDoubleCoinsCommand : Command
     {

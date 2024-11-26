@@ -1,10 +1,9 @@
 ﻿namespace Supercell.Laser.Titan.DataStream
 {
-    using Supercell.Laser.Titan.DataStream;
     using System;
     using System.Linq;
-    using System.Text;
     using System.Numerics;
+    using System.Text;
 
     public class ByteStream : ChecksumEncoder
     {

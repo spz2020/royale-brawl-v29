@@ -1,7 +1,7 @@
 ﻿namespace Supercell.Laser.Server.Database.Cache
 {
-    using Supercell.Laser.Server.Database.Models;
     using System.Collections.Generic;
+    using Supercell.Laser.Server.Database.Models;
 
     public static class AccountCache
     {

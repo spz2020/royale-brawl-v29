@@ -1,7 +1,6 @@
 ﻿namespace Supercell.Laser.Logic.Home.Quest
 {
     using Newtonsoft.Json;
-    using Supercell.Laser.Logic.Battle.Objects;
     using Supercell.Laser.Logic.Home.Structures;
     using Supercell.Laser.Titan.DataStream;
 
@@ -144,7 +143,7 @@
             }
             foreach (Quest quest in QuestList.ToArray())
             {
-                if ((quest.GameModeVariation == gameModeVariation || quest.GameModeVariation == -1) 
+                if ((quest.GameModeVariation == gameModeVariation || quest.GameModeVariation == -1)
                     && (quest.CharacterId == characterId || quest.CharacterId == 0))
                 {
                     if (quest.BrawlPassExclusive && !home.HasPremiumPass) continue;

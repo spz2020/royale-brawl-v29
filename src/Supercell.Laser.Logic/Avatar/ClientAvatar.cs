@@ -1,11 +1,11 @@
 namespace Supercell.Laser.Logic.Avatar
 {
     using Newtonsoft.Json;
-    using Supercell.Laser.Titan.DataStream;
     using Supercell.Laser.Logic.Friends;
     using Supercell.Laser.Logic.Helper;
     using Supercell.Laser.Logic.Home;
     using Supercell.Laser.Logic.Home.Structures;
+    using Supercell.Laser.Titan.DataStream;
 
     public enum AllianceRole
     {
@@ -311,7 +311,7 @@ namespace Supercell.Laser.Logic.Avatar
                     Stream.WriteVInt(hero.Trophies);
                 }
 
-                Stream.WriteVInt(Heroes.Count); 
+                Stream.WriteVInt(Heroes.Count);
                 foreach (Hero hero in Heroes)
                 {
                     ByteStreamHelper.WriteDataReference(Stream, hero.CharacterData);

@@ -6,7 +6,7 @@ namespace Supercell.Laser.Logic.Data
     using Supercell.Laser.Logic.Data.Helper;
     using Supercell.Laser.Logic.Data.Reader;
     using Supercell.Laser.Titan.Debug;
-    
+
     public partial class DataTables
     {
         public static readonly Dictionary<DataType, string> Gamefiles = new Dictionary<DataType, string>();

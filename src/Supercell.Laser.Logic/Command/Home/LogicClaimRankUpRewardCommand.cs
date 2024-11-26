@@ -363,9 +363,10 @@
                         LogicGiveDeliveryItemsCommand command = new LogicGiveDeliveryItemsCommand();
                         DeliveryUnit unit = new DeliveryUnit(100);
                         List<int> Emotes_All = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 };
-                        List<int> Emotes_Locked = Emotes_All.Except(homeMode.Home.UnlockedEmotes).OrderBy(x => Guid.NewGuid()).Take(3).ToList();;
+                        List<int> Emotes_Locked = Emotes_All.Except(homeMode.Home.UnlockedEmotes).OrderBy(x => Guid.NewGuid()).Take(3).ToList(); ;
 
-                        foreach (int x in Emotes_Locked){
+                        foreach (int x in Emotes_Locked)
+                        {
                             GatchaDrop reward = new GatchaDrop(11);
                             reward.Count = 1;
                             reward.PinGlobalId = 52000000 + x;

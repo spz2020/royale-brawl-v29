@@ -198,7 +198,7 @@
                 }
             }
 
-           // bitStream.WritePositiveIntMax7(0);
+            // bitStream.WritePositiveIntMax7(0);
 
             bitStream.WritePositiveInt(visibleGameObjects.Count, 8);
 

@@ -31,7 +31,7 @@
 
             ByteStreamHelper.WriteDataReference(stream, CharacterId);
             ByteStreamHelper.WriteDataReference(stream, SkinId);
-            
+
             stream.WriteVInt(HeroTrophies);
             stream.WriteVInt(HeroHighestTrophies);
             stream.WriteVInt(HeroLevel + 1);

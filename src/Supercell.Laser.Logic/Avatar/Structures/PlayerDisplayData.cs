@@ -1,10 +1,6 @@
 ﻿namespace Supercell.Laser.Logic.Avatar.Structures
 {
     using Supercell.Laser.Titan.DataStream;
-    using Newtonsoft.Json;
-    using Supercell.Laser.Logic.Avatar;
-    using Supercell.Laser.Logic.Avatar.Structures;
-    using Supercell.Laser.Logic.Listener;
 
     public class PlayerDisplayData
     {

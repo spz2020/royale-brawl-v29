@@ -1,5 +1,6 @@
 ﻿namespace Supercell.Laser.Server.Networking.Session
 {
+    using System.Collections.Concurrent;
     using Supercell.Laser.Logic.Friends;
     using Supercell.Laser.Logic.Home;
     using Supercell.Laser.Logic.Listener;
@@ -8,7 +9,6 @@
     using Supercell.Laser.Logic.Message.Friends;
     using Supercell.Laser.Logic.Util;
     using Supercell.Laser.Server.Logic.Game;
-    using System.Collections.Concurrent;
 
     public static class Sessions
     {
@@ -110,7 +110,7 @@
             }
 
             Session session = new Session(home, connection);
-            ActiveSessions[home.Avatar.AccountId] =  session;
+            ActiveSessions[home.Avatar.AccountId] = session;
             return session;
         }
 

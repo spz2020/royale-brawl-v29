@@ -1,7 +1,6 @@
 ﻿namespace Supercell.Laser.Logic.Team.Stream
 {
     using Supercell.Laser.Titan.DataStream;
-    using Supercell.Laser.Titan.Math;
 
     public class ChatStreamEntry : TeamStreamEntry
     {

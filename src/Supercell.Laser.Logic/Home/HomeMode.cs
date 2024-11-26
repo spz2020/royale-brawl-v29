@@ -1,7 +1,6 @@
 namespace Supercell.Laser.Logic.Home
 {
     using Supercell.Laser.Logic.Avatar;
-    using Supercell.Laser.Logic.Battle.Objects;
     using Supercell.Laser.Logic.Command;
     using Supercell.Laser.Logic.Data;
     using Supercell.Laser.Logic.Data.Helper;
@@ -9,8 +8,6 @@ namespace Supercell.Laser.Logic.Home
     using Supercell.Laser.Logic.Home.Items;
     using Supercell.Laser.Logic.Home.Structures;
     using Supercell.Laser.Logic.Listener;
-    using Supercell.Laser.Logic.Message.Home;
-    using Supercell.Laser.Titan.Math;
 
     public class HomeMode
     {

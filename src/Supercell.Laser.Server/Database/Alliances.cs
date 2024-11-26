@@ -160,7 +160,7 @@
                     Alliance alliance = Load(r.NextInt64(1, AllianceIdCounter + 1));
                     if (alliance == null) continue;
                     if (alliance.RequiredTrophies > avatar.Trophies) continue;
-                    if (alliance.Members.Count >= 100) continue;   
+                    if (alliance.Members.Count >= 100) continue;
                     if (alliance.Type == 2) continue;
                     found++;
                     list.Add(alliance);

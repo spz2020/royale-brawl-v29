@@ -85,7 +85,7 @@
 
             this._isInitialized = false;
 
-            this._counter0 += (uint) this._bufferFilled;
+            this._counter0 += (uint)this._bufferFilled;
             this._finalizationFlag0 = ulong.MaxValue;
             if (isEndOfLayer)
             {
@@ -139,19 +139,19 @@
 
         internal static ulong BytesToUInt64(byte[] buf, int offset)
         {
-            return ((ulong) buf[offset + 7] << (7 * 8)) | ((ulong) buf[offset + 6] << (6 * 8)) | ((ulong) buf[offset + 5] << (5 * 8)) | ((ulong) buf[offset + 4] << (4 * 8)) | ((ulong) buf[offset + 3] << (3 * 8)) | ((ulong) buf[offset + 2] << (2 * 8)) | ((ulong) buf[offset + 1] << (1 * 8)) | buf[offset];
+            return ((ulong)buf[offset + 7] << (7 * 8)) | ((ulong)buf[offset + 6] << (6 * 8)) | ((ulong)buf[offset + 5] << (5 * 8)) | ((ulong)buf[offset + 4] << (4 * 8)) | ((ulong)buf[offset + 3] << (3 * 8)) | ((ulong)buf[offset + 2] << (2 * 8)) | ((ulong)buf[offset + 1] << (1 * 8)) | buf[offset];
         }
 
         private static void UInt64ToBytes(ulong value, byte[] buf, int offset)
         {
-            buf[offset + 7] = (byte) (value >> (7 * 8));
-            buf[offset + 6] = (byte) (value >> (6 * 8));
-            buf[offset + 5] = (byte) (value >> (5 * 8));
-            buf[offset + 4] = (byte) (value >> (4 * 8));
-            buf[offset + 3] = (byte) (value >> (3 * 8));
-            buf[offset + 2] = (byte) (value >> (2 * 8));
-            buf[offset + 1] = (byte) (value >> (1 * 8));
-            buf[offset] = (byte) value;
+            buf[offset + 7] = (byte)(value >> (7 * 8));
+            buf[offset + 6] = (byte)(value >> (6 * 8));
+            buf[offset + 5] = (byte)(value >> (5 * 8));
+            buf[offset + 4] = (byte)(value >> (4 * 8));
+            buf[offset + 3] = (byte)(value >> (3 * 8));
+            buf[offset + 2] = (byte)(value >> (2 * 8));
+            buf[offset + 1] = (byte)(value >> (1 * 8));
+            buf[offset] = (byte)value;
         }
 
         partial void Compress(byte[] block, int start);

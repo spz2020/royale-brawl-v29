@@ -1,21 +1,13 @@
 ﻿namespace Supercell.Laser.Server.Logic.Game
 {
-    using Google.Protobuf.WellKnownTypes;
-    using Supercell.Laser.Logic.Battle.Objects;
+    using System;
+    using System.Collections.Generic;
     using Supercell.Laser.Logic.Command.Home;
     using Supercell.Laser.Logic.Data;
-    using Supercell.Laser.Logic.Home;
     using Supercell.Laser.Logic.Home.Items;
-    using Supercell.Laser.Logic.Home.Structures;
-    using Supercell.Laser.Logic.Listener;
-    using Supercell.Laser.Logic.Message.Account;
     using Supercell.Laser.Logic.Message.Home;
     using Supercell.Laser.Server.Networking.Session;
     using Supercell.Laser.Titan.Json;
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.Reflection;
 
     public static class Events
     {

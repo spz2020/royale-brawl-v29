@@ -1,8 +1,8 @@
 ﻿namespace Supercell.Laser.Server
 {
-    using Supercell.Laser.Titan.Debug;
     using System;
     using System.Text;
+    using Supercell.Laser.Titan.Debug;
 
     public static class Logger
     {

@@ -1,13 +1,12 @@
 namespace Supercell.Laser.Server.Discord
 {
+    using System;
+    using System.Threading.Tasks;
     using NetCord;
     using NetCord.Gateway;
     using NetCord.Services;
     using NetCord.Services.Commands;
     using Supercell.Laser.Server.Settings;
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
 
     public class CustomLogger
     {

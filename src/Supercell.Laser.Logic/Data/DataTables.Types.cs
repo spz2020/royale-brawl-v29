@@ -1,11 +1,6 @@
-﻿global using Supercell.Laser.Logic.Data.Helper;
-global using Supercell.Laser.Logic.Data.Reader;
-
-using System.Linq;
-
-namespace Supercell.Laser.Logic.Data
+﻿namespace Supercell.Laser.Logic.Data
 {
-    
+
 
     public enum DataType
     {

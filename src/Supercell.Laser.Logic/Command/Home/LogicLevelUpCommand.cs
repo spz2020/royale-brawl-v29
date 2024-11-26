@@ -2,7 +2,6 @@
 {
     using Supercell.Laser.Logic.Helper;
     using Supercell.Laser.Logic.Home;
-    using Supercell.Laser.Logic.Home.Structures;
     using Supercell.Laser.Titan.DataStream;
 
     public class LogicLevelUpCommand : Command

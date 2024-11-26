@@ -1,7 +1,4 @@
-﻿using System.Linq;
-using Supercell.Laser.Logic.Data.Helper;
-
-namespace Supercell.Laser.Logic.Data.Reader
+﻿namespace Supercell.Laser.Logic.Data.Reader
 {
     public class Gamefiles : IDisposable
     {
@@ -22,7 +19,7 @@ namespace Supercell.Laser.Logic.Data.Reader
 
         public DataTable Get(DataType index)
         {
-            return _dataTables[(int) index];
+            return _dataTables[(int)index];
         }
 
         public DataTable Get(int index)

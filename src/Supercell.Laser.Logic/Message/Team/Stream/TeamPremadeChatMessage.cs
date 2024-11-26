@@ -1,6 +1,5 @@
 ﻿namespace Supercell.Laser.Logic.Message.Team.Stream
 {
-    using Supercell.Laser.Logic.Data;
     using Supercell.Laser.Logic.Helper;
     using Supercell.Laser.Titan.Math;
 

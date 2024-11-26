@@ -1,13 +1,12 @@
-﻿using System.Threading.Tasks;
-
-namespace Supercell.Laser.Logic.Battle
+﻿namespace Supercell.Laser.Logic.Battle
 {
-    using Supercell.Laser.Logic.Avatar;
+    using System;
+    using System.Threading;
     using Supercell.Laser.Logic.Battle.Component;
-    using Supercell.Laser.Logic.Battle.Objects;
     using Supercell.Laser.Logic.Battle.Input;
     using Supercell.Laser.Logic.Battle.Level;
     using Supercell.Laser.Logic.Battle.Level.Factory;
+    using Supercell.Laser.Logic.Battle.Objects;
     using Supercell.Laser.Logic.Battle.Structures;
     using Supercell.Laser.Logic.Data;
     using Supercell.Laser.Logic.Data.Helper;
@@ -20,8 +19,6 @@ namespace Supercell.Laser.Logic.Battle
     using Supercell.Laser.Titan.DataStream;
     using Supercell.Laser.Titan.Debug;
     using Supercell.Laser.Titan.Math;
-    using System;
-    using System.Threading;
 
     public struct DiedEntry
     {
@@ -142,7 +139,7 @@ namespace Supercell.Laser.Logic.Battle
                 message.Players.Add(player);
                 message.OwnPlayer = player;
 
-                if (!player.IsBot()) 
+                if (!player.IsBot())
                 {
                     HomeMode homeMode = LogicServerListener.Instance.GetHomeMode(player.AccountId);
                     if (homeMode != null)
@@ -191,7 +188,7 @@ namespace Supercell.Laser.Logic.Battle
                     }
                     hero.AddTrophies(message.TrophiesReward);
                 }
-                
+
 
                 player.GameListener.SendTCPMessage(message);
 
@@ -347,7 +344,7 @@ namespace Supercell.Laser.Logic.Battle
                 item.SetPosition(2950, 4950, 0);
                 item.DisableAppearAnimation();
                 m_gameObjectManager.AddGameObject(item);
-            } 
+            }
 
             if (m_gameModeVariation == 6)
             {
@@ -376,7 +373,7 @@ namespace Supercell.Laser.Logic.Battle
             int instanceId = DataTables.Get(16).GetInstanceId("LaserBall");
             Character gem = new Character(16, instanceId);
             gem.SetPosition(2950 + 450, 4950 - 333, 0);
-          //  m_gameObjectManager.AddGameObject(gem);
+            //  m_gameObjectManager.AddGameObject(gem);
         }
 
         public void RemoveSpectator(long id)
@@ -565,7 +562,8 @@ namespace Supercell.Laser.Logic.Battle
                 this.Tick();
                 this.m_time.IncreaseTick();
                 this.SendVisionUpdateToPlayers();
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 Console.WriteLine("Battle stopped with exception! Message: " + e.Message + " Trace: " + e.StackTrace);
                 m_updateTimer.Dispose();
@@ -815,7 +813,7 @@ namespace Supercell.Laser.Logic.Battle
 
                     player.GameListener.SendMessage(visionUpdate);
 
-                   // Debugger.Print("Send!");
+                    // Debugger.Print("Send!");
                 }
             });
 

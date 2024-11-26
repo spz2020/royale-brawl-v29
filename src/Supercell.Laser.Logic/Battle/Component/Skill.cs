@@ -1,10 +1,9 @@
 ﻿namespace Supercell.Laser.Logic.Battle.Component
 {
-    using Supercell.Laser.Logic.Battle.Objects;
     using Supercell.Laser.Logic.Battle.Level;
+    using Supercell.Laser.Logic.Battle.Objects;
     using Supercell.Laser.Logic.Data;
     using Supercell.Laser.Titan.DataStream;
-    using Supercell.Laser.Titan.Debug;
     using Supercell.Laser.Titan.Math;
 
     public class Skill
@@ -23,8 +22,8 @@
         public int ActiveTime { get; private set; }
         private int TicksActive;
 
-        public bool IsRapidSpreadPattern 
-        {   
+        public bool IsRapidSpreadPattern
+        {
             get
             {
                 return SkillData.AttackPattern == 6;
@@ -79,7 +78,7 @@
         {
             get
             {
-                return TicksActive >= 0 && TicksActive < ActiveTime+1;
+                return TicksActive >= 0 && TicksActive < ActiveTime + 1;
             }
         }
 
@@ -153,7 +152,7 @@
 
         public void Encode(BitStream bitStream)
         {
-            bitStream.WritePositiveVIntMax255OftenZero(TicksActive >= 0 && IsActive ? TicksActive+1 : 0); // 0x15a048
+            bitStream.WritePositiveVIntMax255OftenZero(TicksActive >= 0 && IsActive ? TicksActive + 1 : 0); // 0x15a048
             bitStream.WriteBoolean(false); // 0x15a05c
             bitStream.WritePositiveVIntMax255OftenZero(0); // 0x15a068
             if (SkillData.MaxCharge >= 1)

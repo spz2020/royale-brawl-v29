@@ -1,8 +1,8 @@
 ﻿namespace Supercell.Laser.Server.Logic
 {
     using Supercell.Laser.Logic.Listener;
-    using Supercell.Laser.Server.Networking;
     using Supercell.Laser.Logic.Message;
+    using Supercell.Laser.Server.Networking;
 
     public class HomeGameListener : LogicGameListener
     {
