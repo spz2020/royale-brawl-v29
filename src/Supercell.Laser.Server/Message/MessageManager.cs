@@ -95,6 +95,18 @@ namespace Supercell.Laser.Server.Message
 
         public void ShowLobbyInfo()
         {
+            DateTime startTime = Process.GetCurrentProcess().StartTime;
+            DateTime now = DateTime.Now;
+            TimeSpan uptime = now - startTime;
+            string formattedUptime = string.Format(
+                "{0}{1}{2}{3}",
+                uptime.Days > 0 ? $"{uptime.Days} Days, " : string.Empty,
+                uptime.Hours > 0 || uptime.Days > 0 ? $"{uptime.Hours} Hours, " : string.Empty,
+                uptime.Minutes > 0 || uptime.Hours > 0
+                  ? $"{uptime.Minutes} Minutes, "
+                  : string.Empty,
+                uptime.Seconds > 0 ? $"{uptime.Seconds} Seconds" : string.Empty
+            );
             string abd = $"Connection: {GetPingIconByMs(0)} (---ms)\n";
             if (Connection.Ping != 0)
             {
@@ -103,7 +115,7 @@ namespace Supercell.Laser.Server.Message
             
             LobbyInfoMessage b = new()
             {
-                LobbyData = $"royale brawl  v29\ngithub.com/erder00\n{abd}Players Online: {Sessions.Count}\nServer Time: {DateTime.Now}\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nwhy are you reading this'",
+                LobbyData = $"Royale Brawl v29\ngithub.com/erder00\n{abd}Players Online: {Sessions.Count}\nUptime: {formattedUptime}\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nwhy are you reading this'",
                 PlayersCount = 0
             };
             Connection.Send(b);
