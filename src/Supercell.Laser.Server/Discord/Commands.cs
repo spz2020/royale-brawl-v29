@@ -1,24 +1,22 @@
 namespace Supercell.Laser.Server.Discord
 {
-    using NetCord.Services.Commands;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using Supercell.Laser.Logic.Avatar;
+    using NetCord.Services.Commands;
+    using Supercell.Laser.Logic.Command.Home;
     using Supercell.Laser.Logic.Data;
     using Supercell.Laser.Logic.Home;
-    using Supercell.Laser.Logic.Message.Account;
-    using Supercell.Laser.Logic.Message.Account.Auth;
-    using Supercell.Laser.Logic.Util;
-    using Supercell.Laser.Logic.Message.Home;
-    using Supercell.Laser.Logic.Command.Home;
     using Supercell.Laser.Logic.Home.Items;
     using Supercell.Laser.Logic.Home.Structures;
+    using Supercell.Laser.Logic.Message.Account.Auth;
+    using Supercell.Laser.Logic.Message.Home;
+    using Supercell.Laser.Logic.Util;
     using Supercell.Laser.Server.Database;
     using Supercell.Laser.Server.Database.Cache;
     using Supercell.Laser.Server.Database.Models;
-    using Supercell.Laser.Server.Networking.Session;
     using Supercell.Laser.Server.Logic.Game;
+    using Supercell.Laser.Server.Networking.Session;
     using Supercell.Laser.Server.Settings;
 
     public class Ping : CommandModule<CommandContext>
