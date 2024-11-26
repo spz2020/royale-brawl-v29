@@ -18,7 +18,6 @@
             Major = Stream.ReadInt();
             ClientSeed = Stream.ReadInt();
             Stream.ReadInt();
-            Console.WriteLine(Stream.ReadString());
         }
 
         public override int GetServiceNodeType()

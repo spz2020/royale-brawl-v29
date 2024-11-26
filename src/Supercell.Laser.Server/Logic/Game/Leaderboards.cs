@@ -42,7 +42,7 @@
                 Accounts = Database.Accounts.GetRankingList();
                 Alliances = Database.Alliances.GetRankingList();
                 Brawlers = Database.Accounts.GetBrawlersRankingList();
-                Thread.Sleep(500);
+                Thread.Sleep(2000);
             }
         }
     }

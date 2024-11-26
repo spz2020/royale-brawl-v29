@@ -28,12 +28,12 @@ namespace Supercell.Laser.Server.Database
             builder.CharacterSet = "utf8mb4";
             builder.AllowPublicKeyRetrieval = true;
 
-
-            JsonConvert.DefaultSettings = () => new JsonSerializerSettings
-            {
-                DefaultValueHandling = DefaultValueHandling.Ignore,
-                NullValueHandling = NullValueHandling.Ignore
-            };
+            JsonConvert.DefaultSettings = () =>
+                new JsonSerializerSettings
+                {
+                    DefaultValueHandling = DefaultValueHandling.Ignore,
+                    NullValueHandling = NullValueHandling.Ignore
+                };
 
             ConnectionString = builder.ToString();
 
@@ -44,9 +44,12 @@ namespace Supercell.Laser.Server.Database
 
         public static long GetMaxAvatarId()
         {
-           using var Connection = new MySqlConnection(ConnectionString);
+            using var Connection = new MySqlConnection(ConnectionString);
             Connection.Open();
-            MySqlCommand command = new MySqlCommand("SELECT coalesce(MAX(Id), 0) FROM accounts", Connection);
+            MySqlCommand command = new MySqlCommand(
+                "SELECT coalesce(MAX(Id), 0) FROM accounts",
+                Connection
+            );
 
             long result = Convert.ToInt64(command.ExecuteScalar());
             Connection.Close();
@@ -65,16 +68,18 @@ namespace Supercell.Laser.Server.Database
             account.Home.HomeId = account.AccountId;
 
             NotificationFactory n = new();
-            n.Add(new Notification
-            {
-                Id = 83,
-                PrimaryMessageEntry = "royale brawl v29",
-                SecondaryMessageEntry = "check out my github (github.com/erder00)",
-                ButtonMessageEntry = "click click click",
-                FileLocation = "pop_up_1920x1235_welcome.png",
-                FileSha = "6bb3b752a80107a14671c7bdebe0a1b662448d0c",
-                ExtLint = "brawlstars://extlink?page=https%3A%2F%2Fgithub.com%2Ferder00",
-            });
+            n.Add(
+                new Notification
+                {
+                    Id = 83,
+                    PrimaryMessageEntry = "royale brawl v29",
+                    SecondaryMessageEntry = "check out my github (github.com/erder00)",
+                    ButtonMessageEntry = "click click click",
+                    FileLocation = "pop_up_1920x1235_welcome.png",
+                    FileSha = "6bb3b752a80107a14671c7bdebe0a1b662448d0c",
+                    ExtLint = "brawlstars://extlink?page=https%3A%2F%2Fgithub.com%2Ferder00",
+                }
+            );
             account.Home.NotificationFactory = n;
 
             Hero hero = new Hero(16000000, 23000000);
@@ -84,7 +89,10 @@ namespace Supercell.Laser.Server.Database
 
             var Connection = new MySqlConnection(ConnectionString);
             Connection.Open();
-            MySqlCommand command = new MySqlCommand($"INSERT INTO accounts (`Id`, `Trophies`, `Data`) VALUES ({(long)account.AccountId}, {account.Avatar.Trophies}, @data)", Connection);
+            MySqlCommand command = new MySqlCommand(
+                $"INSERT INTO accounts (`Id`, `Trophies`, `Data`) VALUES ({(long)account.AccountId}, {account.Avatar.Trophies}, @data)",
+                Connection
+            );
             command.Parameters?.AddWithValue("@data", json);
             command.ExecuteNonQuery();
             Connection.Close();
@@ -96,13 +104,17 @@ namespace Supercell.Laser.Server.Database
 
         public static void Save(Account account)
         {
-            if (account == null) return;
+            if (account == null)
+                return;
 
             string json = JsonConvert.SerializeObject(account);
 
             var Connection = new MySqlConnection(ConnectionString);
             Connection.Open();
-            MySqlCommand command = new MySqlCommand($"UPDATE accounts SET `Trophies`='{account.Avatar.Trophies}', `Data`=@data WHERE Id = '{account.AccountId}'", Connection);
+            MySqlCommand command = new MySqlCommand(
+                $"UPDATE accounts SET `Trophies`='{account.Avatar.Trophies}', `Data`=@data WHERE Id = '{account.AccountId}'",
+                Connection
+            );
             command.Parameters?.AddWithValue("@data", json);
             command.ExecuteNonQuery();
             Connection.Close();
@@ -117,7 +129,10 @@ namespace Supercell.Laser.Server.Database
 
             var Connection = new MySqlConnection(ConnectionString);
             Connection.Open();
-            MySqlCommand command = new MySqlCommand($"SELECT * FROM accounts WHERE Id = '{id}'", Connection);
+            MySqlCommand command = new MySqlCommand(
+                $"SELECT * FROM accounts WHERE Id = '{id}'",
+                Connection
+            );
             MySqlDataReader reader = command.ExecuteReader();
             if (reader.Read())
             {
@@ -139,7 +154,10 @@ namespace Supercell.Laser.Server.Database
 
             var Connection = new MySqlConnection(ConnectionString);
             Connection.Open();
-            MySqlCommand command = new MySqlCommand($"SELECT * FROM accounts WHERE Id = '{id}'", Connection);
+            MySqlCommand command = new MySqlCommand(
+                $"SELECT * FROM accounts WHERE Id = '{id}'",
+                Connection
+            );
             MySqlDataReader reader = command.ExecuteReader();
             if (reader.Read())
             {
@@ -153,67 +171,167 @@ namespace Supercell.Laser.Server.Database
 
         public static List<Account> GetRankingList()
         {
-            #region GetGlobal
-
             var list = new List<Account>();
 
             try
             {
+                // fetch from cache
+                var cachedAccounts = AccountCache.GetCachedAccounts();
+                foreach (var account in cachedAccounts.Values)
+                {
+                    long allianceId = account.Avatar.AllianceId;
+                    if (allianceId > 0)
+                    {
+                        Alliance alliance = Alliances.Load(allianceId);
+                        if (alliance != null)
+                        {
+                            account.Avatar.AllianceName = alliance.Name;
+                        }
+                    }
+                    list.Add(account);
+                }
+
+                // fetch from db
                 using (var connection = new MySqlConnection(ConnectionString))
                 {
                     connection.Open();
 
-                    using (var cmd = new MySqlCommand($"SELECT * FROM accounts ORDER BY `Trophies` DESC LIMIT 200",
-                        connection))
+                    using (
+                        var cmd = new MySqlCommand(
+                            $"SELECT * FROM accounts ORDER BY `Trophies` DESC LIMIT 200",
+                            connection
+                        )
+                    )
                     {
                         var reader = cmd.ExecuteReader();
 
                         while (reader.Read())
                         {
-                            var account = JsonConvert.DeserializeObject<Account>((string)reader["Data"]);
+                            var account = JsonConvert.DeserializeObject<Account>(
+                                (string)reader["Data"]
+                            );
                             long allianceId = account.Avatar.AllianceId;
                             if (allianceId > 0)
                             {
                                 Alliance alliance = Alliances.Load(allianceId);
-                                if (alliance != null) 
+                                if (alliance != null)
                                 {
                                     account.Avatar.AllianceName = alliance.Name;
                                 }
-                                
                             }
 
-                            list.Add(account);
+                            // check if the account is already in the list (from cache)
+                            if (!list.Any(a => a.AccountId == account.AccountId))
+                            {
+                                list.Add(account);
+                            }
                         }
-                        //list.Add(JsonConvert.DeserializeObject<Account>((string)reader["Data"]) with { AllianceName = "test" });
                     }
 
                     connection.Close();
+                }
+
+                list = list.OrderByDescending(a => a.Avatar.Trophies).ToList();
+
+                if (list.Count > 200)
+                {
+                    list = list.GetRange(0, 200);
                 }
 
                 return list;
             }
             catch (Exception exception)
             {
+                Logger.Error($"Error fetching leaderboard data: {exception.Message}");
                 return list;
             }
-
-            #endregion
         }
 
         public static Dictionary<int, List<Account>> GetBrawlersRankingList()
         {
-            #region GetGlobal
-
             var list = new Dictionary<int, List<Account>>();
-            List<int> Brawlers = new() { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40 };
+            List<int> Brawlers =
+                new()
+                {
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7,
+                    8,
+                    9,
+                    10,
+                    11,
+                    12,
+                    13,
+                    14,
+                    15,
+                    16,
+                    17,
+                    18,
+                    19,
+                    20,
+                    21,
+                    22,
+                    23,
+                    24,
+                    25,
+                    26,
+                    28,
+                    29,
+                    30,
+                    31,
+                    32,
+                    33,
+                    34,
+                    35,
+                    36,
+                    37,
+                    38,
+                    39,
+                    40
+                };
+
             try
             {
+                // fetch from cache
+                var cachedAccounts = AccountCache.GetCachedAccounts();
+                foreach (var account in cachedAccounts.Values)
+                {
+                    long allianceId = account.Avatar.AllianceId;
+                    if (allianceId > 0)
+                    {
+                        Alliance alliance = Alliances.Load(allianceId);
+                        if (alliance != null)
+                        {
+                            account.Avatar.AllianceName = alliance.Name;
+                        }
+                    }
+
+                    foreach (Hero hero in account.Avatar.Heroes)
+                    {
+                        if (list.ContainsKey(hero.CharacterId))
+                        {
+                            list[hero.CharacterId].Add(account);
+                        }
+                        else
+                        {
+                            List<Account> a = new();
+                            a.Add(account);
+                            list.Add(hero.CharacterId, a);
+                        }
+                    }
+                }
+
+                // fetch from db
                 using (var connection = new MySqlConnection(ConnectionString))
                 {
                     connection.Open();
 
-                    using (var cmd = new MySqlCommand($"SELECT * FROM accounts",
-                        connection))
+                    using (var cmd = new MySqlCommand($"SELECT * FROM accounts", connection))
                     {
                         var reader = cmd.ExecuteReader();
 
@@ -221,22 +339,32 @@ namespace Supercell.Laser.Server.Database
                         {
                             try
                             {
-                                var account = JsonConvert.DeserializeObject<Account>((string)reader["Data"]);
+                                var account = JsonConvert.DeserializeObject<Account>(
+                                    (string)reader["Data"]
+                                );
                                 long allianceId = account.Avatar.AllianceId;
                                 if (allianceId > 0)
                                 {
                                     Alliance alliance = Alliances.Load(allianceId);
-                                if (alliance == null)
-                                {
-                                    continue;
+                                    if (alliance == null)
+                                    {
+                                        continue;
+                                    }
+                                    account.Avatar.AllianceName = alliance.Name;
                                 }
-                                account.Avatar.AllianceName = alliance.Name;
-                                }
+
                                 foreach (Hero hero in account.Avatar.Heroes)
                                 {
                                     if (list.ContainsKey(hero.CharacterId))
                                     {
-                                        list[hero.CharacterId].Add(account);
+                                        if (
+                                            !list[hero.CharacterId].Any(
+                                                a => a.AccountId == account.AccountId
+                                            )
+                                        )
+                                        {
+                                            list[hero.CharacterId].Add(account);
+                                        }
                                     }
                                     else
                                     {
@@ -250,23 +378,24 @@ namespace Supercell.Laser.Server.Database
                             {
                                 Logger.Error("LB Error" + e.ToString());
                             }
-
                         }
-                        //list.Add(JsonConvert.DeserializeObject<Account>((string)reader["Data"]) with { AllianceName = "test" });
                     }
 
                     connection.Close();
+                }
+
+                foreach (var brawlerList in list.Values)
+                {
+                    brawlerList.Sort((a, b) => b.Avatar.Trophies.CompareTo(a.Avatar.Trophies));
                 }
 
                 return list;
             }
             catch (Exception exception)
             {
+                Logger.Error($"Error fetching brawler leaderboard data: {exception.Message}");
                 return list;
             }
-
-            #endregion
         }
     }
 }
-

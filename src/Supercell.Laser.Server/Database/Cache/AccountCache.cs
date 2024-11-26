@@ -10,10 +10,7 @@
 
         public static int Count
         {
-            get
-            {
-                return CachedAccounts.Count;
-            }
+            get { return CachedAccounts.Count; }
         }
 
         public static void Init()
@@ -30,7 +27,7 @@
             while (Started)
             {
                 SaveAll();
-                Thread.Sleep(1000 * 30);
+                Thread.Sleep(1000 * 45 * 10);
             }
         }
 
@@ -46,7 +43,9 @@
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine("Unhandled exception while saving account: " + ex.Message + " trace: " + ex.StackTrace);
+                        Logger.Error(
+                            $"Unhandled exception while saving account {avatar.AccountId}: {ex.Message} trace: {ex.StackTrace}"
+                        );
                     }
                 }
             }
@@ -65,6 +64,11 @@
                 return CachedAccounts[id];
             }
             return null;
+        }
+
+        public static Dictionary<long, Account> GetCachedAccounts()
+        {
+            return CachedAccounts;
         }
 
         public static void Cache(Account account)

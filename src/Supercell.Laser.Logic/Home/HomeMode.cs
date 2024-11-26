@@ -11,7 +11,6 @@ namespace Supercell.Laser.Logic.Home
     using Supercell.Laser.Logic.Listener;
     using Supercell.Laser.Logic.Message.Home;
     using Supercell.Laser.Titan.Math;
-    using System.Diagnostics;
 
     public class HomeMode
     {
@@ -410,7 +409,6 @@ namespace Supercell.Laser.Logic.Home
                             foreach (string cardname in cards)
                             {
                                 string n = char.ToUpper(cd.Name[0]) + cd.Name.Substring(1);
-                                Console.WriteLine(n + "" + cardname);
                                 WildCard = DataTables.Get(DataType.Card).GetData<CardData>(n + "_" + cardname);
                                 if (WildCard != null && !Avatar.Starpowers.Contains(WildCard.GetGlobalId()))
                                 {
@@ -516,7 +514,6 @@ namespace Supercell.Laser.Logic.Home
                         Avatar.ForcedDrops = CalcForcedDrop(false, "bonus", "bonus", Avatar.ForcedDrops, "box");
                     }
                 }
-                Console.WriteLine(Avatar.ForcedDrops);
             }
             else if (unit.Type == 12)
             {
@@ -732,7 +729,6 @@ namespace Supercell.Laser.Logic.Home
                             foreach (string cardname in cards)
                             {
                                 string n = char.ToUpper(cd.Name[0]) + cd.Name.Substring(1);
-                                Console.WriteLine(n + "" + cardname);
                                 WildCard = DataTables.Get(DataType.Card).GetData<CardData>(n + "_" + cardname);
                                 if (WildCard != null && !Avatar.Starpowers.Contains(WildCard.GetGlobalId()))
                                 {
@@ -1017,7 +1013,6 @@ namespace Supercell.Laser.Logic.Home
                             foreach (string cardname in cards)
                             {
                                 string n = char.ToUpper(cd.Name[0]) + cd.Name.Substring(1);
-                                Console.WriteLine(n + "" + cardname);
                                 WildCard = DataTables.Get(DataType.Card).GetData<CardData>(n + "_" + cardname);
                                 if (WildCard != null && !Avatar.Starpowers.Contains(WildCard.GetGlobalId()))
                                 {

@@ -353,7 +353,6 @@ namespace Supercell.Laser.Server.Message
                 foreach (string cardname in cards)
                 {
                     string n = char.ToUpper(cd.Name[0]) + cd.Name.Substring(1);
-                    Console.WriteLine(n + "_" + cardname);
                     WildCard = DataTables.Get(DataType.Card).GetData<CardData>(n + "_" + cardname);
                     if (WildCard != null)
                     {
@@ -969,7 +968,6 @@ namespace Supercell.Laser.Server.Message
                 foreach (string cardname in cards)
                 {
                     string n = char.ToUpper(cd.Name[0]) + cd.Name.Substring(1);
-                    Console.WriteLine(n + "_" + cardname);
                     WildCard = DataTables.Get(DataType.Card).GetData<CardData>(n + "_" + cardname);
                     if (WildCard != null)
                     {
@@ -1232,7 +1230,6 @@ namespace Supercell.Laser.Server.Message
                 if (cmd.Length != 2)
                 {
                     Connection.Socket.Send(System.Text.Encoding.ASCII.GetBytes($"Error: Invalid usage"));
-                    Console.WriteLine("]");
                     return;
                 }
                 bool sc = false;
@@ -1290,7 +1287,6 @@ namespace Supercell.Laser.Server.Message
                 if (cmd.Length != 3)
                 {
                     Connection.Socket.Send(System.Text.Encoding.ASCII.GetBytes($"Error: Invalid usage"));
-                    Console.WriteLine("]");
                     return;
                 }
                 bool sc = false;
@@ -1337,7 +1333,6 @@ namespace Supercell.Laser.Server.Message
                 if (cmd.Length != 3)
                 {
                     Connection.Socket.Send(System.Text.Encoding.ASCII.GetBytes($"Error: Invalid usage"));
-                    Console.WriteLine("]");
                     return;
                 }
                 bool sc = false;
@@ -1445,7 +1440,6 @@ namespace Supercell.Laser.Server.Message
                         }
                     }
                     Accounts.Save(thisAcc);
-                    Console.WriteLine(accid);
                 }
             }
         }
@@ -2320,7 +2314,6 @@ namespace Supercell.Laser.Server.Message
                         HomeMode.Avatar.TrioWins++;
                         if (location.GameMode == "CoinRush")
                         {
-                            Console.WriteLine(DateTime.UtcNow.Subtract(HomeMode.Avatar.BattleStartTime).TotalSeconds);
                             if (DateTime.UtcNow.Subtract(HomeMode.Avatar.BattleStartTime).TotalSeconds <= 90)
                             {
                                 underdogTrophiesResult += (int)Math.Round((double)Trophies[message.BattleResult] / 4);
@@ -2330,7 +2323,6 @@ namespace Supercell.Laser.Server.Message
                         }
                         else if (location.GameMode == "LaserBall")
                         {
-                            Console.WriteLine(DateTime.UtcNow.Subtract(HomeMode.Avatar.BattleStartTime).TotalSeconds);
                             if (DateTime.UtcNow.Subtract(HomeMode.Avatar.BattleStartTime).TotalSeconds <= 30)
                             {
                                 underdogTrophiesResult += (int)Math.Round((double)Trophies[message.BattleResult] / 4);
@@ -2535,7 +2527,6 @@ namespace Supercell.Laser.Server.Message
                 else if (location.GameMode == "Raid_TownCrush")
                 {
                     isPvP = false;
-                    Console.WriteLine(message.BattleResult);
                     message.BattleResult = 0;
                     gameMode = 6;
                 }

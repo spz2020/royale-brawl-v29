@@ -7,7 +7,6 @@
         public override void Decode()
         {
             Slot = Stream.ReadVInt();
-            Console.WriteLine(Slot);
         }
 
         public override int GetMessageType()

@@ -17,8 +17,6 @@
             Stream.ReadVInt();
             EventSlot = Stream.ReadVInt();
             TeamType = Stream.ReadVInt();
-
-            Console.WriteLine($"Unk2: {EventSlot}, TeamType: {TeamType}, LogicLong: {UnkLogicLong}");
         }
 
         public override int GetMessageType()

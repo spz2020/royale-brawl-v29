@@ -239,7 +239,6 @@
                 foreach (string cardname in cards)
                 {
                     string n = char.ToUpper(cd.Name[0]) + cd.Name.Substring(1);
-                    Console.WriteLine(n + "" + cardname);
                     WildCard = DataTables.Get(DataType.Card).GetData<CardData>(n + "_" + cardname);
                     if (WildCard != null || WildCard == card)
                     {
@@ -388,10 +387,8 @@
             SkinData skinData = DataTables.Get(DataType.Skin).GetDataByGlobalId<SkinData>(skin);
             if (command.SkinId != 63)
                 if (!skinData.Name.EndsWith("Default") && !HomeMode.Home.UnlockedSkins.Contains(skin)) return false;
-            Console.WriteLine(skinData.Conf);
             SkinConfData sk = DataTables.Get(DataType.SkinConf).GetData<SkinConfData>(skinData.Conf);
             CharacterData c = DataTables.Get(DataType.Character).GetData<CharacterData>(sk.Character);
-            Console.WriteLine(c.GetGlobalId());
             HomeMode.Home.SelectedSkins[c.GetInstanceId()] = command.SkinId;
             if (HomeMode.Avatar.TeamId > 0)
             {
@@ -505,7 +502,6 @@
                         foreach (string cardname in cards)
                         {
                             string n = char.ToUpper(cd.Name[0]) + cd.Name.Substring(1);
-                            Console.WriteLine(n + "_" + cardname);
                             WildCard = DataTables.Get(DataType.Card).GetData<CardData>(n + "_" + cardname);
                             if (WildCard != null)
                             {
