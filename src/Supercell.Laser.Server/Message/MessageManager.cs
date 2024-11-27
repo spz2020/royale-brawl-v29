@@ -1,58 +1,51 @@
 namespace Supercell.Laser.Server.Message
 {
+    using System.Diagnostics;
+    using System.Linq;
     using Supercell.Laser.Logic.Avatar;
-    using Supercell.Laser.Server.Utils;
     using Supercell.Laser.Logic.Avatar.Structures;
+    using Supercell.Laser.Logic.Battle;
+    using Supercell.Laser.Logic.Battle.Structures;
     using Supercell.Laser.Logic.Club;
+    using Supercell.Laser.Logic.Command;
     using Supercell.Laser.Logic.Command.Avatar;
+    using Supercell.Laser.Logic.Command.Home;
     using Supercell.Laser.Logic.Data;
+    using Supercell.Laser.Logic.Data.Helper;
     using Supercell.Laser.Logic.Friends;
     using Supercell.Laser.Logic.Home;
+    using Supercell.Laser.Logic.Home.Items;
+    using Supercell.Laser.Logic.Home.Quest;
     using Supercell.Laser.Logic.Home.Structures;
     using Supercell.Laser.Logic.Listener;
+    using Supercell.Laser.Logic.Message;
     using Supercell.Laser.Logic.Message.Account;
+    using Supercell.Laser.Logic.Message.Account.Auth;
+    using Supercell.Laser.Logic.Message.Api;
+    using Supercell.Laser.Logic.Message.Battle;
     using Supercell.Laser.Logic.Message.Club;
     using Supercell.Laser.Logic.Message.Friends;
     using Supercell.Laser.Logic.Message.Home;
+    using Supercell.Laser.Logic.Message.Latency;
     using Supercell.Laser.Logic.Message.Ranking;
     using Supercell.Laser.Logic.Message.Security;
     using Supercell.Laser.Logic.Message.Team;
+    using Supercell.Laser.Logic.Message.Team.Stream;
     using Supercell.Laser.Logic.Message.Udp;
     using Supercell.Laser.Logic.Stream.Entry;
     using Supercell.Laser.Logic.Team;
+    using Supercell.Laser.Logic.Team.Stream;
+    using Supercell.Laser.Logic.Util;
     using Supercell.Laser.Server.Database;
+    using Supercell.Laser.Server.Database.Cache;
     using Supercell.Laser.Server.Database.Models;
+    using Supercell.Laser.Server.Logic;
     using Supercell.Laser.Server.Logic.Game;
     using Supercell.Laser.Server.Networking;
-    using Supercell.Laser.Server.Networking.Session;
-    using Supercell.Laser.Server.Settings;
-    using Supercell.Laser.Server.Logic;
-    using System.Diagnostics;
-    using Supercell.Laser.Server.Database.Cache;
-    using Supercell.Laser.Logic.Util;
-    using Supercell.Laser.Logic.Battle;
-    using Supercell.Laser.Logic.Message.Battle;
-    using Supercell.Laser.Server.Networking.UDP.Game;
     using Supercell.Laser.Server.Networking.Security;
-    using Supercell.Laser.Logic.Home.Items;
-    using Supercell.Laser.Logic.Team.Stream;
-    using Supercell.Laser.Logic.Message.Team.Stream;
-    using Supercell.Laser.Logic.Message;
-    using Supercell.Laser.Logic.Message.Account.Auth;
-    using Supercell.Laser.Logic.Message.Latency;
-    using Supercell.Laser.Logic.Command;
-    using Supercell.Laser.Logic.Battle.Structures;
-    using Newtonsoft.Json.Linq;
-    using System.Reflection;
-    using System.Numerics;
-    using Supercell.Laser.Logic.Home.Quest;
-    using Supercell.Laser.Logic.Data.Helper;
-    using System.Linq;
-    using Supercell.Laser.Logic.Command.Home;
-    using Supercell.Laser.Logic.Message.Api;
-    using System.Xml.Linq;
-    using Microsoft.VisualBasic;
-    using Org.BouncyCastle.Cms;
+    using Supercell.Laser.Server.Networking.Session;
+    using Supercell.Laser.Server.Networking.UDP.Game;
+    using Supercell.Laser.Server.Settings;
 
     public class MessageManager
     {
@@ -112,7 +105,7 @@ namespace Supercell.Laser.Server.Message
             {
                 abd = $"Connection: {GetPingIconByMs(Connection.Ping)} ({Connection.Ping}ms)\n";
             }
-            
+
             LobbyInfoMessage b = new()
             {
                 LobbyData = $"Royale Brawl v29\ngithub.com/erder00\n{abd}Players Online: {Sessions.Count}\nUptime: {formattedUptime}\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nwhy are you reading this'",
@@ -212,7 +205,7 @@ namespace Supercell.Laser.Server.Message
                     AskForAllianceDataReceived((AskForAllianceDataMessage)message);
                     break;
                 case 14303:
-               //AskForJoinableAllianceListReceived((AskForJoinableAllianceListMessage)message);
+                //AskForJoinableAllianceListReceived((AskForJoinableAllianceListMessage)message);
                 //    break;
                 case 14305:
                     JoinAllianceReceived((JoinAllianceMessage)message);
@@ -310,7 +303,7 @@ namespace Supercell.Laser.Server.Message
             }
         }
 
-        
+
         private void TeamSpectateMessageReceived(TeamSpectateMessage message)
         {
             TeamEntry team = Teams.Get(message.TeamId);
@@ -1129,7 +1122,7 @@ namespace Supercell.Laser.Server.Message
             Sessions.RequestedSSID = new();
             Sessions.LeaveJoin = new();
         }
-		private void RequestMaintenanceReceived(RequestMaintenance message)
+        private void RequestMaintenanceReceived(RequestMaintenance message)
         {
             if (message.AuthPass != "672a2746a7afbce8f06dc23d79135ba5")
             {
@@ -2800,7 +2793,7 @@ namespace Supercell.Laser.Server.Message
                 Profile p = Profile.CreateConsole();
                 PlayerProfileMessage a = new PlayerProfileMessage();
                 a.Profile = p;
-                
+
                 Connection.Send(a);
                 return;
             }
@@ -2882,12 +2875,12 @@ namespace Supercell.Laser.Server.Message
 
             if (Sessions.IsSessionActive(account.Avatar.AccountIdRedirect))
             {
-                    var session = Sessions.GetSession(account.Avatar.AccountIdRedirect);
-                    session.GameListener.SendTCPMessage(new AuthenticationFailedMessage()
-                    {
-                        Message = "Another device has connected to this game!"
-                    });
-                    Sessions.Remove(account.Avatar.AccountIdRedirect);
+                var session = Sessions.GetSession(account.Avatar.AccountIdRedirect);
+                session.GameListener.SendTCPMessage(new AuthenticationFailedMessage()
+                {
+                    Message = "Another device has connected to this game!"
+                });
+                Sessions.Remove(account.Avatar.AccountIdRedirect);
             }
 
             if (Sessions.IsSessionActive(message.AccountId))
