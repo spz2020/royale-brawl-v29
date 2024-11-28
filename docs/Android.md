@@ -126,7 +126,12 @@ Enter password: root password
 source database.sql
 exit;
 ```
-
+13: change config.json
+```
+nano config.json
+```
+change the database_password to the password you set, and the database_name to the database you created. 
+Control + x and y and Enter x2
 ### Run 
 terminal 1
 ```
