@@ -87,8 +87,8 @@ Thanks for using MariaDB!
 ```
 8: start glibc runner
 ```
+cd ~
 grun -s
-
 ```
 9: Download dotnet and install 
 ```
@@ -97,6 +97,34 @@ mkdir .dotnet
 tar xvf dotnet-runtime-8.0.11-linux-arm64.tar.gz -C .dotnet
 grun -f .dotnet/dotnet
 grun -c .dotnet/dotnet
+```
+10: Unzip Server
+```
+mkdir Server
+cd Server
+unzip "zip directory"
+unzip Supercell.Laser.Server.1.0.0.zip
+```
+11: mariadb shell
+```
+mariadb -u root -p
+Enter password: root password
+CREATE DATABASE databasename;
+exit;
+```
+12: import [database.sql](../database.sql)
+```
+wget https://github.com/spz2020/royale-brawl-v29/raw/refs/heads/Docs-update/database.sql
+```
+```
+mariadb -u root -p"root password" < database.sql
+```
+or
+```
+mariadb -u root -p databasename
+Enter password: root password
+source database.sql
+exit;
 ```
 
 ### Run 
