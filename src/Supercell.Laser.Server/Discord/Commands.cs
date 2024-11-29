@@ -39,7 +39,7 @@ namespace Supercell.Laser.Server.Discord
                 + "!mute - mute a player (!mute [TAG])\n"
                 + "!unmute - unmute a player (!unmute [TAG])\n"
                 + "!resetseason - resets the season, duh\n"
-                + "!reports - sneds a link to all reported messages\n"
+                + "!reports - sends a link to all reported messages\n"
                 + "!userinfo - show player info (!userinfo [TAG])\n"
                 + "!settrophies - set trophies of all brawlers (!settrophies [TAG] [Trophies])\n"
                 + "!addgems - grant gems to a player (!addgems [TAG] [DonationCount])\n";
