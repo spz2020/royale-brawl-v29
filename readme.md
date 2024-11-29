@@ -2,6 +2,7 @@
 # Royale Brawl v29
 
 A Brawl Stars private server for 29.231 based on royale Brawl
+why did I create this server? because all public v29 servers suck
 
 ## Download the client [here](https://mega.nz/file/h4JGEYxa#cVTFiG1lIFqFxsfl-VzAabzwMy-sDvqMVkN3OaE-1bA)
 ![Logo](https://github.com/Erder00/royale-brawl-v29/blob/main/docs/screenshots/lobby.png?raw=true)
@@ -50,16 +51,20 @@ How to install:
 
 [Android](https://github.com/Erder00/royale-brawl-v29/blob/main/docs/Android.md)
 [Linux](https://github.com/Erder00/royale-brawl-v29/blob/main/docs/Linux.md)
-[Windows](https://github.com/user/repo/blob/branch/Windows.md)
+[Windows](https://github.com/Erder00/royale-brawl-v29/blob/main/docs/Windows.md)
 
 then connect to the server using the [pre-made client](https://mega.nz/file/h4JGEYxa#cVTFiG1lIFqFxsfl-VzAabzwMy-sDvqMVkN3OaE-1bA)
 
 decompile the apk and replace the ip in `lib/armeabi-v7a/liberder.script.so` with your own
 
+## Acknowledgements
+
+ - based on [royale brawl](https://github.com/Erder00/royale-brawl) from [xeon](https://git.xeondev.com/xeon)
+ - using [netcord](https://netcord.dev) for the discord stuff (it's really cool, check it out)
+ - [spz](https://github.com/spz2020) for the pull requests <3
 
 ## TODO
 
-- add setup tutorials for android, windows and linux
 - fix random events sometimes crashing
 - fix brawl pass / collete and surge mess
 - add more club commands
