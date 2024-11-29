@@ -2,6 +2,7 @@
 # Royale Brawl v29
 
 A Brawl Stars private server for 29.231 based on royale Brawl
+
 why did I create this server? because all public v29 servers suck
 
 ## Download the client [here](https://mega.nz/file/h4JGEYxa#cVTFiG1lIFqFxsfl-VzAabzwMy-sDvqMVkN3OaE-1bA)
