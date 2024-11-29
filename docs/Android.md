@@ -139,6 +139,7 @@ cd '/data/data/com.termux/files/usr' ; /data/data/com.termux/files/usr/bin/maria
 ```
 terminal 2 
 ```
+grun -s
 cd Server
 ~/.dotnet/dotnet Supercell.Laser.Server.dll
 ```
