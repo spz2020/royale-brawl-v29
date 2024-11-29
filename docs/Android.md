@@ -1,5 +1,5 @@
 ## Android
-1: get it in [Github Actions](https://github.com/spz2020/royale-brawl-v29/actions)
+1: get it in [Github Actions](https://github.com/Erder00/royale-brawl-v29/actions)
 
 2: install [Termux](https://github.com/termux/termux-app)
 
