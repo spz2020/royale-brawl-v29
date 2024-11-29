@@ -114,7 +114,7 @@ exit;
 ```
 12: import [database.sql](../database.sql)
 ```
-wget https://github.com/spz2020/royale-brawl-v29/raw/refs/heads/Docs-update/database.sql
+wget https://github.com/Erder00/royale-brawl-v29/raw/refs/heads/main/database.sql
 ```
 ```
 mariadb -u root -p"root password" < database.sql
