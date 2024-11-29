@@ -1,7 +1,10 @@
 ## Android
 1: get it in [Github Actions](https://github.com/Erder00/royale-brawl-v29/actions)
 
-2: install [Termux](https://github.com/termux/termux-app)
+2: install [Termux](https://github.com/termux/termux-app) and grant storage permission
+```
+termux-setup-storage
+```
 
 3: upgrade Packages
 ```
