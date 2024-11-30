@@ -10,7 +10,7 @@ namespace Supercell.Laser.Server.Discord
 
     public class CustomLogger
     {
-        public void Log(LogSeverity severity, string message, Exception? exception = null)
+        public void Log(LogSeverity severity, string message, Exception exception = null)
         {
             string formattedMessage = $"[DISCORD] {message}";
 

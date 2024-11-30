@@ -1395,7 +1395,7 @@ namespace Supercell.Laser.Server.Message
             timeDifference.Seconds > 0 ? $"{timeDifference.Seconds} Seconds" : string.Empty);
 
             string msg = $"Server Status:\n" +
-                $"Server Game Version: 29.231\n" +
+                $"Server Game Version: 29.272\n" +
                 $"Server Build: v1.0\n" +
                 $"Resources Sha: {Fingerprint.Sha}\n" +
                 $"Environment: Prod\n" +
@@ -1581,7 +1581,7 @@ namespace Supercell.Laser.Server.Message
                         timeDifference.Seconds > 0 ? $"{timeDifference.Seconds} Seconds" : string.Empty);
 
                         response.Entry.Message = $"Server Status:\n" +
-                            $"Server Game Version: v29.231\n" +
+                            $"Server Game Version: v29.272\n" +
                             $"Server Build: v5.0 from 18.05.2024\n" +
                             $"Resources Sha: {Fingerprint.Sha}\n" +
                             $"Environment: Prod\n" +
@@ -1998,7 +1998,7 @@ namespace Supercell.Laser.Server.Message
                 HomeMode.Home.NotificationFactory.Add(new Notification
                 {
                     Id = 81,
-                    //TimePassed = 
+                    //TimePassed =
                     MessageEntry = $"Hello!\nYour VIP status has expired."
                 });
             }
@@ -2908,7 +2908,7 @@ namespace Supercell.Laser.Server.Message
                 return;
             }
 
-            string GameVersion = "29.231";
+            string GameVersion = "29.272";
 
             if (message.ClientVersion != GameVersion)
             {
