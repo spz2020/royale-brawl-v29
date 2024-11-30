@@ -1,4 +1,3 @@
-
 # Royale Brawl v29
 
 A Brawl Stars private server for 29.272 based on royale Brawl

@@ -205,8 +205,8 @@ namespace Supercell.Laser.Server.Message
                     AskForAllianceDataReceived((AskForAllianceDataMessage)message);
                     break;
                 case 14303:
-                //AskForJoinableAllianceListReceived((AskForJoinableAllianceListMessage)message);
-                //    break;
+                    AskForJoinableAllianceListReceived((AskForJoinableAllianceListMessage)message);
+                    break;
                 case 14305:
                     JoinAllianceReceived((JoinAllianceMessage)message);
                     break;
@@ -1968,7 +1968,9 @@ namespace Supercell.Laser.Server.Message
         private void AskForJoinableAllianceListReceived(AskForJoinableAllianceListMessage message)
         {
             JoinableAllianceListMessage list = new JoinableAllianceListMessage();
-            List<Alliance> alliances = Alliances.GetRandomAlliances(HomeMode.Avatar, 20);
+            List<Alliance> alliances = Alliances.GetRandomAlliances(HomeMode.Avatar, 20)
+                                              .Distinct()
+                                              .ToList();
             foreach (Alliance alliance in alliances)
             {
                 list.JoinableAlliances.Add(alliance.Header);
