@@ -5,8 +5,6 @@ namespace Supercell.Laser.Server.Discord
     using System.Diagnostics;
     using NetCord.Services.Commands;
     using Supercell.Laser.Logic.Command.Home;
-    using Supercell.Laser.Logic.Data;
-    using Supercell.Laser.Logic.Home;
     using Supercell.Laser.Logic.Home.Items;
     using Supercell.Laser.Logic.Home.Structures;
     using Supercell.Laser.Logic.Message.Account.Auth;
@@ -391,7 +389,7 @@ namespace Supercell.Laser.Server.Discord
             );
 
             return "# Server Status\n"
-                + $"Server Game Version: v29.231\n"
+                + $"Server Game Version: v29.272\n"
                 + $"Server Build: v1.0 from 10.02.2024\n"
                 + $"Resources Sha: {Fingerprint.Sha}\n"
                 + $"Environment: Prod\n"
