@@ -120,7 +120,7 @@ exit;
 wget https://github.com/Erder00/royale-brawl-v29/raw/refs/heads/main/database.sql
 ```
 ```
-mariadb -u root -p"root password" < database.sql
+mariadb -u root -p"root password" databasename < database.sql
 ```
 or
 ```
