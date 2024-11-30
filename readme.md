@@ -61,11 +61,13 @@ decompile the apk and replace the ip in `lib/armeabi-v7a/liberder.script.so` wit
 
  - based on [royale brawl](https://github.com/Erder00/royale-brawl) from [xeon](https://git.xeondev.com/xeon)
  - using [netcord](https://netcord.dev) for the discord stuff (it's really cool, check it out)
- - [spz](https://github.com/spz2020) for the pull requests <3
+ - [spz](https://github.com/spz2020) and [santer](https://github.com/SANS3R66) for the pull requests <3
 
 ## TODO
 
 - fix random events sometimes crashing
+- better anti-cheat (check csv shas and apk integrity in script, detect if battles are very short)
+- fix out of syncing after collecting daily reward
 - fix brawl pass / collete and surge mess
 - add more club commands
 - add creator codes
