@@ -23,7 +23,6 @@ const inet_addr = new NativeFunction(Module.findExportByName('libc.so', 'inet_ad
 const libc_send = new NativeFunction(Module.findExportByName('libc.so', 'send'), 'int', ['int', 'pointer', 'int', 'int']);
 const libc_recv = new NativeFunction(Module.findExportByName('libc.so', 'recv'), 'int', ['int', 'pointer', 'int', 'int']);
 const htons = new NativeFunction(Module.findExportByName('libc.so', 'htons'), 'uint16', ['uint16']);
-const openat = Module.findExportByName(null, 'openat');
 var Message = {
     _getByteStream: function(a) {
         return a.add(8)
