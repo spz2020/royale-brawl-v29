@@ -1835,7 +1835,7 @@ namespace Supercell.Laser.Server.Message
 
             ClientAvatar avatar = Accounts.Load(message.AccountId).Avatar;
 
-            AllianceRole None = 0,
+            AllianceRole
                     Member = (AllianceRole)1,
                     Leader = (AllianceRole)2,
                     Elder = (AllianceRole)3,

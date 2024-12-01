@@ -1,4 +1,4 @@
-﻿namespace Supercell.Laser.Logic.Battle.Component
+namespace Supercell.Laser.Logic.Battle.Component
 {
     using Supercell.Laser.Logic.Battle.Objects;
 
