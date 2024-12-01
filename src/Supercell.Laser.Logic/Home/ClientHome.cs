@@ -1070,8 +1070,8 @@ namespace Supercell.Laser.Logic.Home
 
             ByteStreamHelper.WriteDataReference(encoder, Character);
 
-            encoder.WriteString("US");
-            encoder.WriteString("xeon | erder");
+            encoder.WriteString("MUK");
+            encoder.WriteString("Mushroom Brawl");
 
             encoder.WriteVInt(6);
             {
