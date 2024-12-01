@@ -38,7 +38,7 @@
             Stream.WriteString(""); // Account Created Date
             Stream.WriteInt(0); // Startup Cooldown
             Stream.WriteString(null); // Google Service ID
-            Stream.WriteString("US"); // Login Country
+            Stream.WriteString("MUK"); // Login Country
             Stream.WriteString(null); // Kunlun ID 
             Stream.WriteInt(2); // Tier
             Stream.WriteString("");
