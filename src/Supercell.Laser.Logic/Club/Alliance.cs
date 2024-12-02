@@ -1,4 +1,4 @@
-﻿namespace Supercell.Laser.Logic.Club
+namespace Supercell.Laser.Logic.Club
 {
     using Newtonsoft.Json;
     using Supercell.Laser.Logic.Avatar;
@@ -65,7 +65,7 @@
 
         public bool getRoleVector(AllianceRole v1, AllianceRole v2)
         {
-            AllianceRole None = 0,
+            AllianceRole
                     Member = (AllianceRole)1,
                     Leader = (AllianceRole)2,
                     Elder = (AllianceRole)3,

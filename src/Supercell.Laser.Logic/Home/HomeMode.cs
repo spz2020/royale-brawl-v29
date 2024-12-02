@@ -413,10 +413,8 @@ namespace Supercell.Laser.Logic.Home
                         }
                     }
 
-                    bool spdrop = false;
                     if (ProcChance(rand, 11 * 1, "starpower", Avatar.ForcedDrops) && sps.Count > 0)
                     {
-                        spdrop = true;
                         int sp = sps[rand.Next(sps.Count)];
                         GatchaDrop drop = new(4)
                         {

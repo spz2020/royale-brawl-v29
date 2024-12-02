@@ -1,4 +1,4 @@
-﻿namespace Supercell.Laser.Server
+namespace Supercell.Laser.Server
 {
     using System.Threading.Tasks;
     using Supercell.Laser.Logic.Data;

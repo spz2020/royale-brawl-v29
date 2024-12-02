@@ -1,4 +1,4 @@
-﻿namespace Supercell.Laser.Server
+namespace Supercell.Laser.Server
 {
     using System.Drawing;
     using System.Threading.Tasks;
@@ -17,12 +17,12 @@
 
             Colorful.Console.WriteWithGradient(
                 @"
-    ____                      __   _____ __                 
+    ____                      __   _____ __
    / __ )_________ __      __/ /  / ___// /_____ ___________
   / __  / ___/ __ `/ | /| / / /   \__ \/ __/ __ `/ ___/ ___/
- / /_/ / /  / /_/ /| |/ |/ / /   ___/ / /_/ /_/ / /  (__  ) 
-/_____/_/   \__,_/ |__/|__/_/   /____/\__/\__,_/_/  /____/  
-                                                            
+ / /_/ / /  / /_/ /| |/ |/ / /   ___/ / /_/ /_/ / /  (__  )
+/_____/_/   \__,_/ |__/|__/_/   /____/\__/\__,_/_/  /____/
+
        " + "\n\n\n", Color.Fuchsia, Color.Cyan, 8);
 
             Logger.Init();
