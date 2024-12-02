@@ -1595,10 +1595,11 @@ namespace Supercell.Laser.Server.Message
                         response.Entry.Message = $"Avaliable commands:\n/help - show all server commands list\n/status - show server status\n"; // /usecode [code] - use bonus code
                         Connection.Send(response);
                         break;
-
-
+                    default:
+                        response.Entry.Message = $"Unknown command \"{cmd[0]}\" - type \"/help\" to get command list!";
+                        Connection.Send(response);
+                        break;
                 }
-
                 return;
             }
             if (!HomeMode.Avatar.IsCommunityBanned && message.Message.Length < 100)

@@ -7,7 +7,7 @@ namespace Supercell.Laser.Server
 
     static class Program
     {
-        public const string SERVER_VERSION = "29.258.1";
+        public const string SERVER_VERSION = "29.272";
         public const string BUILD_TYPE = "Beta";
 
         private static async Task Main(string[] args)
@@ -33,7 +33,7 @@ namespace Supercell.Laser.Server
             Resources.InitLogic();
             Resources.InitNetwork();
 
-            Logger.Print("Server started! Let's play Brawl Stars!");
+            Logger.Print("Server started!");
 
             ExitHandler.Init();
             CmdHandler.Start();
