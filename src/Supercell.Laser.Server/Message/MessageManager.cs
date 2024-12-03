@@ -1969,9 +1969,7 @@ namespace Supercell.Laser.Server.Message
         private void AskForJoinableAllianceListReceived(AskForJoinableAllianceListMessage message)
         {
             JoinableAllianceListMessage list = new JoinableAllianceListMessage();
-            List<Alliance> alliances = Alliances.GetRandomAlliances(HomeMode.Avatar, 20)
-                                              .Distinct()
-                                              .ToList();
+            List<Alliance> alliances = Alliances.GetRandomAlliances(HomeMode.Avatar, 20);
             foreach (Alliance alliance in alliances)
             {
                 list.JoinableAlliances.Add(alliance.Header);
