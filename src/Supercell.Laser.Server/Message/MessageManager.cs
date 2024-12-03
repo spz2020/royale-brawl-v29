@@ -204,9 +204,9 @@ namespace Supercell.Laser.Server.Message
                 case 14302:
                     AskForAllianceDataReceived((AskForAllianceDataMessage)message);
                     break;
-                case 14303:
-                    AskForJoinableAllianceListReceived((AskForJoinableAllianceListMessage)message);
-                    break;
+                // case 14303:
+                    // AskForJoinableAllianceListReceived((AskForJoinableAllianceListMessage)message);
+                    // break;
                 case 14305:
                     JoinAllianceReceived((JoinAllianceMessage)message);
                     break;
