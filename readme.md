@@ -4,7 +4,7 @@ A Brawl Stars private server for 29.272 based on royale Brawl
 
 why did I create this server? because all public v29 servers suck
 
-## Download the client [here](https://mega.nz/file/znhQXSgZ#svDlWtwaEs6E14w4WdJcBG6fnVMGcZM-m-f4p4r6Zt4)
+## Download the client [here](https://mega.nz/file/D65nBSjR#QunZhdMVdHF6EqN5RG2_vTbl5PlpB6RH-sZO0mVn8nM)
 ![Logo](https://github.com/Erder00/royale-brawl-v29/blob/main/docs/screenshots/lobby.png?raw=true)
 
 
@@ -12,6 +12,7 @@ why did I create this server? because all public v29 servers suck
 
 
 - offline battles
+- vip / premium system
 - report system
 - discord integration
 - online game rooms
@@ -28,6 +29,7 @@ why did I create this server? because all public v29 servers suck
 - !ping - will respond with pong
 - !resetseason - resets the season
 - !reports - sneds a link to all reported messages
+- !givepremium - give premium to an account for one month (!givepremium [TAG])
 - !ban - ban an account (!ban [TAG])
 - !unban - unban an account (!unban [TAG])
 - !mute - mute a player (!mute [TAG])
@@ -53,7 +55,7 @@ How to install:
 [Linux](https://github.com/Erder00/royale-brawl-v29/blob/main/docs/Linux.md)
 [Windows](https://github.com/Erder00/royale-brawl-v29/blob/main/docs/Windows.md)
 
-then connect to the server using the [pre-made client](https://mega.nz/file/znhQXSgZ#svDlWtwaEs6E14w4WdJcBG6fnVMGcZM-m-f4p4r6Zt4)
+then connect to the server using the [pre-made client](https://mega.nz/file/D65nBSjR#QunZhdMVdHF6EqN5RG2_vTbl5PlpB6RH-sZO0mVn8nM)
 
 decompile the apk and replace the ip in `lib/armeabi-v7a/liberder.script.so` with your own
 
