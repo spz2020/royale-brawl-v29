@@ -1,15 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using Supercell.Laser.Logic.Command.Home;
-using Supercell.Laser.Logic.Data;
-using Supercell.Laser.Logic.Home.Items;
-using Supercell.Laser.Logic.Message.Home;
-using Supercell.Laser.Server.Networking.Session;
-using Supercell.Laser.Titan.Json;
-
-namespace Supercell.Laser.Server.Logic.Game
+﻿namespace Supercell.Laser.Server.Logic.Game
 {
+    using Google.Protobuf.WellKnownTypes;
+    using Supercell.Laser.Logic.Battle.Objects;
+    using Supercell.Laser.Logic.Command.Home;
+    using Supercell.Laser.Logic.Data;
+    using Supercell.Laser.Logic.Home;
+    using Supercell.Laser.Logic.Home.Items;
+    using Supercell.Laser.Logic.Home.Structures;
+    using Supercell.Laser.Logic.Listener;
+    using Supercell.Laser.Logic.Message.Account;
+    using Supercell.Laser.Logic.Message.Home;
+    using Supercell.Laser.Server.Networking.Session;
+    using Supercell.Laser.Titan.Json;
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.IO;
+    using System.Reflection;
+
     public static class Events
     {
         public const int REFRESH_MINUTES = 6 * 60;
@@ -30,12 +38,7 @@ namespace Supercell.Laser.Server.Logic.Game
             SlotsLocations = new Dictionary<int, int>();
             EventWriter = 0;
             Locations = new int[16];
-            RefreshTimer = new Timer(
-                new TimerCallback(RefreshTimerElapsed),
-                null,
-                0,
-                REFRESH_MINUTES * 60 * 1000 - 1
-            );
+            RefreshTimer = new Timer(new TimerCallback(RefreshTimerElapsed), null, 0, REFRESH_MINUTES * 60 * 1000 - 1);
             //GenerateEvents();
         }
 
@@ -44,11 +47,7 @@ namespace Supercell.Laser.Server.Logic.Game
             int index = 0;
             for (int i = 0; i < ConfigSlots.Length; i++, index++)
             {
-                EventData[] eventspair = GenerateEvent(
-                    ConfigSlots[index].AllowedModes,
-                    ConfigSlots[index].Slot,
-                    ConfigSlots[index].SlotIndex
-                );
+                EventData[] eventspair = GenerateEvent(ConfigSlots[index].AllowedModes, ConfigSlots[index].Slot, ConfigSlots[index].SlotIndex);
 
                 if (eventspair.Length > 1)
                 {
@@ -89,6 +88,7 @@ namespace Supercell.Laser.Server.Logic.Game
             }
             //LogicGameListener
         }
+
         private static void GenerateEventsInf()
         {
             bool v1 = false;
@@ -109,9 +109,7 @@ namespace Supercell.Laser.Server.Logic.Game
             Random rand = new();
             while (true)
             {
-                LocationData location = DataTables
-                    .Get(DataType.Location)
-                    .GetDataWithId<LocationData>(rand.Next(0, count));
+                LocationData location = DataTables.Get(DataType.Location).GetDataWithId<LocationData>(rand.Next(0, count));
                 if (!location.Disabled && gameModes.Contains(location.GameMode))
                 {
                     int[] modifires = { 1, 2, 3, 5 };
@@ -143,25 +141,23 @@ namespace Supercell.Laser.Server.Logic.Game
                     EventData ev = null;
                     if (slot != 9)
                     {
-                        ev =
-                            new()
-                            {
-                                EndTime = DateTime.Now.AddMinutes(REFRESH_MINUTES),
-                                LocationId = location.GetGlobalId(),
-                                Slot = slot,
-                                Modifiers = sel,
-                            };
+                        ev = new()
+                        {
+                            EndTime = DateTime.Now.AddMinutes(REFRESH_MINUTES),
+                            LocationId = location.GetGlobalId(),
+                            Slot = slot,
+                            Modifiers = sel,
+                        };
                     }
                     else
                     {
-                        ev =
-                            new()
-                            {
-                                EndTime = DateTime.Now.AddMinutes(REFRESH_MINUTES),
-                                LocationId = location.GetGlobalId(),
-                                Slot = slot,
-                                Modifiers = new int[0]
-                            };
+                        ev = new()
+                        {
+                            EndTime = DateTime.Now.AddMinutes(REFRESH_MINUTES),
+                            LocationId = location.GetGlobalId(),
+                            Slot = slot,
+                            Modifiers = new int[0]
+                        };
                     }
                     Locations[EventWriter] = location.GetGlobalId();
                     EventWriter++;
@@ -179,17 +175,14 @@ namespace Supercell.Laser.Server.Logic.Game
                             sep = "s";
                         }
                         string duomode = mode[0] + sep + "Team" + mode[1];
-                        LocationData locationa = DataTables
-                            .Get(DataType.Location)
-                            .GetData<LocationData>(duomode);
-                        EventData evs =
-                            new()
-                            {
-                                EndTime = DateTime.Now.AddMinutes(REFRESH_MINUTES),
-                                LocationId = locationa.GetGlobalId(),
-                                Slot = 5,
-                                Modifiers = sel,
-                            };
+                        LocationData locationa = DataTables.Get(DataType.Location).GetData<LocationData>(duomode);
+                        EventData evs = new()
+                        {
+                            EndTime = DateTime.Now.AddMinutes(REFRESH_MINUTES),
+                            LocationId = locationa.GetGlobalId(),
+                            Slot = 5,
+                            Modifiers = sel,
+                        };
                         Locations[EventWriter] = locationa.GetGlobalId();
                         EventWriter++;
                         SlotsLocations.Add(locationa.GetGlobalId(), 5);
@@ -205,9 +198,7 @@ namespace Supercell.Laser.Server.Logic.Game
 
         private static void LoadSettings()
         {
-            LogicJSONObject settings = LogicJSONParser.ParseObject(
-                File.ReadAllText("gameplay.json")
-            );
+            LogicJSONObject settings = LogicJSONParser.ParseObject(File.ReadAllText("gameplay.json"));
             LogicJSONArray slots = settings.GetJSONArray("slots");
             ConfigSlots = new EventSlotConfig[slots.Size()];
 
@@ -228,12 +219,11 @@ namespace Supercell.Laser.Server.Logic.Game
                 ConfigSlots[i] = config;
             }
         }
+
         public static bool CollectEvent(long id, int slot)
         {
-            if (!HasSlot(slot))
-                return false;
-            if (SlotsCollected[slot].Contains(id))
-                return false;
+            if (!HasSlot(slot)) return false;
+            if (SlotsCollected[slot].Contains(id)) return false;
             SlotsCollected[slot].Add(id);
             //Slots[slot].IsNewEvent = false;
             return true;
@@ -241,10 +231,8 @@ namespace Supercell.Laser.Server.Logic.Game
 
         public static bool PlaySlot(long id, int slot)
         {
-            if (!HasSlot(slot))
-                return false;
-            if (SlotsPlayed[slot].Contains(id))
-                return false;
+            if (!HasSlot(slot)) return false;
+            if (SlotsPlayed[slot].Contains(id)) return false;
 
             if (slot == 5)
             {
@@ -272,6 +260,7 @@ namespace Supercell.Laser.Server.Logic.Game
             }
             return true;
         }
+
         public static EventData GetEvent(int i)
         {
             if (HasSlot(i))
@@ -321,6 +310,7 @@ namespace Supercell.Laser.Server.Logic.Game
                 return Slots.Values.ToArray();
             }
         }
+
         public static EventData[] GetSecondaryEvents()
         {
             EventData[] events = Slots.Values.ToArray();
