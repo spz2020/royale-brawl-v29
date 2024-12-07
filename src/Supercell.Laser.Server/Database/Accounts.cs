@@ -26,13 +26,11 @@ namespace Supercell.Laser.Server.Database
             builder.CharacterSet = "utf8mb4";
             builder.AllowPublicKeyRetrieval = true;
 
-            JsonConvert.DefaultSettings = () =>
-                new JsonSerializerSettings
-                {
-                    DefaultValueHandling = DefaultValueHandling.Ignore,
-                    NullValueHandling = NullValueHandling.Ignore
-                };
-
+            JsonConvert.DefaultSettings = () => new JsonSerializerSettings
+            {
+                DefaultValueHandling = DefaultValueHandling.Ignore,
+                NullValueHandling = NullValueHandling.Ignore
+            };
             ConnectionString = builder.ToString();
 
             AccountCache.Init();
