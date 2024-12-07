@@ -149,7 +149,7 @@ function OfflineBattles() {
     });
     Interceptor.attach(cache.base.add(0xC88108), {
         onLeave(retval) {
-            retval.replace(ptr(1))
+            retval.replace(ptr(9))
         }
     });
     Interceptor.attach(cache.base.add(0x67FEBC), {
@@ -157,11 +157,6 @@ function OfflineBattles() {
             a[3] = ptr(3)
         }
     })
-    Interceptor.replace(base.add(0x5878A0), new NativeCallback(function(LogicBattleModeServer, diff) { // LogicBattleModeServer::setBotDifficulty
-        console.log("LogicBattleModeServer::setBotDifficulty has been called!")
-        LogicBattleModeServer.add(184).writeInt(9)
-        return LogicBattleModeServer
-    }, 'pointer', ['pointer', 'int']))
 }
 
 function setupMessaging() {
