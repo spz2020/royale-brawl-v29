@@ -68,9 +68,7 @@ decompile the apk and replace the ip in `lib/armeabi-v7a/liberder.script.so` wit
 
 ## TODO
 
-- fix random events sometimes crashing
 - better anti-cheat (check csv shas and apk integrity in script, detect if battles are very short)
-- fix out of syncing after collecting daily reward
-- fix brawl pass / collete and surge mess
+- fix brawl pass / colette and surge mess
 - add more club commands
 - add creator codes
