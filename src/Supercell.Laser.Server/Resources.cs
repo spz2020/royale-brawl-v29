@@ -32,8 +32,8 @@ namespace Supercell.Laser.Server
             Events.Init();
             Sessions.Init();
             Leaderboards.Init();
-            Battles.Init();
-            Matchmaking.Init();
+            // Battles.Init();
+            // Matchmaking.Init();
             Teams.Init();
         }
 

@@ -638,7 +638,7 @@ public void ShowLobbyInfo()
         {
             if (HomeMode.Avatar.AllianceId <= 0) return;
 
-            if (HomeMode.Avatar.AllianceRole != AllianceRole.Leader && HomeMode.Avatar.AllianceRole != AllianceRole.CoLeader) return;
+            if (HomeMode.Avatar.AllianceRole != AllianceRole.Leader) return;
 
             Alliance alliance = Alliances.Load(HomeMode.Avatar.AllianceId);
             if (alliance == null) return;
@@ -652,7 +652,6 @@ public void ShowLobbyInfo()
                 alliance.AllianceBadgeId = 8000000;
             }
 
-            alliance.Type = message.Type == 1 ? 1 : 3;
             alliance.Description = message.Description;
             alliance.RequiredTrophies = message.RequiredTrophies;
 
@@ -671,7 +670,6 @@ public void ShowLobbyInfo()
         private void KickAllianceMemberReceived(KickAllianceMemberMessage message)
         {
             if (HomeMode.Avatar.AllianceId <= 0) return;
-            if (HomeMode.Avatar.AllianceRole == AllianceRole.Member || HomeMode.Avatar.AllianceRole == AllianceRole.None) return;
 
             Alliance alliance = Alliances.Load(HomeMode.Avatar.AllianceId);
             if (alliance == null) return;
@@ -681,7 +679,7 @@ public void ShowLobbyInfo()
 
             ClientAvatar avatar = Accounts.Load(message.AccountId).Avatar;
 
-            if (alliance.getRoleVector(avatar.AllianceRole, (AllianceRole)HomeMode.Avatar.AllianceRole)) return;
+            if (HomeMode.Avatar.AllianceRole <= avatar.AllianceRole) return;
 
             alliance.Members.Remove(member);
             avatar.AllianceId = -1;
@@ -923,8 +921,9 @@ public void ShowLobbyInfo()
             member.HeroTrophies = hero.Trophies;
             member.HeroHighestTrophies = hero.HighestTrophies;
 
+            member.HeroLevel = hero.PowerLevel;
             member.IsOwner = true;
-            member.State = 2;
+            member.State = 0;
             team.Members.Add(member);
 
             TeamMessage teamMessage = new TeamMessage();
@@ -1456,120 +1455,38 @@ public void ShowLobbyInfo()
 
             Alliance alliance = Alliances.Load(HomeMode.Avatar.AllianceId);
             if (alliance == null) return;
-            if (HomeMode.Avatar.AllianceRole == AllianceRole.Leader)
-            {
-                AllianceMember nextLeader = alliance.GetNextRoleMember();
-                if (nextLeader == null)
-                {
-                    alliance.RemoveMemberById(HomeMode.Avatar.AccountId);
-                    if (alliance.Members.Count < 1)
-                    {
-                        Alliances.Delete(HomeMode.Avatar.AllianceId);
-                    }
-                    HomeMode.Avatar.AllianceId = -1;
-                    HomeMode.Avatar.AllianceRole = AllianceRole.None;
 
-                    Connection.Send(new AllianceResponseMessage
-                    {
-                        ResponseType = 80
-                    });
-
-                    Connection.Send(new MyAllianceMessage());
-
-                    return;
-                };
-                Account target = Accounts.Load(nextLeader.AccountId);
-                if (target == null) return;
-                target.Avatar.AllianceRole = AllianceRole.Leader;
-                nextLeader.Role = AllianceRole.Leader;
-                if (LogicServerListener.Instance.IsPlayerOnline(target.AccountId))
-                {
-                    LogicServerListener.Instance.GetGameListener(target.AccountId).SendTCPMessage(new AllianceResponseMessage()
-                    {
-                        ResponseType = 101
-                    });
-                    MyAllianceMessage targetAlliance = new()
-                    {
-                        AllianceHeader = alliance.Header,
-                        Role = HomeMode.Avatar.AllianceRole
-                    };
-                    LogicServerListener.Instance.GetGameListener(target.AccountId).SendTCPMessage(targetAlliance);
-                }
-            }
             alliance.RemoveMemberById(HomeMode.Avatar.AccountId);
-            if (alliance.Members.Count < 1)
-            {
-                Alliances.Delete(HomeMode.Avatar.AllianceId);
-            }
-            else
-            {
-                AllianceStreamEntry entry = new()
-                {
-                    AuthorId = HomeMode.Avatar.AccountId,
-                    AuthorName = HomeMode.Avatar.Name,
-                    Id = ++alliance.Stream.EntryIdCounter,
-                    PlayerId = HomeMode.Avatar.AccountId,
-                    PlayerName = HomeMode.Avatar.Name,
-                    Type = 4,
-                    Event = 4,
-                    AuthorRole = HomeMode.Avatar.AllianceRole
-                };
-                alliance.AddStreamEntry(entry);
-            }
             HomeMode.Avatar.AllianceId = -1;
             HomeMode.Avatar.AllianceRole = AllianceRole.None;
 
-            AllianceResponseMessage response = new()
-            {
-                ResponseType = 80
-            };
+            AllianceStreamEntry entry = new AllianceStreamEntry();
+            entry.AuthorId = HomeMode.Avatar.AccountId;
+            entry.AuthorName = HomeMode.Avatar.Name;
+            entry.Id = ++alliance.Stream.EntryIdCounter;
+            entry.PlayerId = HomeMode.Avatar.AccountId;
+            entry.PlayerName = HomeMode.Avatar.Name;
+            entry.Type = 4;
+            entry.Event = 4;
+            entry.AuthorRole = HomeMode.Avatar.AllianceRole;
+            alliance.AddStreamEntry(entry);
+
+            AllianceResponseMessage response = new AllianceResponseMessage();
+            response.ResponseType = 80;
             Connection.Send(response);
 
-            MyAllianceMessage myAlliance = new();
+            MyAllianceMessage myAlliance = new MyAllianceMessage();
             Connection.Send(myAlliance);
-
         }
 
         private void CreateAllianceReceived(CreateAllianceMessage message)
         {
             if (HomeMode.Avatar.AllianceId >= 0) return;
-            if (message.Name.Contains("</c"))
-            {
-                Connection.Send(new AllianceResponseMessage()
-                {
-                    ResponseType = 21
-                });
-                return;
-            }
-            if (message.Description.Contains("</c"))
-            {
-                Connection.Send(new AllianceResponseMessage()
-                {
-                    ResponseType = 21
-                });
-                return;
-            }
-            if (message.Name.Length > 20)
-            {
-                Connection.Send(new AllianceResponseMessage()
-                {
-                    ResponseType = 21
-                });
-                return;
-            }
-            if (message.Description.Length > 250)
-            {
-                Connection.Send(new AllianceResponseMessage()
-                {
-                    ResponseType = 21
-                });
-                return;
-            }
+
             Alliance alliance = new Alliance();
             alliance.Name = message.Name;
             alliance.Description = message.Description;
             alliance.RequiredTrophies = message.RequiredTrophies;
-            alliance.Type = message.Type == 1 ? 1 : 3;
 
             if (message.BadgeId >= 8000000 && message.BadgeId < 8000000 + DataTables.Get(DataType.AllianceBadge).Count)
             {
@@ -1747,18 +1664,16 @@ public void ShowLobbyInfo()
             }
         }
 
-        private void AskForJoinableAllianceListReceived(AskForJoinableAllianceListMessage message)
+    private void AskForJoinableAllianceListReceived(AskForJoinableAllianceListMessage message)
+    {
+        JoinableAllianceListMessage list = new JoinableAllianceListMessage();
+        List<Alliance> alliances = Alliances.GetRandomAlliances(10);
+        foreach (Alliance alliance in alliances)
         {
-            JoinableAllianceListMessage list = new JoinableAllianceListMessage();
-            List<Alliance> alliances = Alliances.GetRandomAlliances(HomeMode.Avatar, 20)
-                                              .Distinct()
-                                              .ToList();
-            foreach (Alliance alliance in alliances)
-            {
-                list.JoinableAlliances.Add(alliance.Header);
-            }
-            Connection.Send(list);
+            list.JoinableAlliances.Add(alliance.Header);
         }
+        Connection.Send(list);
+    }
 
         private void ClientCapabilitesReceived(ClientCapabilitiesMessage message)
         {

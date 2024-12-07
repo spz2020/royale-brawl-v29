@@ -35,9 +35,7 @@
         {
             Blake2BTreeConfig _Result = new Blake2BTreeConfig
             {
-                FanOut = _Parallel,
-                MaxHeight = 2,
-                IntermediateHashSize = 64
+                FanOut = _Parallel, MaxHeight = 2, IntermediateHashSize = 64
             };
             return _Result;
         }

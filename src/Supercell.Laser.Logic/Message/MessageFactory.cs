@@ -1,17 +1,18 @@
 ﻿namespace Supercell.Laser.Logic.Message
 {
+    using Supercell.Laser.Logic.Message;
     using Supercell.Laser.Logic.Message.Account;
-    using Supercell.Laser.Logic.Message.Account.Auth;
-    using Supercell.Laser.Logic.Message.Api;
-    using Supercell.Laser.Logic.Message.Battle;
     using Supercell.Laser.Logic.Message.Club;
+    using Supercell.Laser.Logic.Message.Battle;
     using Supercell.Laser.Logic.Message.Friends;
     using Supercell.Laser.Logic.Message.Home;
-    using Supercell.Laser.Logic.Message.Latency;
     using Supercell.Laser.Logic.Message.Ranking;
     using Supercell.Laser.Logic.Message.Security;
     using Supercell.Laser.Logic.Message.Team;
     using Supercell.Laser.Logic.Message.Team.Stream;
+    using Supercell.Laser.Logic.Message.Udp;
+    using Supercell.Laser.Logic.Message.Account.Auth;
+    using Supercell.Laser.Logic.Message.Latency;
 
     public class MessageFactory
     {
@@ -44,7 +45,7 @@
                 {10506, typeof(RemoveFriendMessage)},
                 {10576, typeof(SetBlockFriendRequestsMessage)},
 
-                {11000, typeof(RequestSyncSSID)},
+                //{11000, typeof(RequestSyncSSID)},
 
                 ///{10555, typeof(ClientInputMessage)},
 
@@ -95,10 +96,12 @@
 
                 {19001, typeof(LatencyTestResultMessage)},
 
-                {19996, typeof(RequestMaintenance)},
-                {19997, typeof(RequestSaveAll)},
-                {19998, typeof(RequestDBChanges)},
-                {19999, typeof(RequestServerStatus)},
+                //{14330, typeof(SendAllianceMailMessage)},
+
+                //{19996, typeof(RequestMaintenance)},
+                //{19997, typeof(RequestSaveAll)},
+                //{19998, typeof(RequestDBChanges)},
+                //{19999, typeof(RequestServerStatus)},
             };
         }
 

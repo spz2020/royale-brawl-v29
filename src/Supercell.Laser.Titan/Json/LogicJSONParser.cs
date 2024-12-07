@@ -293,46 +293,46 @@
                             switch (nextChar)
                             {
                                 case 'n':
-                                    {
-                                        nextChar = '\n';
-                                        break;
-                                    }
+                                {
+                                    nextChar = '\n';
+                                    break;
+                                }
 
                                 case 'r':
-                                    {
-                                        nextChar = '\r';
-                                        break;
-                                    }
+                                {
+                                    nextChar = '\r';
+                                    break;
+                                }
 
                                 case 't':
-                                    {
-                                        nextChar = '\t';
-                                        break;
-                                    }
+                                {
+                                    nextChar = '\t';
+                                    break;
+                                }
 
                                 case 'u':
-                                    {
-                                        nextChar = (char)int.Parse(stream.Read(4), NumberStyles.HexNumber);
-                                        break;
-                                    }
+                                {
+                                    nextChar = (char) int.Parse(stream.Read(4), NumberStyles.HexNumber);
+                                    break;
+                                }
 
                                 case 'b':
-                                    {
-                                        nextChar = '\b';
-                                        break;
-                                    }
+                                {
+                                    nextChar = '\b';
+                                    break;
+                                }
 
                                 case 'f':
-                                    {
-                                        nextChar = '\f';
-                                        break;
-                                    }
+                                {
+                                    nextChar = '\f';
+                                    break;
+                                }
 
                                 case '\0':
-                                    {
-                                        LogicJSONParser.ParseError("Not a string");
-                                        return null;
-                                    }
+                                {
+                                    LogicJSONParser.ParseError("Not a string");
+                                    return null;
+                                }
                             }
                         }
 
