@@ -19,9 +19,11 @@ namespace Supercell.Laser.Logic.Data
 
         public string Skin { get; set; }
 
-        public int Type { get; set; }
+        public bool IsPicto { get; set; }
 
+        public int BattleCategory { get; set; }
         public int Rarity { get; set; }
+        public int EmoteType { get; set; }
 
         public bool LockedForChronos { get; set; }
 

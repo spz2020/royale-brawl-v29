@@ -27,10 +27,10 @@
 
             encoder.WriteBoolean(false); // Unk
             encoder.WriteBoolean(IsBonusCollected);
-            encoder.WriteString(null); // 0xacecac
+            encoder.WriteString(null); // 0xacecac // unused text
             encoder.WriteVInt(0); // 0xacecc0
             encoder.WriteVInt(PowerPlayGamesPlayed); // 0xacecd4
-            encoder.WriteVInt(3); // 0xacece8
+            encoder.WriteVInt(3); // 0xacece8 //power play game left
 
             encoder.WriteVInt(Modifiers.Length); // 0xacecfc
             foreach (int modifier in Modifiers)
@@ -38,7 +38,7 @@
                 encoder.WriteVInt(modifier);
             }
 
-            encoder.WriteVInt(12); // 0xacee58
+            encoder.WriteVInt(12); // 0xacee58 //ticket events diffs?
             encoder.WriteVInt(0); // 0xacee6c
         }
     }
