@@ -5,11 +5,13 @@
 
     public class LogicPurchaseBrawlPassCommand : Command
     {
+        public int vint;
+        public bool boolean;
         public override void Decode(ByteStream stream)
         {
             base.Decode(stream);
-            stream.ReadVInt();
-            stream.ReadBoolean();
+            vint = stream.ReadVInt();
+            boolean = stream.ReadBoolean();
         }
 
         public override int Execute(HomeMode homeMode)

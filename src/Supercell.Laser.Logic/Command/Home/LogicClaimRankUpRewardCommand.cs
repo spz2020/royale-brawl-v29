@@ -1,5 +1,6 @@
 ﻿namespace Supercell.Laser.Logic.Command.Home
 {
+    using Supercell.Laser.Logic.Battle.Objects;
     using Supercell.Laser.Logic.Data;
     using Supercell.Laser.Logic.Helper;
     using Supercell.Laser.Logic.Home;
@@ -56,7 +57,7 @@
             }
             else if (MilestoneId == 9 || MilestoneId == 10)
             {
-                string name = $"Goal_{MilestoneId}_0_{(MilestoneId == 10 ? homeMode.Home.BrawlPassProgress : homeMode.Home.PremiumPassProgress) - 1}";
+                string name = $"Goal_{MilestoneId}_2_{(MilestoneId == 10 ? homeMode.Home.BrawlPassProgress : homeMode.Home.PremiumPassProgress) - 1}";
                 if (MilestoneId == 9 && !homeMode.Home.HasPremiumPass)
                 {
                     return -5;
@@ -201,8 +202,21 @@
                         LogicGiveDeliveryItemsCommand command = new LogicGiveDeliveryItemsCommand();
                         DeliveryUnit unit = new DeliveryUnit(100);
 
+                        var openingskindata = DataTables.Get(DataType.Skin).GetData<SkinData>(data);
+                        var openingskinid = openingskindata.GetGlobalId();
+                        var skinsconfname = openingskindata.Conf;
+                        var skinconfdata = DataTables.Get(DataType.SkinConf).GetData<SkinConfData>(skinsconfname);
+                        var characterName = skinconfdata.Character;
+                        var characterData = DataTables.Get(DataType.Character).GetData<CharacterData>(characterName);
+                        if (!homeMode.Avatar.HasHero(characterData.GetGlobalId()))
+                        {
+                            GatchaDrop characterdrop = new GatchaDrop(1);
+                            characterdrop.DataGlobalId = characterData.GetGlobalId();
+                            characterdrop.Count = 1;
+                            unit.AddDrop(characterdrop);
+                        }
                         GatchaDrop drop = new GatchaDrop(9);
-                        drop.SkinGlobalId = DataTables.Get(DataType.Skin).GetData<SkinData>(data).GetGlobalId();
+                        drop.SkinGlobalId = openingskinid;
                         drop.Count = 1;
                         unit.AddDrop(drop);
 
@@ -342,37 +356,6 @@
                         drop.PinGlobalId = DataTables.Get(DataType.Emote).GetData<EmoteData>(data).GetGlobalId();
                         drop.Count = 1;
                         unit.AddDrop(drop);
-                        homeMode.Home.UnlockedEmotes.Add(drop.PinGlobalId - 52000000);
-
-                        command.DeliveryUnits.Add(unit);
-                        command.RewardTrackType = track;
-                        command.RewardForRank = idx;
-                        if (isBp)
-                        {
-                            command.BrawlPassSeason = 2;
-                        }
-                        command.Execute(homeMode);
-
-                        AvailableServerCommandMessage message = new AvailableServerCommandMessage();
-                        message.Command = command;
-                        homeMode.GameListener.SendMessage(message);
-                    }
-                    break;
-                case 21: // Pins
-                    {
-                        LogicGiveDeliveryItemsCommand command = new LogicGiveDeliveryItemsCommand();
-                        DeliveryUnit unit = new DeliveryUnit(100);
-                        List<int> Emotes_All = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 };
-                        List<int> Emotes_Locked = Emotes_All.Except(homeMode.Home.UnlockedEmotes).OrderBy(x => Guid.NewGuid()).Take(3).ToList(); ;
-
-                        foreach (int x in Emotes_Locked)
-                        {
-                            GatchaDrop reward = new GatchaDrop(11);
-                            reward.Count = 1;
-                            reward.PinGlobalId = 52000000 + x;
-                            unit.AddDrop(reward);
-                            homeMode.Home.UnlockedEmotes.Add(x);
-                        }
 
                         command.DeliveryUnits.Add(unit);
                         command.RewardTrackType = track;
@@ -392,6 +375,21 @@
                     {
                         LogicGiveDeliveryItemsCommand command = new LogicGiveDeliveryItemsCommand();
                         DeliveryUnit unit = new DeliveryUnit(100);
+
+
+                        var openingskindata = DataTables.Get(DataType.Skin).GetData<SkinData>(data);
+                        var openingskinid = openingskindata.GetGlobalId();
+                        var skinsconfname = openingskindata.Conf;
+                        var skinconfdata = DataTables.Get(DataType.SkinConf).GetData<SkinConfData>(skinsconfname);
+                        var characterName = skinconfdata.Character;
+                        var characterData = DataTables.Get(DataType.Character).GetData<CharacterData>(characterName);
+                        if (!homeMode.Avatar.HasHero(characterData.GetGlobalId()))
+                        {
+                            GatchaDrop characterdrop = new GatchaDrop(1);
+                            characterdrop.DataGlobalId = characterData.GetGlobalId();
+                            characterdrop.Count = 1;
+                            unit.AddDrop(characterdrop);
+                        }
 
                         GatchaDrop drop = new GatchaDrop(9);
                         drop.SkinGlobalId = DataTables.Get(DataType.Skin).GetData<SkinData>(data).GetGlobalId();

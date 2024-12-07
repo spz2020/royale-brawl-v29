@@ -22,6 +22,7 @@
     using Supercell.Laser.Server.Logic.Game;
     using Supercell.Laser.Server.Networking;
     using Supercell.Laser.Titan.Debug;
+    using Supercell.Laser.Logic.Message.Account.Auth;
     //using System.Diagnostics;
 
     public class CommandManager
@@ -500,36 +501,50 @@
         }
         private bool LogicSetPlayerThumbnailReceived(LogicSetPlayerThumbnailCommand command)
         {
-            if (command.ThumbnailInstanceId < 0) return false;
-            if (command.ThumbnailInstanceId > DataTables.Get(DataType.PlayerThumbnail).Count) return false;
+            try
+            {
+                if (command.ThumbnailInstanceId < 0) return false;
+                if (command.ThumbnailInstanceId > DataTables.Get(DataType.PlayerThumbnail).Count) return false;
 
-            HomeMode.Home.ThumbnailId = GlobalId.CreateGlobalId(28, command.ThumbnailInstanceId);
-            if (HomeMode.Avatar.AllianceId > 0)
-            {
-                Alliance alliance = Alliances.Load(HomeMode.Avatar.AllianceId);
-                AllianceMember member = alliance.GetMemberById(HomeMode.Avatar.AccountId);
-                member.DisplayData.ThumbnailId = HomeMode.Home.ThumbnailId;
-                AllianceDataMessage data = new()
+                if (command.ThumbnailInstanceId > 54)
                 {
-                    Alliance = alliance,
-                    IsMyAlliance = true
-                };
-                //alliance.SendToAlliance(data);
-            }
-            foreach (Friend friend in HomeMode.Avatar.Friends)
-            {
-                Friend entry = friend.Avatar.GetFriendById(HomeMode.Avatar.AccountId);
-                entry.DisplayData.ThumbnailId = HomeMode.Home.ThumbnailId;
-                if (LogicServerListener.Instance.IsPlayerOnline(friend.Avatar.AccountId))
-                {
-                    FriendListUpdateMessage update = new()
+                    AuthenticationFailedMessage loginFailed = new AuthenticationFailedMessage
                     {
-                        Entry = entry
+                        ErrorCode = 1,
+                        Message = "Modded client detected!"
                     };
-                    LogicServerListener.Instance.GetGameListener(friend.AccountId).SendTCPMessage(update);
+                    Connection.Send(loginFailed);
+                    return false;
                 }
+                HomeMode.Home.ThumbnailId = GlobalId.CreateGlobalId(28, command.ThumbnailInstanceId);
+                if (HomeMode.Avatar.AllianceId > 0)
+                {
+                    Alliance alliance = Alliances.Load(HomeMode.Avatar.AllianceId);
+                    AllianceMember member = alliance.GetMemberById(HomeMode.Avatar.AccountId);
+                    member.DisplayData.ThumbnailId = HomeMode.Home.ThumbnailId;
+                    AllianceDataMessage data = new()
+                    {
+                        Alliance = alliance,
+                        IsMyAlliance = true
+                    };
+                    //alliance.SendToAlliance(data);
+                }
+                foreach (Friend friend in HomeMode.Avatar.Friends)
+                {
+                    Friend entry = friend.Avatar.GetFriendById(HomeMode.Avatar.AccountId);
+                    entry.DisplayData.ThumbnailId = HomeMode.Home.ThumbnailId;
+                    if (LogicServerListener.Instance.IsPlayerOnline(friend.Avatar.AccountId))
+                    {
+                        FriendListUpdateMessage update = new()
+                        {
+                            Entry = entry
+                        };
+                        LogicServerListener.Instance.GetGameListener(friend.AccountId).SendTCPMessage(update);
+                    }
 
+                }
             }
+            catch { return false; }
 
             return true;
         }
@@ -637,7 +652,7 @@
             }
             else if (command.MilestoneId == 9 || command.MilestoneId == 10)
             {
-                string name = $"Goal_{command.MilestoneId}_1_{(command.MilestoneId == 10 ? command.RequieredMilestone : command.RequieredMilestone)}";
+                string name = $"Goal_{command.MilestoneId}_2_{(command.MilestoneId == 10 ? command.RequieredMilestone : command.RequieredMilestone)}";
                 if (command.MilestoneId == 9 && !HomeMode.Home.HasPremiumPass)
                 {
                     return false;
