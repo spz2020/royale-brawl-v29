@@ -21,6 +21,7 @@ why did I create this server? because all public v29 servers suck
 - global, club and brawler leaderboards
 - random events
 - slash commands in clubs
+- anti-ddos
 
 #### discord bot commands
 

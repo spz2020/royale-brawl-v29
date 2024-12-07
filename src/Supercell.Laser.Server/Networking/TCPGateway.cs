@@ -1,30 +1,33 @@
-﻿namespace Supercell.Laser.Server.Networking
+namespace Supercell.Laser.Server.Networking
 {
+    using System;
+    using System.Collections.Generic;
     using System.Net;
     using System.Net.Sockets;
+    using System.Threading;
     using Supercell.Laser.Server.Networking.Session;
 
     public static class TCPGateway
     {
-        private static List<Connection> ActiveConnections;
+        private static readonly List<Connection> ActiveConnections = new List<Connection>();
+        private static readonly Dictionary<string, int> IpConnections = new Dictionary<string, int>();
+        private static readonly HashSet<string> RejectedIps = new HashSet<string>();
+        private const int MaxConnectionsPerIp = 5;
 
-        private static Socket Socket;
-        private static Thread Thread;
-
-        private static ManualResetEvent AcceptEvent;
+        private static Socket _socket;
+        private static Thread _thread;
+        private static ManualResetEvent _acceptEvent;
 
         public static void Init(string host, int port)
         {
-            ActiveConnections = new List<Connection>();
+            _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            _socket.Bind(new IPEndPoint(IPAddress.Parse(host), port));
+            _socket.Listen(10000000);
 
-            Socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            Socket.Bind(new IPEndPoint(IPAddress.Parse(host), port));
-            Socket.Listen(10000000);
+            _acceptEvent = new ManualResetEvent(false);
 
-            AcceptEvent = new ManualResetEvent(false);
-
-            Thread = new Thread(TCPGateway.Update);
-            Thread.Start();
+            _thread = new Thread(Update);
+            _thread.Start();
 
             Logger.Print($"TCP Server started at {host}:{port}");
         }
@@ -33,9 +36,9 @@
         {
             while (true)
             {
-                AcceptEvent.Reset();
-                Socket.BeginAccept(new AsyncCallback(OnAccept), null);
-                AcceptEvent.WaitOne();
+                _acceptEvent.Reset();
+                _socket.BeginAccept(OnAccept, null);
+                _acceptEvent.WaitOne();
             }
         }
 
@@ -43,19 +46,47 @@
         {
             try
             {
-                Socket client = Socket.EndAccept(ar);
+                Socket client = _socket.EndAccept(ar);
+                string clientIp = ((IPEndPoint)client.RemoteEndPoint).Address.ToString();
+
+                lock (IpConnections)
+                {
+                    if (!IpConnections.ContainsKey(clientIp))
+                    {
+                        IpConnections[clientIp] = 1;
+                    }
+                    else if (IpConnections[clientIp] >= MaxConnectionsPerIp)
+                    {
+                        if (!RejectedIps.Contains(clientIp))
+                        {
+                            lock (RejectedIps)
+                            {
+                                RejectedIps.Add(clientIp);
+                                Logger.Print($"DDOS attempt from {clientIp} has been prevented");
+                            }
+                        }
+                        client.Close();
+                        _acceptEvent.Set();
+                        return;
+                    }
+                    else
+                    {
+                        IpConnections[clientIp]++;
+                    }
+                }
+
                 Connection connection = new Connection(client);
                 ActiveConnections.Add(connection);
-                Logger.Print("New connection!");
+                Logger.Print($"New connection from {clientIp}");
                 Connections.AddConnection(connection);
-                client.BeginReceive(connection.ReadBuffer, 0, 1024, SocketFlags.None, new AsyncCallback(OnReceive), connection);
+                client.BeginReceive(connection.ReadBuffer, 0, 1024, SocketFlags.None, OnReceive, connection);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                ;
+                Logger.Print($"Error accepting connection: {ex.Message}");
             }
 
-            AcceptEvent.Set();
+            _acceptEvent.Set();
         }
 
         private static void OnReceive(IAsyncResult ar)
@@ -65,10 +96,11 @@
 
             try
             {
-                int r = connection.Socket.EndReceive(ar);
-                if (r <= 0)
+                int bytesRead = connection.Socket.EndReceive(ar);
+                if (bytesRead <= 0)
                 {
-                    Logger.Print("client disconnected.");
+                    Logger.Print("Client disconnected.");
+                    RemoveIpConnection(connection.Socket);
                     ActiveConnections.Remove(connection);
                     if (connection.MessageManager.HomeMode != null)
                     {
@@ -78,34 +110,36 @@
                     return;
                 }
 
-                connection.Memory.Write(connection.ReadBuffer, 0, r);
+                connection.Memory.Write(connection.ReadBuffer, 0, bytesRead);
                 if (connection.Messaging.OnReceive() != 0)
                 {
+                    RemoveIpConnection(connection.Socket);
                     ActiveConnections.Remove(connection);
                     if (connection.MessageManager.HomeMode != null)
                     {
                         Sessions.Remove(connection.Avatar.AccountId);
                     }
                     connection.Close();
-                    Logger.Print("client disconnected.");
+                    Logger.Print("Client disconnected.");
                     return;
                 }
-                connection.Socket.BeginReceive(connection.ReadBuffer, 0, 1024, SocketFlags.None, new AsyncCallback(OnReceive), connection);
+                connection.Socket.BeginReceive(connection.ReadBuffer, 0, 1024, SocketFlags.None, OnReceive, connection);
             }
-            catch (SocketException)
+            catch (SocketException ex)
             {
+                Logger.Print($"Socket error: {ex.Message}");
+                RemoveIpConnection(connection.Socket);
                 ActiveConnections.Remove(connection);
                 if (connection.MessageManager.HomeMode != null)
                 {
                     Sessions.Remove(connection.Avatar.AccountId);
                 }
                 connection.Close();
-                Logger.Print("client disconnected.");
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
+                Logger.Print($"Unhandled exception: {ex.Message}, trace: {ex.StackTrace}");
                 connection.Close();
-                Logger.Print("Unhandled exception: " + exception + ", trace: " + exception.StackTrace);
             }
         }
 
@@ -116,9 +150,32 @@
                 Socket socket = (Socket)ar.AsyncState;
                 socket.EndSend(ar);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                ;
+                Logger.Print($"Error sending data: {ex.Message}");
+            }
+        }
+
+        private static void RemoveIpConnection(Socket socket)
+        {
+            try
+            {
+                string clientIp = ((IPEndPoint)socket.RemoteEndPoint).Address.ToString();
+                lock (IpConnections)
+                {
+                    if (IpConnections.ContainsKey(clientIp))
+                    {
+                        IpConnections[clientIp]--;
+                        if (IpConnections[clientIp] <= 0)
+                        {
+                            IpConnections.Remove(clientIp);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Print($"Error removing IP connection: {ex.Message}");
             }
         }
     }
