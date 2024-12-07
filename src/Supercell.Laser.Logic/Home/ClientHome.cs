@@ -1,9 +1,9 @@
+using System.Linq;
+
 namespace Supercell.Laser.Logic.Home
 {
-    using System;
-    using System.Collections.Immutable;
-    using System.Numerics;
     using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
     using Supercell.Laser.Logic.Command.Home;
     using Supercell.Laser.Logic.Data;
     using Supercell.Laser.Logic.Data.Helper;
@@ -14,6 +14,13 @@ namespace Supercell.Laser.Logic.Home
     using Supercell.Laser.Logic.Home.Structures;
     using Supercell.Laser.Logic.Message.Home;
     using Supercell.Laser.Titan.DataStream;
+    using System;
+    using System.Collections.Immutable;
+    using System.Numerics;
+    using System.Reflection.Metadata;
+    using System.Text.RegularExpressions;
+    using System.Xml.Linq;
+    using static System.Collections.Specialized.BitVector32;
 
     [JsonObject(MemberSerialization.OptIn)]
     public class ClientHome
@@ -63,14 +70,10 @@ namespace Supercell.Laser.Logic.Home
         [JsonProperty] public int BattleTokens;
         [JsonProperty] public DateTime BattleTokensRefreshStart;
         [JsonProperty] public DateTime PremiumEndTime;
-        [JsonProperty] public DateTime ChatBanEndTime;
-        [JsonProperty] public DateTime BanEndTime;
         [JsonProperty] public List<long> ReportsIds;
         [JsonProperty] public bool BlockFriendRequests;
         [JsonProperty] public string IpAddress;
         [JsonProperty] public string Device;
-        [JsonProperty] public List<string> OffersClaimed;
-        [JsonProperty] public string Day;
 
 
         [JsonIgnore] public EventData[] Events;
@@ -91,10 +94,9 @@ namespace Supercell.Laser.Logic.Home
             ThumbnailId = GlobalId.CreateGlobalId(28, 0);
             NameColorId = GlobalId.CreateGlobalId(43, 0);
             CharacterId = GlobalId.CreateGlobalId(16, 0);
-            SelectedSkins = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+            SelectedSkins = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,};
 
             OfferBundles = new List<OfferBundle>();
-            OffersClaimed = new List<string>();
             ReportsIds = new List<long>();
             UnlockedSkins = new List<int>();
             LastVisitHomeTime = DateTime.UnixEpoch;
@@ -120,13 +122,6 @@ namespace Supercell.Laser.Logic.Home
             RotateShopContent(DateTime.UtcNow, OfferBundles.Count == 0);
             LastVisitHomeTime = DateTime.UtcNow;
             //Quests = null;
-            UpdateOfferBundles();
-
-            string Today = LastVisitHomeTime.ToString("d");
-            if (Today != Day)
-            {
-                Day = Today;
-            }
 
             if (Quests == null && TrophyRoadProgress >= 11)
             {
@@ -144,28 +139,6 @@ namespace Supercell.Laser.Logic.Home
             StarPointsGained = 0;
             PowerPlayTrophiesReward = 0;
         }*/
-        public int TimerMath(DateTime timer_start, DateTime timer_end)
-        {
-            {
-                DateTime timer_now = DateTime.Now;
-                if (timer_now > timer_start)
-                {
-                    if (timer_now < timer_end)
-                    {
-                        int time_sec = (int)(timer_end - timer_now).TotalSeconds;
-                        return time_sec;
-                    }
-                    else
-                    {
-                        return -1;
-                    }
-                }
-                else
-                {
-                    return -1;
-                }
-            }
-        }
         public void Tick()
         {
             LastVisitHomeTime = DateTime.UtcNow;
@@ -221,15 +194,6 @@ namespace Supercell.Laser.Logic.Home
             }
 
             bundle.Purchased = true;
-
-            if (bundle.Claim == "debug")
-            {
-                ;
-            }
-            else
-            {
-                OffersClaimed.Add(bundle.Claim);
-            }
 
             LogicGiveDeliveryItemsCommand command = new LogicGiveDeliveryItemsCommand();
             Random rand = new Random();
@@ -308,45 +272,11 @@ namespace Supercell.Laser.Logic.Home
                     unit.AddDrop(reward);
                     command.DeliveryUnits.Add(unit);
                 }
-                else if (offer.Type == ShopItem.GuaranteedHero)
-                {
-                    DeliveryUnit unit = new DeliveryUnit(100);
-                    GatchaDrop reward = new GatchaDrop(1);
-                    reward.DataGlobalId = offer.ItemDataId;
-                    reward.Count = 1;
-                    unit.AddDrop(reward);
-                    command.DeliveryUnits.Add(unit);
-                }
                 else if (offer.Type == ShopItem.CoinDoubler)
                 {
                     DeliveryUnit unit = new DeliveryUnit(100);
                     GatchaDrop reward = new GatchaDrop(2);
                     reward.Count = offer.Count;
-                    unit.AddDrop(reward);
-                    command.DeliveryUnits.Add(unit);
-                }
-                else if (offer.Type == ShopItem.EmoteBundle)
-                {
-                    DeliveryUnit unit = new DeliveryUnit(100);
-                    List<int> Emotes_All = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 241, 242, 243, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 255, 256, 257, 258, 259, 260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 270, 271, 272, 273, 274, 275, 276, 277, 278, 279, 280, 281, 282, 283, 284, 285, 286, 287, 288, 289, 290, 291, 292, 293, 294, 295, 296, 297, 298, 299, 300 };
-                    List<int> Emotes_Locked = Emotes_All.Except(UnlockedEmotes).OrderBy(x => Guid.NewGuid()).Take(3).ToList(); ;
-
-                    foreach (int x in Emotes_Locked)
-                    {
-                        GatchaDrop reward = new GatchaDrop(11);
-                        reward.Count = 1;
-                        reward.PinGlobalId = 52000000 + x;
-                        unit.AddDrop(reward);
-                        UnlockedEmotes.Add(x);
-                    }
-                    command.DeliveryUnits.Add(unit);
-                }
-                else if (offer.Type == ShopItem.Emote)
-                {
-                    DeliveryUnit unit = new DeliveryUnit(100);
-                    GatchaDrop reward = new GatchaDrop(11);
-                    reward.Count = 1;
-                    reward.PinGlobalId = 52000155;
                     unit.AddDrop(reward);
                     command.DeliveryUnits.Add(unit);
                 }
@@ -359,7 +289,6 @@ namespace Supercell.Laser.Logic.Home
 
 
             }
-            UpdateOfferBundles();
             AvailableServerCommandMessage message = new AvailableServerCommandMessage();
             message.Command = command;
             HomeMode.GameListener.SendMessage(message);
@@ -370,42 +299,142 @@ namespace Supercell.Laser.Logic.Home
             /*if (OfferBundles.Select(bundle => bundle.IsDailyDeals).ToArray().Length > 6)
             {
                 OfferBundles.RemoveAll(bundle => bundle.IsDailyDeals);
-                
-
             }*/
             bool IsUpdated = false;
             int offLen = OfferBundles.Count;
             OfferBundles.RemoveAll(offer => offer.EndTime <= time);
-            bool SHOULD_STAR_MEGABOX2 = false;
+            bool WELCOME_OFFER = true;
+            bool SHOULD_FREE3 = false;
+            bool SHOULD_FREE4 = false;
+            bool WELCOME_BP = true;
+            bool WELCOME_MEGA = true;
+            bool WELCOME_100 = true;
+            bool WELCOME_BUYUK = true;
+
             foreach (OfferBundle o in OfferBundles)
             {
-
-
-                if (o.Title == "wow! an offer")
+                if (o.Title == "Welcome 170")
                 {
-                    SHOULD_STAR_MEGABOX2 = false;
+                    WELCOME_BP = false;
                 }
-
+                if (o.Title == "Welcome offer")
+                {
+                    WELCOME_MEGA = false;
+                }
+                if (o.Title == "FIRST 100 PLAYER OFFER!")
+                {
+                    WELCOME_100 = false;
+                }
+                if (o.Title == "Welcome offer 2")
+                {
+                    WELCOME_BUYUK = false;
+                }
+                if (o.Title == "<cff0800>У<cff1000>р<cff1800>а<cff2000>а<cff2900>а<cff3100>а<cff3900>а<cff4100>а<cff4a00>а<cff5200>а<cff5a00>а<cff6200>а<cff6a00>а<cff7300>а<cff7b00>а<cff8300>а<cff8b00>а<cff9400>а<cff9c00>а<cffa400>а<cffac00>а<cffb400>а<cffbd00>а<cffc500>а<cfecd00>а<cffd500>а<cffde00>а<cffe600>а<cffee00>а<cfff600>а<cfffe00>а<cf6ff00>а<ceeff00>а<ce6ff00>а<cdeff00>а<cd5ff00>!<ccdff00>!<cc5ff00>!<cbdff00>!<cb4ff00> <cacff00>С<ca4ff00>б<c9cff00>р<c94ff00>о<c8bff00>с<c83ff00> <c7bff00>С<c73ff00>е<c6aff00>з<c62ff00>о<c5aff00>н<c52ff00>а<c4aff00>!<c41ff00>!<c39ff00>!<c31fe00>!<c29ff00>!<c20ff00>!<c18ff00>!<c10ff00>!<c08ff00>!<c01ff00>!</c>")
+                {
+                    WELCOME_OFFER = false;
+                }
 
             }
 
-            if (SHOULD_STAR_MEGABOX2)
+            if (WELCOME_100)
+            {
+                if (HomeMode.Avatar.AccountId < 100)
+                {
+                    OfferBundle bundle = new OfferBundle();
+                    bundle.Title = "FIRST 100 PLAYER OFFER!";
+                    bundle.IsDailyDeals = false;
+                    bundle.EndTime = DateTime.UtcNow.AddDays(14);
+                    bundle.BackgroundExportName = "offer_legendary";
+                    Offer megaBoxOffer = new Offer(ShopItem.MegaBox, 5);
+                    bundle.Items.Add(megaBoxOffer);
+                    Offer item2 = new Offer(ShopItem.Gems, 30);
+                    bundle.Items.Add(item2);
+                    Offer item3 = new Offer(ShopItem.Skin, 1);
+                    item3.SkinDataId = 52;
+                    bundle.Items.Add(item3);
+                    bundle.Cost = 120;
+                    bundle.OldCost = 300;
+                    bundle.Currency = 0;
+                    OfferBundles.Add(bundle);
+                }
+            }
+
+            if (WELCOME_OFFER)
             {
                 OfferBundle bundle = new OfferBundle();
-                bundle.Title = "offer 2 or sum idk";
+                bundle.Title = "Welcome offer";
                 bundle.IsDailyDeals = false;
                 bundle.EndTime = DateTime.UtcNow.AddDays(14); // tomorrow at 8:00 utc (11:00 MSK)
                 bundle.BackgroundExportName = "offer_legendary";
-                Offer megaBoxOffer = new Offer(ShopItem.MegaBox, 5);
+                Offer megaBoxOffer = new Offer(ShopItem.MegaBox, 1);
                 bundle.Items.Add(megaBoxOffer);
-                bundle.Cost = 1000;
-                bundle.Currency = 1;
+                bundle.Cost = 0;
+                bundle.Currency = 0;
+                //OfferBundles.Add(bundle);
+            }
+   
+            if (WELCOME_MEGA)
+            {
+                OfferBundle bundle = new OfferBundle();
+                bundle.Title = "Welcome offer";
+                bundle.IsDailyDeals = false;
+                bundle.EndTime = DateTime.UtcNow.AddDays(7); // tomorrow at 8:00 utc (11:00 MSK)
+                bundle.BackgroundExportName = "offer_special";
+                Offer megaBoxOffer = new Offer(ShopItem.MegaBox, 1);
+                bundle.Items.Add(megaBoxOffer);
+                bundle.Cost = 0;
+                bundle.Currency = 0;
                 OfferBundles.Add(bundle);
             }
-
-
-
-
+            if (WELCOME_BUYUK)
+            {
+                OfferBundle bundle = new OfferBundle();
+                bundle.Title = "Welcome offer 2";
+                bundle.IsDailyDeals = false;
+                bundle.EndTime = DateTime.UtcNow.AddDays(7); // tomorrow at 8:00 utc (11:00 MSK)
+                bundle.BackgroundExportName = "offer_special";
+                Offer megaBoxOffer = new Offer(ShopItem.BigBox, 1);
+                bundle.Items.Add(megaBoxOffer);
+                bundle.Cost = 0;
+                bundle.Currency = 0;
+                OfferBundles.Add(bundle);
+            }
+            if (SHOULD_FREE3)
+            {
+                OfferBundle bundle = new OfferBundle();
+                bundle.Title = "<cff2400>F<cff4800>r<cff6d00>e<cfe9100>e<cffb600> <cffda00>O<cfffe00>f<cffff00>f<cdaff00>e<cb6ff00>r<c91ff00> <c6dfe00>#<c48ff00>7</c>";
+                bundle.IsDailyDeals = false;
+                bundle.EndTime = DateTime.UtcNow.AddDays(14); // tomorrow at 8:00 utc (11:00 MSK)
+                bundle.BackgroundExportName = "offer_special";
+                Offer megaBoxOffer = new Offer(ShopItem.MegaBox, 2);
+                bundle.Items.Add(megaBoxOffer);
+                bundle.Cost = 0;
+                bundle.Currency = 0;
+                OfferBundles.Add(bundle);
+            }
+            if (SHOULD_FREE4 && !SelectedSkins.Contains(29000178))
+            {
+                OfferBundle bundle = new OfferBundle();
+                bundle.Title = "<cff1f00>F<cff3f00>i<cff5f00>n<cff7f00>a<cff9f00>l<cffbf00> <cffdf00>F<cffff00>r<cdfff00>e<cbfff00>e<c9fff00> <c7fff00>O<c5fff00>f<c3fff00>f<c1fff00>e<c00ff00>r</c>";
+                bundle.IsDailyDeals = false;
+                bundle.EndTime = DateTime.UtcNow.AddDays(14); // tomorrow at 8:00 utc (11:00 MSK)
+                bundle.BackgroundExportName = "offer_legendary";
+                Offer megaBoxOffer = new Offer(ShopItem.Skin, 1);
+                //megaBoxOffer.ItemDataId = 178;
+                megaBoxOffer.SkinDataId = 178;
+                bundle.Items.Add(megaBoxOffer);
+                bundle.Cost = 0;
+                bundle.Currency = 0;
+                OfferBundles.Add(bundle);
+            }
+            if (SHOULD_FREE3 || SHOULD_FREE4)
+            {
+                ShouldUpdateDay = true;
+            }
+            if (WELCOME_BP || WELCOME_MEGA || WELCOME_BUYUK || WELCOME_100)
+            {
+                ShouldUpdateDay = false;
+            }
             IsUpdated = OfferBundles.Count != offLen;
             if (isNewAcc || DateTime.UtcNow.Hour >= 8) // Daily deals refresh at 08:00 AM UTC
             {
@@ -451,334 +480,9 @@ namespace Supercell.Laser.Logic.Home
             }
         }
 
-        public void UpdateOfferBundles()
-        {
-            OfferBundles.RemoveAll(bundle => bundle.IsTrue);
-
-            GenerateOffer2(
-                new DateTime(2024, 4, 20, 12, 0, 0), new DateTime(2024, 5, 25, 10, 0, 0),
-                4, 999, 0, ShopItem.MegaBox,
-                4, 999, 0, ShopItem.BigBox,
-                0, 0, 0,
-                "mamadea", "Gift!", "offer_boxes"
-            );
-
-            GenerateOffer(
-                new DateTime(2024, 4, 20, 12, 0, 0), new DateTime(2024, 5, 25, 10, 0, 0),
-                1, 999, 201, ShopItem.Skin,
-                299, 0, 0,
-                "skin1", "Sale!", "offer_boxes"
-            );
-
-            GenerateOffer(
-                new DateTime(2024, 4, 20, 12, 0, 0), new DateTime(2024, 5, 25, 10, 0, 0),
-                1, 999, 203, ShopItem.Skin,
-                299, 0, 0,
-                "gift", "Gift!", "offer_boxes"
-            );
-
-            GenerateOffer3(
-                new DateTime(2024, 4, 20, 12, 0, 0), new DateTime(2024, 5, 25, 10, 0, 0),
-                5000, 999, 0, ShopItem.Coin,
-                25, 999, 0, ShopItem.BrawlBox,
-                1, 999, 0, ShopItem.MegaBox,
-                0, 0, 0,
-                "gift7", "Gift!", "offer_boxes"
-            );
-
-            GenerateOffer3(
-                new DateTime(2024, 4, 20, 12, 0, 0), new DateTime(2024, 5, 25, 10, 0, 0),
-                1, 999, 52, ShopItem.Skin,
-                1, 999, 59, ShopItem.Skin,
-                20, 999, 0, ShopItem.Gems,
-                0, 0, 0,
-                "gift2", "Gift!", "offer_boxes"
-            );
-
-
-            GenerateOffer(
-                new DateTime(2024, 4, 20, 12, 0, 0), new DateTime(2024, 5, 25, 10, 0, 0),
-                40, 999, 0, ShopItem.Gems,
-                0, 0, 0,
-                "gift2", "Gift!", "offer_boxes"
-            );
-
-            GenerateOffer2(
-                new DateTime(2024, 4, 20, 12, 0, 0), new DateTime(2024, 5, 25, 10, 0, 0),
-                20, 999, 0, ShopItem.Gems,
-                9, 999, 0, ShopItem.MegaBox,
-                0, 0, 0,
-                "gift8", "Gift!", "offer_boxes"
-            );
-
-            GenerateOffer(
-                new DateTime(2024, 4, 20, 12, 0, 0), new DateTime(2024, 5, 25, 10, 0, 0),
-                6000, 999, 0, ShopItem.Coin,
-                0, 0, 0,
-                "special", "special or sum idk!", "offer_boxes"
-            );
-
-            GenerateOffer(
-                new DateTime(2024, 4, 20, 12, 0, 0), new DateTime(2024, 5, 19, 12, 0, 0),
-                1, 999, 0, ShopItem.Gems,
-                0, 0, 0,
-                "specail2", "compensation!", "offer_boxes"
-            );
-
-            GenerateOffer2(
-                new DateTime(2024, 4, 20, 12, 0, 0), new DateTime(2024, 5, 25, 12, 0, 0),
-                50, 999, 0, ShopItem.Gems,
-                15, 999, 0, ShopItem.BigBox,
-                0, 0, 0,
-                "subs", "Sorry 🙇", "offer_boxes"
-            );
-
-            GenerateOffer(
-                new DateTime(2024, 5, 19, 12, 0, 0), new DateTime(2024, 5, 25, 10, 0, 0),
-                60, 999, 0, ShopItem.Gems,
-                0, 0, 0,
-                "special3", "wowi!", "offer_boxes"
-            );
-
-            GenerateOffer(
-                new DateTime(2024, 4, 20, 12, 0, 0), new DateTime(2024, 5, 25, 10, 0, 0),
-                1, 999, 209, ShopItem.Skin,
-                79, 0, 0,
-                "skin3", "Акция!", "offer_boxes"
-            );
-
-            GenerateOffer(
-                new DateTime(2024, 4, 20, 12, 0, 0), new DateTime(2024, 5, 25, 10, 0, 0),
-                1, 999, 210, ShopItem.Skin,
-                79, 0, 0,
-                "skin4", "Sale!", "offer_boxes"
-            );
-
-            GenerateOffer(
-                new DateTime(2024, 4, 20, 12, 0, 0), new DateTime(2024, 5, 25, 10, 0, 0),
-                1, 999, 211, ShopItem.Skin,
-                79, 0, 0,
-                "skin5", "Sale!", "offer_boxes"
-            );
-
-            //бигбокс за 500 старов
-            GenerateOffer(
-                new DateTime(2000, 4, 20, 12, 0, 0), new DateTime(2030, 4, 20, 12, 0, 0),
-                1, 999, 0, ShopItem.BigBox,
-                500, 0, 3,
-                (Day + "_daily_3000"), "STAR OFFER", "offer_legendary"
-            );
-            //мегабокс за 1500 старов
-            GenerateOffer(
-                new DateTime(2000, 4, 20, 12, 0, 0), new DateTime(2030, 4, 20, 12, 0, 0),
-                1, 999, 0, ShopItem.MegaBox,
-                1500, 0, 3,
-                (Day + "_daily_3000"), "STAR OFFER", "offer_legendary"
-            );
-            //мегабокс за 3000 старов
-            GenerateOffer(
-                new DateTime(2000, 4, 20, 12, 0, 0), new DateTime(2030, 4, 20, 12, 0, 0),
-                2, 999, 0, ShopItem.MegaBox,
-                3000, 0, 3,
-                (Day + "_daily_3000"), "STAR OFFER", "offer_legendary"
-            );
-            GenerateOffer(
-                 new DateTime(2024, 5, 7, 10, 0, 0), new DateTime(2024, 5, 10, 11, 0, 0),
-                 1, 999, 0, ShopItem.MegaBox,
-                 0, 0, 0,
-                 "1000", "Gift", "offer_generic"
-             );
-            GenerateOffer(
-                 new DateTime(2024, 4, 8, 10, 0, 0), new DateTime(2024, 5, 10, 11, 0, 0),
-                 20, 999, 0, ShopItem.Gems,
-                 0, 0, 0,
-                 "day6", "Gift", "offer_generic"
-             );
-            GenerateOffer(
-                 new DateTime(2024, 5, 9, 12, 0, 0), new DateTime(2024, 5, 10, 11, 0, 0),
-                 1, 999, 130, ShopItem.Skin,
-                 0, 0, 0,
-                 "day7", "Gift", "offer_generic"
-             );
-
-            GenerateOffer2(
-                 new DateTime(2024, 5, 7, 12, 0, 0), new DateTime(2024, 5, 14, 11, 0, 0),
-                 10, 999, 130, ShopItem.BigBox,
-                 10, 999, 130, ShopItem.MegaBox,
-                 0, 0, 0,
-                 "Sorry", "sorry.", "offer_generic"
-             );
-
-            GenerateOffer3(
-                 new DateTime(2024, 5, 7, 12, 0, 0), new DateTime(2024, 5, 14, 11, 0, 0),
-                 1, 999, 0, ShopItem.EmoteBundle,
-                 2500, 999, 0, ShopItem.Coin,
-                 40, 999, 130, ShopItem.Gems,
-                 0, 0, 0,
-                 "9may", "Happy 9th of May!", "offer_pinpack"
-             );
-
-        }
-
-        public void GenerateOffer(
-            DateTime OfferStart,
-            DateTime OfferEnd,
-            int Count,
-            int BrawlerID,
-            int Extra,
-            ShopItem Item,
-            int Cost,
-            int OldCost,
-            int Currency,
-            string Claim,
-            string Title,
-            string BGR
-            )
-        {
-
-            OfferBundle bundle = new OfferBundle();
-            bundle.IsDailyDeals = false;
-            bundle.IsTrue = true;
-            bundle.EndTime = OfferEnd;
-            bundle.Cost = Cost;
-            bundle.OldCost = OldCost;
-            bundle.Currency = Currency;
-            bundle.Claim = Claim;
-            bundle.Title = Title;
-            bundle.BackgroundExportName = BGR;
-
-            if (OffersClaimed.Contains(bundle.Claim))
-            {
-                bundle.Purchased = true;
-            }
-            if (TimerMath(OfferStart, OfferEnd) == -1)
-            {
-                bundle.Purchased = true;
-            }
-            if (HomeMode.HasHeroUnlocked(16000000 + BrawlerID))
-            {
-                bundle.Purchased = true;
-            }
-
-            Offer offer = new Offer(Item, Count, (16000000 + BrawlerID), Extra);
-            bundle.Items.Add(offer);
-
-            OfferBundles.Add(bundle);
-        }
-
-        public void GenerateOffer2(
-            DateTime OfferStart,
-            DateTime OfferEnd,
-            int Count,
-            int BrawlerID,
-            int Extra,
-            ShopItem Item,
-            int Count2,
-            int BrawlerID2,
-            int Extra2,
-            ShopItem Item2,
-            int Cost,
-            int OldCost,
-            int Currency,
-            string Claim,
-            string Title,
-            string BGR
-            )
-        {
-
-            OfferBundle bundle = new OfferBundle();
-            bundle.IsDailyDeals = false;
-            bundle.IsTrue = true;
-            bundle.EndTime = OfferEnd;
-            bundle.Cost = Cost;
-            bundle.OldCost = OldCost;
-            bundle.Currency = Currency;
-            bundle.Claim = Claim;
-            bundle.Title = Title;
-            bundle.BackgroundExportName = BGR;
-
-            if (OffersClaimed.Contains(bundle.Claim))
-            {
-                bundle.Purchased = true;
-            }
-            if (TimerMath(OfferStart, OfferEnd) == -1)
-            {
-                bundle.Purchased = true;
-            }
-            if (HomeMode.HasHeroUnlocked(16000000 + BrawlerID))
-            {
-                bundle.Purchased = true;
-            }
-
-            Offer offer = new Offer(Item, Count, (16000000 + BrawlerID), Extra);
-            bundle.Items.Add(offer);
-            Offer offer2 = new Offer(Item2, Count2, (16000000 + BrawlerID2), Extra2);
-            bundle.Items.Add(offer2);
-
-            OfferBundles.Add(bundle);
-        }
-
-        public void GenerateOffer3(
-            DateTime OfferStart,
-            DateTime OfferEnd,
-            int Count,
-            int BrawlerID,
-            int Extra,
-            ShopItem Item,
-            int Count2,
-            int BrawlerID2,
-            int Extra2,
-            ShopItem Item2,
-            int Count3,
-            int BrawlerID3,
-            int Extra3,
-            ShopItem Item3,
-            int Cost,
-            int OldCost,
-            int Currency,
-            string Claim,
-            string Title,
-            string BGR
-            )
-        {
-
-            OfferBundle bundle = new OfferBundle();
-            bundle.IsDailyDeals = false;
-            bundle.IsTrue = true;
-            bundle.EndTime = OfferEnd;
-            bundle.Cost = Cost;
-            bundle.OldCost = OldCost;
-            bundle.Currency = Currency;
-            bundle.Claim = Claim;
-            bundle.Title = Title;
-            bundle.BackgroundExportName = BGR;
-
-            if (OffersClaimed.Contains(bundle.Claim))
-            {
-                bundle.Purchased = true;
-            }
-            if (TimerMath(OfferStart, OfferEnd) == -1)
-            {
-                bundle.Purchased = true;
-            }
-            if (HomeMode.HasHeroUnlocked(16000000 + BrawlerID))
-            {
-                bundle.Purchased = true;
-            }
-
-            Offer offer = new Offer(Item, Count, (16000000 + BrawlerID), Extra);
-            bundle.Items.Add(offer);
-            Offer offer2 = new Offer(Item2, Count2, (16000000 + BrawlerID2), Extra2);
-            bundle.Items.Add(offer2);
-            Offer offer3 = new Offer(Item3, Count3, (16000000 + BrawlerID3), Extra3);
-            bundle.Items.Add(offer3);
-
-            OfferBundles.Add(bundle);
-        }
-
         private void UpdateDailySkins()
         {
-            List<string> skins = new() { "Witch", "Rockstar", "Beach", "Pink", "Panda", "White", "Hair", "Gold", "Rudo", "Bandita", "Rey", "Knight", "Caveman", "Dragon", "Summer", "Summertime", "Pheonix", "Greaser", "GirlPrereg", "Box", "Santa", "Chef", "Boombox", "Wizard", "Reindeer", "GalElf", "Hat", "Footbull", "Popcorn", "Hanbok", "Cny", "Valentine", "WarsBox", "Nightwitch", "Cart", "Shiba", "GalBunny", "Ms", "GirlHotrod", "Maple", "RR", "Mecha", "MechaWhite", "MechaNight", "FootbullBlue", "Outlaw", "Hogrider", "BoosterDefault", "Shark", "HoleBlue", "BoxMoonFestival", "WizardRed", "Pirate", "GirlWitch", "KnightDark", "DragonDark", "DJ", "Wolf", "Brown", "Total", "Sally", "Leonard", "SantaRope", "Gift", "GT", "SniperDefaultAddonBee", "SniperLadyBug", "SniperLadyBugAddonBee", "Virus", "BoosterVirus", "HoleStreetNinja", "Gamer", "Valentines", "Koala", "BearKoala", "TurretDefault", "AgentP", "Football", "Arena", "Tanuki", "Horus", "ArenaPSG", "DarkBunny", "College", "TurretTanuki", "TotemDefault", "Bazaar", "RedDragon", "Constructor", "Hawaii", "Barbking", "Trader", "StationSummer", "Silver", "SniperMonster", "BombMonster", "SniperMonsterAddonBee", "Bank", "Retro", "Ranger", "Tracksuit", "Knight", "RetroAddon", "Mask", "GiftShop", "Atomic" };
+            List<string> skins = new() { "Witch", "Rockstar", "Beach", "Pink", "Panda", "White", "Hair", "Gold", "Rudo", "Bandita", "Rey", "Knight", "Caveman", "Dragon", "Summer", "Summertime", "Pheonix", "Greaser", "GirlPrereg", "Box", "Santa", "Chef", "Boombox", "Wizard", "Reindeer", "GalElf", "Hat", "Footbull", "Popcorn", "Hanbok", "Cny", "Valentine", "WarsBox", "Nightwitch", "Cart", "Shiba", "GalBunny", "Ms", "GirlHotrod", "Maple", "RR", "Mecha", "MechaWhite", "MechaNight", "FootbullBlue", "Outlaw", "Hogrider", "BoosterDefault", "Shark", "HoleBlue", "BoxMoonFestival", "WizardRed", "Pirate", "GirlWitch", "KnightDark", "DragonDark", "DJ", "Wolf", "Brown", "Total", "Sally", "Leonard", "SantaRope", "Gift", "GT", "SniperDefaultAddonBee", "SniperLadyBug", "SniperLadyBugAddonBee", "Virus", "BoosterVirus", "HoleStreetNinja", "Gamer", "Valentines", "Koala", "BearKoala", "TurretDefault", "AgentP", "Football", "Arena", "Tanuki", "Horus", "ArenaPSG", "DarkBunny", "College", "TurretTanuki", "TotemDefault", "Bazaar", "RedDragon", "Constructor", "Hawaii", "Barbking", "Trader", "StationSummer", "Silver", "SniperMonster", "BombMonster", "SniperMonsterAddonBee", "Bank", "Retro", "Ranger", "Tracksuit", "Knight", "RetroAddon" };
             List<int> skis = new();
             List<int> starss = new();
             foreach (Hero h in HomeMode.Avatar.Heroes)
@@ -941,13 +645,41 @@ namespace Supercell.Laser.Logic.Home
 
         private OfferBundle GenerateDailyGift()
         {
-            OfferBundle bundle = new OfferBundle();
-            bundle.IsDailyDeals = true;
-            bundle.EndTime = DateTime.UtcNow.Date.AddDays(1).AddHours(8); // tomorrow at 8:00 utc (11:00 MSK)
-            bundle.Cost = 0;
+            Random random = new Random();
 
-            Offer offer1 = new Offer(ShopItem.BrawlBox, 1);
-            bundle.Items.Add(offer1);
+            // Generate random integer within a specific range (e.g., between 0 and 100)
+            int randomInRange = random.Next(0, 2);
+            OfferBundle bundle = new OfferBundle();
+            if (randomInRange == 0)
+            {
+                bundle.IsDailyDeals = true;
+                bundle.EndTime = DateTime.UtcNow.Date.AddSeconds(3); //change
+                bundle.Cost = 0;
+
+                Offer offer = new Offer(ShopItem.FreeBox, 1);
+                bundle.Items.Add(offer);
+            }
+
+            if (randomInRange == 1)
+            {
+                bundle.IsDailyDeals = true;
+                bundle.EndTime = DateTime.UtcNow.Date.AddSeconds(3); //change
+                bundle.Cost = 0;
+
+                Offer offer = new Offer(ShopItem.Coin, random.Next(10,50));
+                bundle.Items.Add(offer);
+            }
+
+            if (randomInRange == 2)
+            {
+                bundle.IsDailyDeals = true;
+                bundle.EndTime = DateTime.UtcNow.Date.AddSeconds(3); //change
+                bundle.Cost = 0;
+                bundle.OldCost = 80;
+                Offer offer = new Offer(ShopItem.MegaBox, 1);
+                bundle.Items.Add(offer);
+            }
+
 
             return bundle;
         }
@@ -1022,7 +754,7 @@ namespace Supercell.Laser.Logic.Home
                 }
             }
 
-            encoder.WriteVInt(UnlockedSkins.Count); // Played game modes
+            encoder.WriteVInt(UnlockedSkins.Count); // Unlocked Skins array
             foreach (int s in UnlockedSkins)
             {
                 ByteStreamHelper.WriteDataReference(encoder, s);
@@ -1030,15 +762,15 @@ namespace Supercell.Laser.Logic.Home
 
             encoder.WriteVInt(0);
 
-            encoder.WriteVInt(0);
+            encoder.WriteVInt(0); // leaderboard region
             encoder.WriteVInt(HomeMode.Avatar.HighestTrophies); // 122
-            encoder.WriteVInt(0);
+            encoder.WriteVInt(0); //tokens used in battles
             encoder.WriteVInt(0);
             encoder.WriteBoolean(true);
             encoder.WriteVInt(TokenDoublers);
-            encoder.WriteVInt(0); // token doubler
-            encoder.WriteVInt(0);
-            encoder.WriteVInt(0);
+            encoder.WriteVInt(69); // trophy league season timer
+            encoder.WriteVInt(0); 
+            encoder.WriteVInt(69); //brawl pass season timer
 
             encoder.WriteVInt(0);
             encoder.WriteVInt(0);
@@ -1051,8 +783,9 @@ namespace Supercell.Laser.Logic.Home
             encoder.WriteVInt(2);
             encoder.WriteVInt(2);
             encoder.WriteVInt(2);
-            encoder.WriteVInt(0);
-            encoder.WriteVInt(0);
+
+            encoder.WriteVInt(0); // change name cost
+            encoder.WriteVInt(0); //change name timer
 
             encoder.WriteVInt(OfferBundles.Count); // Shop offers at 0x78e0c4
             foreach (OfferBundle offerBundle in OfferBundles)
@@ -1070,10 +803,10 @@ namespace Supercell.Laser.Logic.Home
 
             ByteStreamHelper.WriteDataReference(encoder, Character);
 
-            encoder.WriteString("US");
-            encoder.WriteString("xeon | erder");
+            encoder.WriteString("TR");
+            encoder.WriteString("erder | xeon");
 
-            encoder.WriteVInt(6);
+            encoder.WriteVInt(6); // IntValueEntry
             {
                 encoder.WriteInt(3);
                 encoder.WriteInt(TokenReward); // tokens
@@ -1082,16 +815,16 @@ namespace Supercell.Laser.Logic.Home
                 encoder.WriteInt(TrophiesReward); // trophies
 
                 encoder.WriteInt(8);
-                encoder.WriteInt(StarPointsGained); // trophies
+                encoder.WriteInt(StarPointsGained); // star points
 
                 encoder.WriteInt(7);
-                encoder.WriteInt(HomeMode.Avatar.DoNotDisturb ? 1 : 0); // trophies
+                encoder.WriteInt(HomeMode.Avatar.DoNotDisturb ? 1 : 0); // dnd
 
                 encoder.WriteInt(9);
-                encoder.WriteInt(1); // trophies
+                encoder.WriteInt(1); // idk
 
                 encoder.WriteInt(10);
-                encoder.WriteInt(PowerPlayTrophiesReward); // trophies
+                encoder.WriteInt(PowerPlayTrophiesReward); // power ply trophird
 
             }
 
@@ -1101,15 +834,15 @@ namespace Supercell.Laser.Logic.Home
             StarPointsGained = 0;
             PowerPlayTrophiesReward = 0;
 
-            encoder.WriteVInt(0); // array
+            encoder.WriteVInt(0); // CoolDownEntry
 
             encoder.WriteVInt(1); // BrawlPassSeasonData
             {
-                encoder.WriteVInt(2);
-                encoder.WriteVInt(BrawlPassTokens);
+                encoder.WriteVInt(2); //season id
+                encoder.WriteVInt(BrawlPassTokens); //collected tokens
                 //encoder.WriteVInt(PremiumPassProgress);
-                encoder.WriteBoolean(HasPremiumPass);
-                encoder.WriteVInt(0);
+                encoder.WriteBoolean(HasPremiumPass); //is purchased
+                encoder.WriteVInt(0); //collected tier
 
                 if (encoder.WriteBoolean(true)) // Track 9
                 {
@@ -1139,16 +872,7 @@ namespace Supercell.Laser.Logic.Home
             }
 
             encoder.WriteBoolean(true);
-
-            encoder.WriteVInt(UnlockedEmotes.Count);
-            foreach (int i in UnlockedEmotes)
-            {
-                encoder.WriteVInt(52);
-                encoder.WriteVInt(i);
-                encoder.WriteVInt(1);
-                encoder.WriteVInt(1);
-                encoder.WriteVInt(1);
-            }
+            encoder.WriteVInt(0);
         }
 
         public void LogicConfData(ByteStream encoder, DateTime utcNow)
@@ -1168,9 +892,18 @@ namespace Supercell.Laser.Logic.Home
 
             encoder.WriteVInt(0); // Array
 
-            encoder.WriteVInt(9);
-            for (int i = 1; i <= 9; i++)
-                encoder.WriteVInt(i);
+            encoder.WriteVInt(9); //event slot array
+            /*for (int i = 1; i <= 9; i++)
+                encoder.WriteVInt(i);*/
+            encoder.WriteVInt(1); //gem grab
+            encoder.WriteVInt(2); //swowdown
+            encoder.WriteVInt(3); //daily events
+            encoder.WriteVInt(4); //team events
+            encoder.WriteVInt(5); //duo showdown
+            encoder.WriteVInt(6); //team events 2
+            encoder.WriteVInt(7); //special events
+            encoder.WriteVInt(8); //solo events
+            encoder.WriteVInt(9); //power play
 
             encoder.WriteVInt(Events.Length);
             foreach (EventData data in Events)
@@ -1245,12 +978,12 @@ namespace Supercell.Laser.Logic.Home
 
             encoder.WriteBoolean(true);
 
-            encoder.WriteVInt(0); // Array
+            encoder.WriteVInt(0); // relase entry Array
 
             encoder.WriteVInt(2); // IntValueEntries
             {
                 encoder.WriteInt(1);
-                encoder.WriteInt(41000017); // theme
+                encoder.WriteInt(41000015); // theme
 
                 encoder.WriteInt(46);
                 encoder.WriteInt(1);
