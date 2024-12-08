@@ -1,10 +1,10 @@
 # Royale Brawl v29
 
-A Brawl Stars private server for 29.272 based on royale Brawl
+A Brawl Stars private server for 29.270 based on royale Brawl
 
 why did I create this server? because all public v29 servers suck
 
-## Download the client [here](https://mega.nz/file/D65nBSjR#QunZhdMVdHF6EqN5RG2_vTbl5PlpB6RH-sZO0mVn8nM)
+## Download the client [here](https://mega.nz/file/37wkxarS#_iM12SgrEt3KpeWuixu_K7_qgJ8Qd458_qcnM7FunD0)
 ![Logo](https://github.com/Erder00/royale-brawl-v29/blob/main/docs/screenshots/lobby.png?raw=true)
 
 
@@ -56,7 +56,7 @@ How to install:
 [Linux](https://github.com/Erder00/royale-brawl-v29/blob/main/docs/Linux.md)
 [Windows](https://github.com/Erder00/royale-brawl-v29/blob/main/docs/Windows.md)
 
-then connect to the server using the [pre-made client](https://mega.nz/file/D65nBSjR#QunZhdMVdHF6EqN5RG2_vTbl5PlpB6RH-sZO0mVn8nM)
+then connect to the server using the [pre-made client](https://mega.nz/file/37wkxarS#_iM12SgrEt3KpeWuixu_K7_qgJ8Qd458_qcnM7FunD0)
 
 decompile the apk and replace the ip in `lib/armeabi-v7a/liberder.script.so` with your own
 
@@ -69,6 +69,6 @@ decompile the apk and replace the ip in `lib/armeabi-v7a/liberder.script.so` wit
 ## TODO
 
 - better anti-cheat (check csv shas and apk integrity in script, detect if battles are very short)
-- fix brawl pass / colette and surge mess
+- fix pin packs
 - add more club commands
 - add creator codes
