@@ -251,6 +251,12 @@ function setup(b, c) {
             }
         }
     })
+
+    const isEmulatorFunc = new NativeFunction(base.add(0x61F76C), 'int', [])
+
+    if (isEmulatorFunc() == 1) {
+        console.log("using an emulator!")
+    }
 }
 
 function hacksupermod() {
