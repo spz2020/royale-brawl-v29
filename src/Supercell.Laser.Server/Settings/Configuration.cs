@@ -12,6 +12,7 @@
         [JsonProperty("database_username")] public readonly string DatabaseUsername;
         [JsonProperty("database_password")] public readonly string DatabasePassword;
         [JsonProperty("database_name")] public readonly string DatabaseName;
+        [JsonProperty("anti-ddos")] public readonly bool antiddos;
         [JsonProperty("BotToken")] public readonly string BotToken;
         [JsonProperty("ChannelId")] public readonly ulong ChannelId;
 

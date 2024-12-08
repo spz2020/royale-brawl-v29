@@ -199,7 +199,7 @@ namespace Supercell.Laser.Server.Networking
             }
             else
             {
-                Logger.Print("Ignoring message of unknown type " + type);
+                //Logger.Print("Ignoring message of unknown type " + type);
             }
 
             return 0;

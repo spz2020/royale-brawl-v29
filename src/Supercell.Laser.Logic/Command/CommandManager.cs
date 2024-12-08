@@ -40,7 +40,7 @@
             Command command = CommandManager.CreateCommand(type);
             if (command == null)
             {
-                Debugger.Warning("Command is unhandled: " + type);
+                //Debugger.Warning("Command is unhandled: " + type);
                 return null;
             }
 

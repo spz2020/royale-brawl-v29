@@ -1,33 +1,52 @@
 namespace Supercell.Laser.Server.Networking
 {
+    using Supercell.Laser.Server.Networking.Session;
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Net;
     using System.Net.Sockets;
     using System.Threading;
-    using Supercell.Laser.Server.Networking.Session;
-
+    using Supercell.Laser.Server.Settings;
+    
     public static class TCPGateway
     {
-        private static readonly List<Connection> ActiveConnections = new List<Connection>();
-        private static readonly Dictionary<string, int> IpConnections = new Dictionary<string, int>();
-        private static readonly HashSet<string> RejectedIps = new HashSet<string>();
-        private const int MaxConnectionsPerIp = 5;
-
-        private static Socket _socket;
-        private static Thread _thread;
-        private static ManualResetEvent _acceptEvent;
+        private static List<Connection> ActiveConnections;
+        private static Socket Socket;
+        private static Thread Thread;
+        private static ManualResetEvent AcceptEvent;
+        private static Dictionary<IPAddress, int> ConnectionAttempts;
+        private static HashSet<IPAddress> IPBlacklist;
+        private static HashSet<IPAddress> LoggedBlacklistedIPs;
+        private static string BlacklistFilePath = "ipblacklist.txt";
+        private static bool AntiDDoSEnabled;
+        private static Timer BlacklistReloadTimer;
 
         public static void Init(string host, int port)
         {
-            _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            _socket.Bind(new IPEndPoint(IPAddress.Parse(host), port));
-            _socket.Listen(10000000);
+            ActiveConnections = new List<Connection>();
+            ConnectionAttempts = new Dictionary<IPAddress, int>();
+            IPBlacklist = new HashSet<IPAddress>();
+            LoggedBlacklistedIPs = new HashSet<IPAddress>();
 
-            _acceptEvent = new ManualResetEvent(false);
+            Configuration config = Configuration.LoadFromFile("config.json");
+            AntiDDoSEnabled = config.antiddos;
 
-            _thread = new Thread(Update);
-            _thread.Start();
+            if (AntiDDoSEnabled)
+            {
+                LoadBlacklist();
+                // reload blacklist every 60 seconds
+                BlacklistReloadTimer = new Timer(ReloadBlacklist, null, TimeSpan.FromSeconds(60), TimeSpan.FromSeconds(60));
+            }
+
+            Socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            Socket.Bind(new IPEndPoint(IPAddress.Parse(host), port));
+            Socket.Listen(10000000);
+
+            AcceptEvent = new ManualResetEvent(false);
+
+            Thread = new Thread(TCPGateway.Update);
+            Thread.Start();
 
             Logger.Print($"TCP Server started at {host}:{port}");
         }
@@ -36,9 +55,9 @@ namespace Supercell.Laser.Server.Networking
         {
             while (true)
             {
-                _acceptEvent.Reset();
-                _socket.BeginAccept(OnAccept, null);
-                _acceptEvent.WaitOne();
+                AcceptEvent.Reset();
+                Socket.BeginAccept(new AsyncCallback(OnAccept), null);
+                AcceptEvent.WaitOne();
             }
         }
 
@@ -46,47 +65,56 @@ namespace Supercell.Laser.Server.Networking
         {
             try
             {
-                Socket client = _socket.EndAccept(ar);
-                string clientIp = ((IPEndPoint)client.RemoteEndPoint).Address.ToString();
+                Socket client = Socket.EndAccept(ar);
+                IPAddress clientIP = ((IPEndPoint)client.RemoteEndPoint).Address;
 
-                lock (IpConnections)
+                if (AntiDDoSEnabled)
                 {
-                    if (!IpConnections.ContainsKey(clientIp))
+                    lock (IPBlacklist)
                     {
-                        IpConnections[clientIp] = 1;
-                    }
-                    else if (IpConnections[clientIp] >= MaxConnectionsPerIp)
-                    {
-                        if (!RejectedIps.Contains(clientIp))
+                        if (IPBlacklist.Contains(clientIP))
                         {
-                            lock (RejectedIps)
+                            if (!LoggedBlacklistedIPs.Contains(clientIP))
                             {
-                                RejectedIps.Add(clientIp);
-                                Logger.Print($"DDOS attempt from {clientIp} has been prevented");
+                                Logger.Print($"Blocked connection from blacklisted IP: {clientIP}");
+                                LoggedBlacklistedIPs.Add(clientIP);
                             }
+                            client.Close();
+                            AcceptEvent.Set();
+                            return;
                         }
-                        client.Close();
-                        _acceptEvent.Set();
-                        return;
-                    }
-                    else
-                    {
-                        IpConnections[clientIp]++;
+
+                        if (!ConnectionAttempts.ContainsKey(clientIP))
+                        {
+                            ConnectionAttempts[clientIP] = 0;
+                        }
+
+                        ConnectionAttempts[clientIP]++;
+
+                        if (ConnectionAttempts[clientIP] > 3)
+                        {
+                            Logger.Print($"DDoS from {clientIP} detected. Has been added to blacklist.");
+                            IPBlacklist.Add(clientIP);
+                            File.AppendAllText(BlacklistFilePath, clientIP + Environment.NewLine);
+                            client.Close();
+                            AcceptEvent.Set();
+                            return;
+                        }
                     }
                 }
 
                 Connection connection = new Connection(client);
                 ActiveConnections.Add(connection);
-                Logger.Print($"New connection from {clientIp}");
+                Logger.Print($"New connection from IP: {clientIP}!");
                 Connections.AddConnection(connection);
-                client.BeginReceive(connection.ReadBuffer, 0, 1024, SocketFlags.None, OnReceive, connection);
+                client.BeginReceive(connection.ReadBuffer, 0, 1024, SocketFlags.None, new AsyncCallback(OnReceive), connection);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Logger.Print($"Error accepting connection: {ex.Message}");
+                ;
             }
 
-            _acceptEvent.Set();
+            AcceptEvent.Set();
         }
 
         private static void OnReceive(IAsyncResult ar)
@@ -96,11 +124,11 @@ namespace Supercell.Laser.Server.Networking
 
             try
             {
-                int bytesRead = connection.Socket.EndReceive(ar);
-                if (bytesRead <= 0)
+                int r = connection.Socket.EndReceive(ar);
+                if (r <= 0)
                 {
-                    Logger.Print("Client disconnected.");
-                    RemoveIpConnection(connection.Socket);
+                    IPAddress clientIP = ((IPEndPoint)connection.Socket.RemoteEndPoint).Address;
+                    Logger.Print($"Client with IP {clientIP} disconnected.");
                     ActiveConnections.Remove(connection);
                     if (connection.MessageManager.HomeMode != null)
                     {
@@ -110,25 +138,25 @@ namespace Supercell.Laser.Server.Networking
                     return;
                 }
 
-                connection.Memory.Write(connection.ReadBuffer, 0, bytesRead);
+                connection.Memory.Write(connection.ReadBuffer, 0, r);
                 if (connection.Messaging.OnReceive() != 0)
                 {
-                    RemoveIpConnection(connection.Socket);
+                    IPAddress clientIP = ((IPEndPoint)connection.Socket.RemoteEndPoint).Address;
+                    Logger.Print($"Client with IP {clientIP} disconnected.");
                     ActiveConnections.Remove(connection);
                     if (connection.MessageManager.HomeMode != null)
                     {
                         Sessions.Remove(connection.Avatar.AccountId);
                     }
                     connection.Close();
-                    Logger.Print("Client disconnected.");
                     return;
                 }
-                connection.Socket.BeginReceive(connection.ReadBuffer, 0, 1024, SocketFlags.None, OnReceive, connection);
+                connection.Socket.BeginReceive(connection.ReadBuffer, 0, 1024, SocketFlags.None, new AsyncCallback(OnReceive), connection);
             }
-            catch (SocketException ex)
+            catch (SocketException)
             {
-                Logger.Print($"Socket error: {ex.Message}");
-                RemoveIpConnection(connection.Socket);
+                IPAddress clientIP = ((IPEndPoint)connection.Socket.RemoteEndPoint).Address;
+                Logger.Print($"Client with IP {clientIP} disconnected.");
                 ActiveConnections.Remove(connection);
                 if (connection.MessageManager.HomeMode != null)
                 {
@@ -136,9 +164,8 @@ namespace Supercell.Laser.Server.Networking
                 }
                 connection.Close();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Logger.Print($"Unhandled exception: {ex.Message}, trace: {ex.StackTrace}");
                 connection.Close();
             }
         }
@@ -150,33 +177,36 @@ namespace Supercell.Laser.Server.Networking
                 Socket socket = (Socket)ar.AsyncState;
                 socket.EndSend(ar);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Logger.Print($"Error sending data: {ex.Message}");
+                ;
             }
         }
 
-        private static void RemoveIpConnection(Socket socket)
+        private static void LoadBlacklist()
         {
-            try
+            if (File.Exists(BlacklistFilePath))
             {
-                string clientIp = ((IPEndPoint)socket.RemoteEndPoint).Address.ToString();
-                lock (IpConnections)
+                lock (IPBlacklist)
                 {
-                    if (IpConnections.ContainsKey(clientIp))
+                    IPBlacklist.Clear();
+                    LoggedBlacklistedIPs.Clear();
+                    foreach (var line in File.ReadAllLines(BlacklistFilePath))
                     {
-                        IpConnections[clientIp]--;
-                        if (IpConnections[clientIp] <= 0)
+                        if (IPAddress.TryParse(line, out var ip))
                         {
-                            IpConnections.Remove(clientIp);
+                            IPBlacklist.Add(ip);
                         }
                     }
                 }
             }
-            catch (Exception ex)
-            {
-                Logger.Print($"Error removing IP connection: {ex.Message}");
-            }
+        }
+
+        private static void ReloadBlacklist(object state)
+        {
+            Logger.Print("Reloading blacklist...");
+            LoadBlacklist();
+            Logger.Print("Blacklist has been reloaded.");
         }
     }
 }

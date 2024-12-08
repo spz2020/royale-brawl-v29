@@ -3,7 +3,8 @@
   "udp_port": 9449,
   "database_username": "root",
   "database_password": "erder",
-  "database_name": "rbdb",
+  "database_name": "royale29",
+  "anti-ddos": true,
   "BotToken": "YOUR_BOT_TOKEN_HERE",
   "ChannelId": 1305220460081975439
 }
