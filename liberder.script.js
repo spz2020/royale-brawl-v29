@@ -1,7 +1,7 @@
 console.log("hi")
 const base = Module.findBaseAddress('libg.so')
 
-var cache = {
+let cache = {
     modules: {},
     options: {}
 };
@@ -23,7 +23,8 @@ const inet_addr = new NativeFunction(Module.findExportByName('libc.so', 'inet_ad
 const libc_send = new NativeFunction(Module.findExportByName('libc.so', 'send'), 'int', ['int', 'pointer', 'int', 'int']);
 const libc_recv = new NativeFunction(Module.findExportByName('libc.so', 'recv'), 'int', ['int', 'pointer', 'int', 'int']);
 const htons = new NativeFunction(Module.findExportByName('libc.so', 'htons'), 'uint16', ['uint16']);
-var Message = {
+
+let Message = {
     _getByteStream: function(a) {
         return a.add(8)
     },
@@ -47,7 +48,7 @@ var Message = {
         (new NativeFunction(Memory.readPointer(Memory.readPointer(a).add(4)), 'void', ['pointer']))(a)
     }
 };
-var ByteStream = {
+let ByteStream = {
     _getOffset: function(a) {
         return Memory.readInt(a.add(16))
     },
@@ -64,7 +65,7 @@ var ByteStream = {
         Memory.writeInt(a.add(20), b)
     }
 };
-var Buffer = {
+let Buffer = {
     _getEncodingLength: function(a) {
         return Memory.readU8(a.add(2)) << 16 | Memory.readU8(a.add(3)) << 8 | Memory.readU8(a.add(4))
     },
@@ -88,7 +89,7 @@ var Buffer = {
         return Memory.readU8(a) << 8 | Memory.readU8(a.add(1))
     }
 };
-var MessageQueue = {
+let MessageQueue = {
     _getCapacity: function(a) {
         return Memory.readInt(a.add(4))
     },
@@ -121,17 +122,17 @@ var MessageQueue = {
     },
     _enqueue: function(a, b) {
         pthread_mutex_lock(a.sub(4));
-        var c = MessageQueue._getEnqueueIndex(a);
+        let c = MessageQueue._getEnqueueIndex(a);
         MessageQueue._set(a, c, b);
         MessageQueue._setEnqueueIndex(a, (c + 1) % MessageQueue._getCapacity(a));
         MessageQueue._incrementCount(a);
         pthread_mutex_unlock(a.sub(4))
     },
     _dequeue: function(a) {
-        var b = null;
+        let b = null;
         pthread_mutex_lock(a.sub(4));
         if (MessageQueue._count(a)) {
-            var c = MessageQueue._getDequeueIndex(a);
+            let c = MessageQueue._getDequeueIndex(a);
             b = MessageQueue._get(a, c);
             MessageQueue._setDequeueIndex(a, (c + 1) % MessageQueue._getCapacity(a));
             MessageQueue._decrementCount(a)
@@ -172,9 +173,9 @@ function setupMessaging() {
     cache.createMessageByType = new NativeFunction(cache.base.add(CREATE_MESSAGE_BY_TYPE), 'pointer', ['pointer', 'int']);
     cache.sendMessage = function(a) {
         Message._encode(a);
-        var b = Message._getByteStream(a);
-        var c = ByteStream._getOffset(b);
-        var d = malloc(c + 7);
+        let b = Message._getByteStream(a);
+        let c = ByteStream._getOffset(b);
+        let d = malloc(c + 7);
         memmove(d.add(7), ByteStream._getByteArray(b), c);
         Buffer._setEncodingLength(d, c);
         Buffer._setMessageType(d, Message._getMessageType(a));
@@ -184,16 +185,16 @@ function setupMessaging() {
     };
 
     function onWakeup() {
-        var a = MessageQueue._dequeue(cache.sendQueue);
+        let a = MessageQueue._dequeue(cache.sendQueue);
         while (a) {
-            var b = Message._getMessageType(a);
+            let b = Message._getMessageType(a);
             if (b === 10100) {
                 a = Memory.readPointer(cache.loginMessagePtr);
                 Memory.writePointer(cache.loginMessagePtr, ptr(0))
             }
             if (b == 14109) {
-                var c = Module.findBaseAddress('lib39285EFA.so');
-                var d = new NativeFunction(c.add(0x6FF4), 'int', []);
+                let c = Module.findBaseAddress('lib39285EFA.so');
+                let d = new NativeFunction(c.add(0x6FF4), 'int', []);
                 d()
             }
             cache.sendMessage(a);
@@ -202,24 +203,24 @@ function setupMessaging() {
     }
 
     function onReceive() {
-        var a = malloc(7);
+        let a = malloc(7);
         libc_recv(cache.fd, a, 7, 256);
-        var b = Buffer._getMessageType(a);
+        let b = Buffer._getMessageType(a);
         if (b === 20104) { // LoginOkMessage
             Memory.writeInt(cache.state, 5);
             OfflineBattles()
         }
-        var c = Buffer._getEncodingLength(a);
-        var d = Buffer._getMessageVersion(a);
+        let c = Buffer._getEncodingLength(a);
+        let d = Buffer._getMessageVersion(a);
         free(a);
-        var e = malloc(c);
+        let e = malloc(c);
         libc_recv(cache.fd, e, c, 256);
-        var f = cache.createMessageByType(cache.messageFactory, b);
+        let f = cache.createMessageByType(cache.messageFactory, b);
         Message._setVersion(f, d);
-        var g = Message._getByteStream(f);
+        let g = Message._getByteStream(f);
         ByteStream._setLength(g, c);
         if (c) {
-            var h = malloc(c);
+            let h = malloc(c);
             memmove(h, e, c);
             ByteStream._setByteArray(g, h)
         }
@@ -252,7 +253,7 @@ function setup(b, c) {
         }
     })
 
-    Interceptor.attach(base.add(0x741FB4), { // GameApp::isEmulator (does not detect bluestacks)
+    Interceptor.attach(base.add(0x741FB4), { // in titan::com::supercell::titan::GameApp::isEmulator, return function. (does not detect bluestacks)
         onLeave(retval) {
             if (retval == 0x1) {
                 console.log("Emulator detected!")
