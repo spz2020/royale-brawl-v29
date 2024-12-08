@@ -31,7 +31,7 @@
 
         public override int Execute(HomeMode homeMode)
         {
-            Debugger.Print($"Claim rankup reward: milestone: {MilestoneId}, data: {UnknownDataId}, unk2: {Unk2}, unk3: {Unk3}");
+            //Debugger.Print($"Claim rankup reward: milestone: {MilestoneId}, data: {UnknownDataId}, unk2: {Unk2}, unk3: {Unk3}");
 
             if (MilestoneId == 6)
             {
@@ -356,6 +356,35 @@
                         drop.PinGlobalId = DataTables.Get(DataType.Emote).GetData<EmoteData>(data).GetGlobalId();
                         drop.Count = 1;
                         unit.AddDrop(drop);
+
+                        command.DeliveryUnits.Add(unit);
+                        command.RewardTrackType = track;
+                        command.RewardForRank = idx;
+                        if (isBp)
+                        {
+                            command.BrawlPassSeason = 2;
+                        }
+                        command.Execute(homeMode);
+
+                        AvailableServerCommandMessage message = new AvailableServerCommandMessage();
+                        message.Command = command;
+                        homeMode.GameListener.SendMessage(message);
+                    }
+                    break;
+                case 21: // Pins
+                    {
+                        LogicGiveDeliveryItemsCommand command = new LogicGiveDeliveryItemsCommand();
+                        DeliveryUnit unit = new DeliveryUnit(100);
+                        List<int> Emotes_All = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 };
+                        List<int> Emotes_Locked = Emotes_All.Except(homeMode.Home.UnlockedEmotes).OrderBy(x => Guid.NewGuid()).Take(3).ToList();;
+
+                        foreach (int x in Emotes_Locked){
+                            GatchaDrop reward = new GatchaDrop(11);
+                            reward.Count = 1;
+                            reward.PinGlobalId = 52000000 + x;
+                            unit.AddDrop(reward);
+                            homeMode.Home.UnlockedEmotes.Add(x);
+                        }
 
                         command.DeliveryUnits.Add(unit);
                         command.RewardTrackType = track;

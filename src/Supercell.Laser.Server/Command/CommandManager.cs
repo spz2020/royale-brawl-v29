@@ -626,7 +626,7 @@
         }
         private bool LogicClaimRankUpRewardReceived(LogicClaimRankUpRewardCommand command)
         {
-            Debugger.Print($"Claim rankup reward: milestone: {command.MilestoneId}, data: {command.UnknownDataId}, Unk2: {command.Unk2}, Unk3: {command.Unk3}");
+            //Debugger.Print($"Claim rankup reward: milestone: {command.MilestoneId}, data: {command.UnknownDataId}, Unk2: {command.Unk2}, Unk3: {command.Unk3}");
 
             if (command.MilestoneId == 6)
             {
