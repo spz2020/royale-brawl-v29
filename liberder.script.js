@@ -147,7 +147,7 @@ function OfflineBattles() {
             retval.replace(ptr(1))
         }
     });
-    Interceptor.attach(cache.base.add(0xC88108), {
+    Interceptor.attach(cache.base.add(0xC88108), { // LogicBattleModeServer::setBotDifficulty
         onLeave(retval) {
             retval.replace(ptr(9))
         }
@@ -205,7 +205,7 @@ function setupMessaging() {
         var a = malloc(7);
         libc_recv(cache.fd, a, 7, 256);
         var b = Buffer._getMessageType(a);
-        if (b === 20104) {
+        if (b === 20104) { // LoginOkMessage
             Memory.writeInt(cache.state, 5);
             OfflineBattles()
         }
@@ -252,7 +252,7 @@ function setup(b, c) {
         }
     })
 
-    Interceptor.attach(base.add(0x741FB4), {
+    Interceptor.attach(base.add(0x741FB4), { // GameApp::isEmulator (does not detect bluestacks)
         onLeave(retval) {
             if (retval == 0x1) {
                 console.log("Emulator detected!")
