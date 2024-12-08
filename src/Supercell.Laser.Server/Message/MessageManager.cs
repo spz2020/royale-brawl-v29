@@ -1175,7 +1175,7 @@ public void ShowLobbyInfo()
             timeDifference.Seconds > 0 ? $"{timeDifference.Seconds} Seconds" : string.Empty);
 
             string msg = $"Server Status:\n" +
-                $"Server Game Version: 29.272\n" +
+                $"Server Game Version: 29.270\n" +
                 $"Server Build: v1.0\n" +
                 $"Resources Sha: {Fingerprint.Sha}\n" +
                 $"Environment: Prod\n" +
@@ -1361,7 +1361,7 @@ public void ShowLobbyInfo()
                         timeDifference.Seconds > 0 ? $"{timeDifference.Seconds} Seconds" : string.Empty);
 
                         response.Entry.Message = $"Server Status:\n" +
-                            $"Server Game Version: v29.272\n" +
+                            $"Server Game Version: v29.270\n" +
                             $"Server Build: v5.0 from 18.05.2024\n" +
                             $"Resources Sha: {Fingerprint.Sha}\n" +
                             $"Environment: Prod\n" +
@@ -2613,7 +2613,7 @@ private void AskForBattleEndReceived(AskForBattleEndMessage message)
                 return;
             }
 
-            string GameVersion = "29.272";
+            string GameVersion = "29.270";
 
             if (message.ClientVersion != GameVersion)
             {

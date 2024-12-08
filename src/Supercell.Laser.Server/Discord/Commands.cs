@@ -425,7 +425,7 @@ namespace Supercell.Laser.Server.Discord
             );
 
             return "# Server Status\n"
-                + $"Server Game Version: v29.272\n"
+                + $"Server Game Version: v29.270\n"
                 + $"Server Build: v1.0 from 10.02.2024\n"
                 + $"Resources Sha: {Fingerprint.Sha}\n"
                 + $"Environment: Prod\n"
