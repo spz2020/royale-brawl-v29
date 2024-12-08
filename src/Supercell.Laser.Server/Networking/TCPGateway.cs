@@ -127,8 +127,11 @@ namespace Supercell.Laser.Server.Networking
                 int r = connection.Socket.EndReceive(ar);
                 if (r <= 0)
                 {
-                    IPAddress clientIP = ((IPEndPoint)connection.Socket.RemoteEndPoint).Address;
-                    Logger.Print($"Client with IP {clientIP} disconnected.");
+                    if (connection.Socket.Connected)
+                    {
+                        IPAddress clientIP = ((IPEndPoint)connection.Socket.RemoteEndPoint).Address;
+                        Logger.Print($"Client with IP {clientIP} disconnected.");
+                    }
                     ActiveConnections.Remove(connection);
                     if (connection.MessageManager.HomeMode != null)
                     {
@@ -141,8 +144,11 @@ namespace Supercell.Laser.Server.Networking
                 connection.Memory.Write(connection.ReadBuffer, 0, r);
                 if (connection.Messaging.OnReceive() != 0)
                 {
-                    IPAddress clientIP = ((IPEndPoint)connection.Socket.RemoteEndPoint).Address;
-                    Logger.Print($"Client with IP {clientIP} disconnected.");
+                    if (connection.Socket.Connected)
+                    {
+                        IPAddress clientIP = ((IPEndPoint)connection.Socket.RemoteEndPoint).Address;
+                        Logger.Print($"Client with IP {clientIP} disconnected.");
+                    }
                     ActiveConnections.Remove(connection);
                     if (connection.MessageManager.HomeMode != null)
                     {
@@ -155,8 +161,11 @@ namespace Supercell.Laser.Server.Networking
             }
             catch (SocketException)
             {
-                IPAddress clientIP = ((IPEndPoint)connection.Socket.RemoteEndPoint).Address;
-                Logger.Print($"Client with IP {clientIP} disconnected.");
+                if (connection.Socket.Connected)
+                {
+                    IPAddress clientIP = ((IPEndPoint)connection.Socket.RemoteEndPoint).Address;
+                    Logger.Print($"Client with IP {clientIP} disconnected.");
+                }
                 ActiveConnections.Remove(connection);
                 if (connection.MessageManager.HomeMode != null)
                 {
