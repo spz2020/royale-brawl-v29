@@ -252,11 +252,16 @@ function setup(b, c) {
         }
     })
 
-    const isEmulatorFunc = new NativeFunction(base.add(0x61F76C), 'int', [])
-
-    if (isEmulatorFunc() == 1) {
-        console.log("using an emulator!")
-    }
+    Interceptor.attach(base.add(0x741FB4), {
+        onLeave(retval) {
+            if (retval == 0x1) {
+                console.log("Emulator detected!")
+                // do anything
+            } else {
+                console.log("No emulator detected!")
+            }
+        }
+    })
 }
 
 function hacksupermod() {
