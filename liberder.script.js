@@ -240,6 +240,35 @@ function setupMessaging() {
     })
 }
 
+function checkCpuInfo() {
+    Java.perform(function() {
+        let File = Java.use("java.io.File");
+        let FileInputStream = Java.use("java.io.FileInputStream");
+        let InputStreamReader = Java.use("java.io.InputStreamReader");
+        let BufferedReader = Java.use("java.io.BufferedReader");
+    
+        let filePath = "/proc/cpuinfo";
+    
+        let file = File.$new(filePath);
+        let fileInputStream = FileInputStream.$new(file);
+        let inputStreamReader = InputStreamReader.$new(fileInputStream);
+        let bufferedReader = BufferedReader.$new(inputStreamReader);
+    
+        let line = bufferedReader.readLine();
+        while (line !== null) {
+            if (line.includes("AMD") || line.includes("Intel")) {
+                console.log("emulator detected method 2")
+                break
+            }
+            line = bufferedReader.readLine();
+        }
+    
+        bufferedReader.close();
+        inputStreamReader.close();
+        fileInputStream.close();
+    });
+}
+
 function setup(b, c) {
     Interceptor.attach(Module.findExportByName('libc.so', 'connect'), {
         onEnter: function(a) {
@@ -249,17 +278,6 @@ function setup(b, c) {
                 Memory.writeU16(a[1].add(2), ntohs(c));
 
                 setupMessaging()
-            }
-        }
-    })
-
-    Interceptor.attach(base.add(0x741FB4), { // in titan::com::supercell::titan::GameApp::isEmulator, return function. (does not detect bluestacks)
-        onLeave(retval) {
-            if (retval == 0x1) {
-                console.log("Emulator detected!")
-                // do anything
-            } else {
-                console.log("No emulator detected!")
             }
         }
     })
@@ -273,6 +291,7 @@ function hacksupermod() {
 }
 
 function init() {
+    //checkCpuInfo() // uncomment to crash app if emulator is detected
     setup("127.0.0.1", 9339)
 }
 
