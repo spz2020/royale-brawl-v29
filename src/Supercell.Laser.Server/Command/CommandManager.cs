@@ -251,30 +251,77 @@
 
         private bool LogicPurchaseBrawlPassReceived(LogicPurchaseBrawlPassCommand command)
         {
-            if (HomeMode.Avatar.UseDiamonds(169))
+            if (command.boolean == false)
             {
-                HomeMode.Home.HasPremiumPass = true;
-                if (HomeMode.Avatar.AllianceId > 0)
+                if (HomeMode.Avatar.UseDiamonds(169))
                 {
-                    Alliance alliance = Alliances.Load(HomeMode.Avatar.AllianceId);
-                    AllianceMember member = alliance.GetMemberById(HomeMode.Avatar.AccountId);
-                    member.DisplayData.HighNameColorId = HomeMode.Home.NameColorId;
-                }
-                foreach (Friend friend in HomeMode.Avatar.Friends)
-                {
-                    Friend entry = friend.Avatar.GetFriendById(HomeMode.Avatar.AccountId);
-                    entry.DisplayData.HighNameColorId = HomeMode.Home.NameColorId;
-                    if (LogicServerListener.Instance.IsPlayerOnline(friend.Avatar.AccountId))
+                    HomeMode.Home.HasPremiumPass = true;
+                    if (HomeMode.Avatar.AllianceId > 0)
                     {
-                        FriendListUpdateMessage update = new()
-                        {
-                            Entry = entry
-                        };
-                        LogicServerListener.Instance.GetGameListener(friend.AccountId).SendTCPMessage(update);
+                        Alliance alliance = Alliances.Load(HomeMode.Avatar.AllianceId);
+                        AllianceMember member = alliance.GetMemberById(HomeMode.Avatar.AccountId);
+                        member.DisplayData.HighNameColorId = HomeMode.Home.NameColorId;
                     }
+                    foreach (Friend friend in HomeMode.Avatar.Friends)
+                    {
+                        Friend entry = friend.Avatar.GetFriendById(HomeMode.Avatar.AccountId);
+                        entry.DisplayData.HighNameColorId = HomeMode.Home.NameColorId;
+                        if (LogicServerListener.Instance.IsPlayerOnline(friend.Avatar.AccountId))
+                        {
+                            FriendListUpdateMessage update = new()
+                            {
+                                Entry = entry
+                            };
+                            LogicServerListener.Instance.GetGameListener(friend.AccountId).SendTCPMessage(update);
+                        }
 
+                    }
+                    return true;
                 }
-                return true;
+            } else
+            {
+                if (HomeMode.Avatar.UseDiamonds(249))
+                {
+                    HomeMode.Home.HasPremiumPass = true;
+
+                    var test = 0;
+                    while (test<10)
+                    {
+                        for (int x = 966; x < 1036 + 1; x++)
+                        {
+                            MilestoneData milestoneData = DataTables.Get(DataType.Milestone).GetDataByGlobalId<MilestoneData>(GlobalId.CreateGlobalId((int)DataType.Milestone, x));
+                            if (milestoneData.ProgressStart <= HomeMode.Home.BrawlPassTokens && (milestoneData.ProgressStart + milestoneData.Progress) > HomeMode.Home.BrawlPassTokens)
+                            {
+                                HomeMode.Home.BrawlPassTokens = milestoneData.ProgressStart + milestoneData.Progress;
+                                test += 1;
+                                if (test == 10) break;
+                            }
+                        }
+                    }
+                    
+
+                    if (HomeMode.Avatar.AllianceId > 0)
+                    {
+                        Alliance alliance = Alliances.Load(HomeMode.Avatar.AllianceId);
+                        AllianceMember member = alliance.GetMemberById(HomeMode.Avatar.AccountId);
+                        member.DisplayData.HighNameColorId = HomeMode.Home.NameColorId;
+                    }
+                    foreach (Friend friend in HomeMode.Avatar.Friends)
+                    {
+                        Friend entry = friend.Avatar.GetFriendById(HomeMode.Avatar.AccountId);
+                        entry.DisplayData.HighNameColorId = HomeMode.Home.NameColorId;
+                        if (LogicServerListener.Instance.IsPlayerOnline(friend.Avatar.AccountId))
+                        {
+                            FriendListUpdateMessage update = new()
+                            {
+                                Entry = entry
+                            };
+                            LogicServerListener.Instance.GetGameListener(friend.AccountId).SendTCPMessage(update);
+                        }
+
+                    }
+                    return true;
+                }
             }
 
             return false;

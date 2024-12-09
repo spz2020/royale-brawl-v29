@@ -2,6 +2,7 @@ namespace Supercell.Laser.Server.Message
 {
     using System.Diagnostics;
     using System.Linq;
+    using MySql.Data.MySqlClient;
     using Supercell.Laser.Logic.Avatar;
     using Supercell.Laser.Logic.Avatar.Structures;
     using Supercell.Laser.Logic.Battle;
@@ -1372,12 +1373,85 @@ public void ShowLobbyInfo()
                         Connection.Send(response);
                         break;
                     case "help":
-                        response.Entry.Message = $"Avaliable commands:\n/help - show all server commands list\n/status - show server status\n"; // /usecode [code] - use bonus code
+                        response.Entry.Message = $"Avaliable commands:\n/help - show all server commands list\n/status - show server status\n\n                               --- royale ID ---\n/register [username] [password] - register an account\n/login [username] [password] - login to an account";
                         Connection.Send(response);
                         break;
                     default:
                         response.Entry.Message = $"Unknown command \"{cmd[0]}\" - type \"/help\" to get command list!";
                         Connection.Send(response);
+                        break;
+                    // ACCOUNT SYSTEM HERE
+                    case "register":
+                        if (cmd.Length != 3)
+                        {
+                            response.Entry.Message = $"Usage: /register [username] [password]";
+                            Connection.Send(response);
+                            return;
+                        }
+
+                        string username = cmd[1];
+                        string password = cmd[2];
+
+                        bool registrationSuccess = RegisterUserToDatabase(username, password, accountId);
+
+                        if (!registrationSuccess)
+                        {
+                            response.Entry.Message = $"Registration was unsuccessful. Username is already being used.";
+                            Connection.Send(response);
+                            return;
+                        }
+                        Account plreaccount = Accounts.Load(accountId);
+                        Notification brlyn = new()
+                        {
+                            Id = 89,
+                            DonationCount = 200,
+                            MessageEntry = "<c6>royale ID Thank you for connecting!</c>"
+                        };
+                        plreaccount.Home.NotificationFactory.Add(brlyn);
+                        response.Entry.Message = $"Registration is successful! You can log into your account now. You can also get your registration gift by restarting the game.";
+                        Connection.Send(response);
+                        break;
+                    case "login":
+                        if (cmd.Length != 3)
+                        {
+                            response.Entry.Message = $"Usage: /login [username] [password]";
+                            Connection.Send(response);
+                            return;
+                        }
+
+                        string loginUsername = cmd[1];
+                        string loginPassword = cmd[2];
+
+                
+                        string accountIdS = LoginUserFromDatabase(loginUsername, loginPassword);
+
+                        if (string.IsNullOrEmpty(accountIdS))
+                        {
+                            response.Entry.Message = $"Username or password incorrect."; 
+                            Connection.Send(response);
+                            return;
+                        }
+
+                        Account account = Accounts.Load((long)Convert.ToDouble(accountIdS)); 
+
+                        if (account == null)
+                        {
+                            response.Entry.Message = $"Account not found."; 
+                            Connection.Send(response);
+                            return;
+                        }
+
+                        Connection.Send(new CreateAccountOkMessage
+                        {
+                            AccountId = account.AccountId,
+                            PassToken = account.PassToken
+                        });
+
+                        Connection.Send(new AuthenticationFailedMessage
+                        {
+                            ErrorCode = 0,
+                            Message = "Logged in successfully."
+                        });
                         break;
                 }
                 return;
@@ -1680,6 +1754,81 @@ public void ShowLobbyInfo()
             Connection.PingUpdated(message.Ping);
             ShowLobbyInfo();
         }
+
+private bool RegisterUserToDatabase(string username, string password, long id)
+{
+    bool success = false;
+
+    try
+    {
+        string connectionString = $"server=127.0.0.1;" +
+                                  $"user={Configuration.Instance.DatabaseUsername};" +
+                                  $"database={Configuration.Instance.DatabaseName};" +
+                                  $"port=3306;" +
+                                  $"password={Configuration.Instance.DatabasePassword}";
+
+        using (MySqlConnection connection = new MySqlConnection(connectionString))
+        {
+            connection.Open();
+
+            string query = "INSERT INTO users (username, password, id) VALUES (@username, @password, @id)";
+            MySqlCommand cmd = new MySqlCommand(query, connection);
+            cmd.Parameters.AddWithValue("@username", username);
+            cmd.Parameters.AddWithValue("@password", password);
+            cmd.Parameters.AddWithValue("@id", id);
+
+            int rowsAffected = cmd.ExecuteNonQuery();
+
+            if (rowsAffected > 0)
+            {
+                success = true;
+            }
+        }
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine("Error: " + ex.Message);
+    }
+
+    return success;
+}
+
+private string LoginUserFromDatabase(string username, string password)
+{
+    string accountId = null;
+
+    try
+    {
+        string connectionString = $"server=127.0.0.1;" +
+                                  $"user={Configuration.Instance.DatabaseUsername};" +
+                                  $"database={Configuration.Instance.DatabaseName};" +
+                                  $"port=3306;" +
+                                  $"password={Configuration.Instance.DatabasePassword}";
+
+        using (MySqlConnection connection = new MySqlConnection(connectionString))
+        {
+            connection.Open();
+
+            string query = "SELECT id FROM users WHERE username = @username AND password = @password";
+            MySqlCommand cmd = new MySqlCommand(query, connection);
+            cmd.Parameters.AddWithValue("@username", username);
+            cmd.Parameters.AddWithValue("@password", password);
+
+            object result = cmd.ExecuteScalar();
+
+            if (result != null)
+            {
+                accountId = result.ToString();
+            }
+        }
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine("Error: " + ex.Message);
+    }
+
+    return accountId;
+}
 
 private void AskForBattleEndReceived(AskForBattleEndMessage message)
 {

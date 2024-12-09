@@ -13,6 +13,7 @@ why did I create this server? because all public v29 servers suck
 
 - offline battles
 - vip / premium system
+- account system (supercell ID like system)
 - report system
 - discord integration
 - online game rooms
