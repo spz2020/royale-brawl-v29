@@ -109,7 +109,7 @@ public void ShowLobbyInfo()
 
     LobbyInfoMessage b = new()
     {
-        LobbyData = $"Royale Brawl v29\ngithub.com/erder00\n{abd}Players Online: {Sessions.Count}\nUptime: {formattedUptime}\nPremium: {hasPremium}\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nhi'",
+        LobbyData = $"<cff001f>R<cff003f>o<cff005f>y<cff007f>a<cff009f>l<cff00bf>e<cff00df> <cff00ff>B<cdf00ff>r<cbf00ff>a<c9f00ff>w<c7f00ff>l<c5f00ff> <c3f00ff>v<c1f00ff>2<c0000ff>9</c>\n<c001cff>g<c0038ff>i<c0055ff>t<c0071ff>h<c008dff>u<c00aaff>b<c00c6ff>.<c00e2ff>c<c00ffff>o<c00ffe2>m<c00ffc6>/<c00ffa9>e<c00ff8d>r<c00ff71>d<c00ff54>e<c00ff38>r<c00ff1c>0<c00ff00>0</c>\n{abd}Players Online: {Sessions.Count}\nUptime: {formattedUptime}\nPremium: {hasPremium}\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nhi'",
         PlayersCount = 0
     };
     Connection.Send(b);

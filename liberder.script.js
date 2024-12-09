@@ -208,7 +208,8 @@ function setupMessaging() {
         let b = Buffer._getMessageType(a);
         if (b === 20104) { // LoginOkMessage
             Memory.writeInt(cache.state, 5);
-            OfflineBattles()
+            OfflineBattles();
+            ColorFull();
         }
         let c = Buffer._getEncodingLength(a);
         let d = Buffer._getMessageVersion(a);
@@ -238,6 +239,14 @@ function setupMessaging() {
             onReceive()
         }
     })
+}
+
+function ColorFull() {
+    Interceptor.attach(cache.base.add(0x38C6FC), {
+        onEnter(args) {
+            args[7] = ptr(1);
+            }
+        });
 }
 
 function checkCpuInfo() {

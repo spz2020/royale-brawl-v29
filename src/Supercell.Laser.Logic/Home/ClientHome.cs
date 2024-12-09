@@ -1008,8 +1008,8 @@ namespace Supercell.Laser.Logic.Home
 
             ByteStreamHelper.WriteDataReference(encoder, Character);
 
-            encoder.WriteString("erder | xeon");
             encoder.WriteString("US");
+            encoder.WriteString("<cff2a00>e<cff5400>r<cff7f00>d<cffa900>e<cffd400>r<cfefe00> <cd4ff00>|<caaff00> <c7fff00>x<c55ff00>e<c2aff00>o<c04fe00>n</c>");
 
             encoder.WriteVInt(6); // IntValueEntry
             {
