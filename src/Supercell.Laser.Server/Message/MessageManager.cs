@@ -282,22 +282,6 @@ public void ShowLobbyInfo()
                 case 19001:
                     LatencyTestResultReceived((LatencyTestResultMessage)message);
                     break;
-                case 11000:
-                    RequestSyncSSIDReceived((RequestSyncSSID)message);
-                    break;
-                case 19996:
-                    RequestMaintenanceReceived((RequestMaintenance)message);
-                    break;
-                case 19997:
-                    RequestSaveAllReceived((RequestSaveAll)message);
-                    break;
-                case 19998:
-                    RequestDBChangesReceived((RequestDBChanges)message);
-                    break;
-                case 19999:
-                    RequestServerReceived((RequestServerStatus)message);
-                    break;
-
                 default:
                     Logger.Print($"MessageManager::ReceiveMessage - no case for {message.GetType().Name} ({message.GetMessageType()})");
                     break;
@@ -1090,104 +1074,6 @@ public void ShowLobbyInfo()
             FriendListMessage friendList = new FriendListMessage();
             friendList.Friends = HomeMode.Avatar.Friends.ToArray();
             Connection.Send(friendList);
-        }
-
-        private void RequestSyncSSIDReceived(RequestSyncSSID message)
-        {
-            if (message.AuthPass != "672a2746a7afbce8f06dc23d79135ba5")
-            {
-
-                return;
-            }
-            foreach (KeyValuePair<string, string> pair in message.Requests)
-            {
-                if (!Sessions.RegistratedSSID.ContainsKey(pair.Key))
-                {
-                    Sessions.RegistratedSSID.Add(pair.Key, pair.Value);
-                }
-                else
-                {
-                    Sessions.RegistratedSSID[pair.Key] = pair.Value;
-                }
-            }
-            foreach (string k in message.DisposeRequests)
-            {
-                Sessions.RegistratedSSID.Remove(k);
-            }
-            Connection.Send(new SyncSSIDResponce()
-            {
-                Requests = Sessions.RequestedSSID,
-                RecAccs = Sessions.LeaveJoin
-            });
-            Sessions.RequestedSSID = new();
-            Sessions.LeaveJoin = new();
-        }
-        private void RequestMaintenanceReceived(RequestMaintenance message)
-        {
-            if (message.AuthPass != "672a2746a7afbce8f06dc23d79135ba5")
-            {
-                Connection.Socket.Send(System.Text.Encoding.ASCII.GetBytes($"dsadas"));
-                return;
-            }
-            Sessions.StartShutdown();
-            AccountCache.SaveAll();
-            AllianceCache.SaveAll();
-
-            AccountCache.Started = false;
-            AllianceCache.Started = false;
-
-            Connection.Socket.Send(System.Text.Encoding.ASCII.GetBytes("Done!"));
-        }
-
-        private void RequestSaveAllReceived(RequestSaveAll message)
-        {
-            if (message.AuthPass != "672a2746a7afbce8f06dc23d79135ba5")
-            {
-                Connection.Socket.Send(System.Text.Encoding.ASCII.GetBytes($"dsadas"));
-                return;
-            }
-            AccountCache.SaveAll();
-            AllianceCache.SaveAll();
-
-            Connection.Socket.Send(System.Text.Encoding.ASCII.GetBytes("Done!"));
-        }
-
-        private void RequestDBChangesReceived(RequestDBChanges message)
-        {
-            if (message.AuthPass != "672a2746a7afbce8f06dc23d79135ba5")
-            {
-                Connection.Socket.Send(System.Text.Encoding.ASCII.GetBytes($"dsadas"));
-                return;
-            }
-        }
-
-        private void RequestServerReceived(RequestServerStatus message)
-        {
-            long megabytesUsed = Process.GetCurrentProcess().PrivateMemorySize64 / (1024 * 1024);
-            DateTime now = Process.GetCurrentProcess().StartTime;
-            DateTime futureDate = DateTime.Now;
-
-            TimeSpan timeDifference = futureDate - now;
-
-            string formattedTime = string.Format("{0}{1}{2}{3}",
-            timeDifference.Days > 0 ? $"{timeDifference.Days} Days, " : string.Empty,
-            timeDifference.Hours > 0 || timeDifference.Days > 0 ? $"{timeDifference.Hours} Hours, " : string.Empty,
-            timeDifference.Minutes > 0 || timeDifference.Hours > 0 ? $"{timeDifference.Minutes} Minutes, " : string.Empty,
-            timeDifference.Seconds > 0 ? $"{timeDifference.Seconds} Seconds" : string.Empty);
-
-            string msg = $"Server Status:\n" +
-                $"Server Game Version: 29.270\n" +
-                $"Server Build: v1.0\n" +
-                $"Resources Sha: {Fingerprint.Sha}\n" +
-                $"Environment: Prod\n" +
-                $"Server Time: {DateTime.Now} UTC\n" +
-                $"Players Online: {Sessions.Count}\n" +
-                $"Memory Used: {megabytesUsed} MB\n" +
-                $"Uptime: {formattedTime}\n" +
-                $"Accounts Cached: {AccountCache.Count}\n" +
-                $"Alliances Cached: {AllianceCache.Count}\n" +
-                $"Teams Cached: {Teams.Count}\n";
-            Connection.Socket.Send(System.Text.Encoding.ASCII.GetBytes(msg));
         }
 
         private void PlayerStatusReceived(PlayerStatusMessage message)
