@@ -1335,7 +1335,7 @@ public void ShowLobbyInfo()
 
                         Connection.Send(new AuthenticationFailedMessage
                         {
-                            ErrorCode = 0,
+                            ErrorCode = 8,
                             Message = "Logged in successfully."
                         });
                         break;

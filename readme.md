@@ -70,6 +70,5 @@ decompile the apk and replace the ip in `lib/armeabi-v7a/liberder.script.so` wit
 ## TODO
 
 - better anti-cheat (check csv shas and apk integrity in script, detect if battles are very short)
-- fix pin packs
 - add more club commands
 - add creator codes
