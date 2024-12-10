@@ -358,7 +358,6 @@ function hacksupermod() {
 function init() {
     //checkCpuInfo() // uncomment to crash app if emulator is detected
     setup("127.0.0.1", 9339)
-    base.add(0xC31F2B).writeUtf8String("Erder brawl skibidi") // "TID_CONNECTING_TO_SERVER"
 }
 
 init();
