@@ -1462,7 +1462,7 @@ public void ShowLobbyInfo()
             }
             else
             {
-                AllianceStreamEntry entry = new()
+                AllianceStreamEntry allianceentry = new()
                 {
                     AuthorId = HomeMode.Avatar.AccountId,
                     AuthorName = HomeMode.Avatar.Name,
@@ -1473,7 +1473,7 @@ public void ShowLobbyInfo()
                     Event = 4,
                     AuthorRole = HomeMode.Avatar.AllianceRole
                 };
-                alliance.AddStreamEntry(entry);
+                alliance.AddStreamEntry(allianceentry);
             }
             HomeMode.Avatar.AllianceId = -1;
             HomeMode.Avatar.AllianceRole = AllianceRole.None;
@@ -1693,6 +1693,12 @@ public void ShowLobbyInfo()
                 list.JoinableAlliances.Add(alliance.Header);
             }
             Connection.Send(list);
+        }
+
+        private void ClientCapabilitesReceived(ClientCapabilitiesMessage message)
+        {
+            Connection.PingUpdated(message.Ping);
+            ShowLobbyInfo();
         }
 
 private bool RegisterUserToDatabase(string username, string password, long id)
