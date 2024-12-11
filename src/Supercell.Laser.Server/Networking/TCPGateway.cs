@@ -1,14 +1,14 @@
 namespace Supercell.Laser.Server.Networking
 {
-    using Supercell.Laser.Server.Networking.Session;
     using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Net;
     using System.Net.Sockets;
     using System.Threading;
+    using Supercell.Laser.Server.Networking.Session;
     using Supercell.Laser.Server.Settings;
-    
+
     public static class TCPGateway
     {
         private static List<Connection> ActiveConnections;

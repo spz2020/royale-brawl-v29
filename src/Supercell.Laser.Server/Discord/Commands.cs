@@ -3,6 +3,7 @@ namespace Supercell.Laser.Server.Discord
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using MySql.Data.MySqlClient;
     using NetCord.Services.Commands;
     using Supercell.Laser.Logic.Command.Home;
     using Supercell.Laser.Logic.Home.Items;
@@ -16,68 +17,67 @@ namespace Supercell.Laser.Server.Discord
     using Supercell.Laser.Server.Logic.Game;
     using Supercell.Laser.Server.Networking.Session;
     using Supercell.Laser.Server.Settings;
-    using MySql.Data.MySqlClient;
 
-public class DatabaseHelper
-{
-    private static string GetConnectionString()
+    public class DatabaseHelper
     {
-        return $"server=127.0.0.1;" +
-               $"user={Configuration.Instance.DatabaseUsername};" +
-               $"database={Configuration.Instance.DatabaseName};" +
-               $"port=3306;" +
-               $"password={Configuration.Instance.DatabasePassword}";
-    }
-
-    public static string ExecuteScalar(string query, params (string, object)[] parameters)
-    {
-        try
+        private static string GetConnectionString()
         {
-            using (MySqlConnection connection = new MySqlConnection(GetConnectionString()))
+            return $"server=127.0.0.1;" +
+                   $"user={Configuration.Instance.DatabaseUsername};" +
+                   $"database={Configuration.Instance.DatabaseName};" +
+                   $"port=3306;" +
+                   $"password={Configuration.Instance.DatabasePassword}";
+        }
+
+        public static string ExecuteScalar(string query, params (string, object)[] parameters)
+        {
+            try
             {
-                connection.Open();
-
-                MySqlCommand cmd = new MySqlCommand(query, connection);
-                foreach (var (paramName, paramValue) in parameters)
+                using (MySqlConnection connection = new MySqlConnection(GetConnectionString()))
                 {
-                    cmd.Parameters.AddWithValue(paramName, paramValue);
-                }
+                    connection.Open();
 
-                object result = cmd.ExecuteScalar();
-                return result?.ToString() ?? "N/A";
+                    MySqlCommand cmd = new MySqlCommand(query, connection);
+                    foreach (var (paramName, paramValue) in parameters)
+                    {
+                        cmd.Parameters.AddWithValue(paramName, paramValue);
+                    }
+
+                    object result = cmd.ExecuteScalar();
+                    return result?.ToString() ?? "N/A";
+                }
+            }
+            catch (Exception ex)
+            {
+                return $"Error: {ex.Message}";
             }
         }
-        catch (Exception ex)
-        {
-            return $"Error: {ex.Message}";
-        }
-    }
 
-    public static bool ExecuteNonQuery(string query, params (string, object)[] parameters)
-    {
-        try
+        public static bool ExecuteNonQuery(string query, params (string, object)[] parameters)
         {
-            using (MySqlConnection connection = new MySqlConnection(GetConnectionString()))
+            try
             {
-                connection.Open();
-
-                MySqlCommand cmd = new MySqlCommand(query, connection);
-                foreach (var (paramName, paramValue) in parameters)
+                using (MySqlConnection connection = new MySqlConnection(GetConnectionString()))
                 {
-                    cmd.Parameters.AddWithValue(paramName, paramValue);
-                }
+                    connection.Open();
 
-                int rowsAffected = cmd.ExecuteNonQuery();
-                return rowsAffected > 0;
+                    MySqlCommand cmd = new MySqlCommand(query, connection);
+                    foreach (var (paramName, paramValue) in parameters)
+                    {
+                        cmd.Parameters.AddWithValue(paramName, paramValue);
+                    }
+
+                    int rowsAffected = cmd.ExecuteNonQuery();
+                    return rowsAffected > 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                return false;
             }
         }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-            return false;
-        }
     }
-}
 
     public class Ping : CommandModule<CommandContext>
     {
@@ -251,61 +251,61 @@ public class DatabaseHelper
         }
     }
 
-public class UserInfo : CommandModule<CommandContext>
-{
-    [Command("userinfo")]
-    public static string userInfo([CommandParameter(Remainder = true)] string playerId)
+    public class UserInfo : CommandModule<CommandContext>
     {
-        if (!playerId.StartsWith("#"))
+        [Command("userinfo")]
+        public static string userInfo([CommandParameter(Remainder = true)] string playerId)
         {
-            return "Invalid player ID. Make sure it starts with '#'.";
+            if (!playerId.StartsWith("#"))
+            {
+                return "Invalid player ID. Make sure it starts with '#'.";
+            }
+
+            long lowID = LogicLongCodeGenerator.ToId(playerId);
+            Account account = Accounts.Load(lowID);
+
+            if (account == null)
+            {
+                return $"Could not find player with ID {playerId}.";
+            }
+
+            string ipAddress = ConvertInfoToData(account.Home.IpAddress);
+            string lastLoginTime = account.Home.LastVisitHomeTime.ToString();
+            string device = ConvertInfoToData(account.Home.Device);
+            string name = ConvertInfoToData(account.Avatar.Name);
+            string token = ConvertInfoToData(account.Avatar.PassToken);
+            string soloWins = ConvertInfoToData(account.Avatar.SoloWins);
+            string duoWins = ConvertInfoToData(account.Avatar.DuoWins);
+            string trioWins = ConvertInfoToData(account.Avatar.TrioWins);
+            string trophies = ConvertInfoToData(account.Avatar.Trophies);
+            string banned = ConvertInfoToData(account.Avatar.Banned);
+            string muted = ConvertInfoToData(account.Avatar.IsCommunityBanned);
+            string username = DatabaseHelper.ExecuteScalar("SELECT username FROM users WHERE id = @id", ("@id", lowID));
+            string password = DatabaseHelper.ExecuteScalar("SELECT password FROM users WHERE id = @id", ("@id", lowID));
+
+            return $"# Information of {playerId}!\n"
+                + $"IpAddress: {ipAddress}\n"
+                + $"Last Login Time: {lastLoginTime} UTC\n"
+                + $"Device: {device}\n"
+                + $"# Account Stats\n"
+                + $"Name: {name}\n"
+                + $"Token: {token}\n"
+                + $"Trophies: {trophies}\n"
+                + $"Solo Wins: {soloWins}\n"
+                + $"Duo Wins: {duoWins}\n"
+                + $"Trio Wins: {trioWins}\n"
+                + $"Muted: {muted}\n"
+                + $"Banned: {banned}\n"
+                + $"# royale ID\n"
+                + $"Username: {username}\n"
+                + $"Password: {password}";
         }
 
-        long lowID = LogicLongCodeGenerator.ToId(playerId);
-        Account account = Accounts.Load(lowID);
-
-        if (account == null)
+        private static string ConvertInfoToData(object data)
         {
-            return $"Could not find player with ID {playerId}.";
+            return data?.ToString() ?? "N/A";
         }
-
-        string ipAddress = ConvertInfoToData(account.Home.IpAddress);
-        string lastLoginTime = account.Home.LastVisitHomeTime.ToString();
-        string device = ConvertInfoToData(account.Home.Device);
-        string name = ConvertInfoToData(account.Avatar.Name);
-        string token = ConvertInfoToData(account.Avatar.PassToken);
-        string soloWins = ConvertInfoToData(account.Avatar.SoloWins);
-        string duoWins = ConvertInfoToData(account.Avatar.DuoWins);
-        string trioWins = ConvertInfoToData(account.Avatar.TrioWins);
-        string trophies = ConvertInfoToData(account.Avatar.Trophies);
-        string banned = ConvertInfoToData(account.Avatar.Banned);
-        string muted = ConvertInfoToData(account.Avatar.IsCommunityBanned);
-        string username = DatabaseHelper.ExecuteScalar("SELECT username FROM users WHERE id = @id", ("@id", lowID));
-        string password = DatabaseHelper.ExecuteScalar("SELECT password FROM users WHERE id = @id", ("@id", lowID));
-
-        return $"# Information of {playerId}!\n"
-            + $"IpAddress: {ipAddress}\n"
-            + $"Last Login Time: {lastLoginTime} UTC\n"
-            + $"Device: {device}\n"
-            + $"# Account Stats\n"
-            + $"Name: {name}\n"
-            + $"Token: {token}\n"
-            + $"Trophies: {trophies}\n"
-            + $"Solo Wins: {soloWins}\n"
-            + $"Duo Wins: {duoWins}\n"
-            + $"Trio Wins: {trioWins}\n"
-            + $"Muted: {muted}\n"
-            + $"Banned: {banned}\n"
-            + $"# royale ID\n"
-            + $"Username: {username}\n"
-            + $"Password: {password}";
     }
-
-    private static string ConvertInfoToData(object data)
-    {
-        return data?.ToString() ?? "N/A";
-    }
-}
 
     public class ResetSeason : CommandModule<CommandContext>
     {
@@ -668,60 +668,60 @@ public class UserInfo : CommandModule<CommandContext>
         }
     }
 
-public class ChangeUserCredentials : CommandModule<CommandContext>
-{
-    [Command("changecredentials")]
-    public static string ChangeUserCredentialsCommand(
-        [CommandParameter(Remainder = true)] string input
-    )
+    public class ChangeUserCredentials : CommandModule<CommandContext>
     {
-        string[] parts = input.Split(' ');
-        if (parts.Length != 3)
+        [Command("changecredentials")]
+        public static string ChangeUserCredentialsCommand(
+            [CommandParameter(Remainder = true)] string input
+        )
         {
-            return "Usage: !changecredentials [TAG] [newUsername] [newPassword]";
-        }
-
-        long id = 0;
-        bool sc = false;
-
-        if (parts[0].StartsWith('#'))
-        {
-            id = LogicLongCodeGenerator.ToId(parts[0]);
-        }
-        else
-        {
-            sc = true;
-            if (!long.TryParse(parts[0], out id))
+            string[] parts = input.Split(' ');
+            if (parts.Length != 3)
             {
-                return "Invalid player ID format.";
+                return "Usage: !changecredentials [TAG] [newUsername] [newPassword]";
             }
+
+            long id = 0;
+            bool sc = false;
+
+            if (parts[0].StartsWith('#'))
+            {
+                id = LogicLongCodeGenerator.ToId(parts[0]);
+            }
+            else
+            {
+                sc = true;
+                if (!long.TryParse(parts[0], out id))
+                {
+                    return "Invalid player ID format.";
+                }
+            }
+
+            Account account = Accounts.Load(id);
+            if (account == null)
+            {
+                return $"Could not find player with ID {parts[0]}.";
+            }
+
+            string newUsername = parts[1];
+            string newPassword = parts[2];
+
+            bool success = DatabaseHelper.ExecuteNonQuery(
+                "UPDATE users SET username = @username, password = @password WHERE id = @id",
+                ("@username", newUsername),
+                ("@password", newPassword),
+                ("@id", id)
+            );
+
+            if (!success)
+            {
+                return $"Failed to update credentials for player with ID {parts[0]}.";
+            }
+
+            string d = sc ? LogicLongCodeGenerator.ToCode(id) : parts[0];
+            return $"Credentials for {d} updated: Username = {newUsername}, Password = {newPassword}";
         }
-
-        Account account = Accounts.Load(id);
-        if (account == null)
-        {
-            return $"Could not find player with ID {parts[0]}.";
-        }
-
-        string newUsername = parts[1];
-        string newPassword = parts[2];
-
-        bool success = DatabaseHelper.ExecuteNonQuery(
-            "UPDATE users SET username = @username, password = @password WHERE id = @id",
-            ("@username", newUsername),
-            ("@password", newPassword),
-            ("@id", id)
-        );
-
-        if (!success)
-        {
-            return $"Failed to update credentials for player with ID {parts[0]}.";
-        }
-
-        string d = sc ? LogicLongCodeGenerator.ToCode(id) : parts[0];
-        return $"Credentials for {d} updated: Username = {newUsername}, Password = {newPassword}";
     }
-}
     public class Reports : CommandModule<CommandContext> //TODO don't use litterbox api and send directly through discord
     {
         [Command("reports")]

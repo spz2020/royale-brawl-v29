@@ -1,9 +1,9 @@
-using System.Linq;
-
 namespace Supercell.Laser.Logic.Home
 {
+    using System;
+    using System.Collections.Immutable;
+    using System.Numerics;
     using Newtonsoft.Json;
-    using Newtonsoft.Json.Linq;
     using Supercell.Laser.Logic.Command.Home;
     using Supercell.Laser.Logic.Data;
     using Supercell.Laser.Logic.Data.Helper;
@@ -14,13 +14,6 @@ namespace Supercell.Laser.Logic.Home
     using Supercell.Laser.Logic.Home.Structures;
     using Supercell.Laser.Logic.Message.Home;
     using Supercell.Laser.Titan.DataStream;
-    using System;
-    using System.Collections.Immutable;
-    using System.Numerics;
-    using System.Reflection.Metadata;
-    using System.Text.RegularExpressions;
-    using System.Xml.Linq;
-    using static System.Collections.Specialized.BitVector32;
 
     [JsonObject(MemberSerialization.OptIn)]
     public class ClientHome
@@ -96,7 +89,7 @@ namespace Supercell.Laser.Logic.Home
             ThumbnailId = GlobalId.CreateGlobalId(28, 0);
             NameColorId = GlobalId.CreateGlobalId(43, 0);
             CharacterId = GlobalId.CreateGlobalId(16, 0);
-            SelectedSkins = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,};
+            SelectedSkins = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, };
 
             OfferBundles = new List<OfferBundle>();
             OffersClaimed = new List<string>();
@@ -337,9 +330,10 @@ namespace Supercell.Laser.Logic.Home
                 {
                     DeliveryUnit unit = new DeliveryUnit(100);
                     List<int> Emotes_All = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 241, 242, 243, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 255, 256, 257, 258, 259, 260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 270, 271, 272, 273, 274, 275, 276, 277, 278, 279, 280, 281, 282, 283, 284, 285, 286, 287, 288, 289, 290, 291, 292, 293, 294, 295, 296, 297, 298, 299, 300 };
-                    List<int> Emotes_Locked = Emotes_All.Except(UnlockedEmotes).OrderBy(x => Guid.NewGuid()).Take(3).ToList();;
+                    List<int> Emotes_Locked = Emotes_All.Except(UnlockedEmotes).OrderBy(x => Guid.NewGuid()).Take(3).ToList(); ;
 
-                    foreach (int x in Emotes_Locked){
+                    foreach (int x in Emotes_Locked)
+                    {
                         GatchaDrop reward = new GatchaDrop(11);
                         reward.Count = 1;
                         reward.PinGlobalId = 52000000 + x;
@@ -445,7 +439,7 @@ namespace Supercell.Laser.Logic.Home
                 bundle.Currency = 0;
                 //OfferBundles.Add(bundle);
             }
-   
+
             if (WELCOME_MEGA)
             {
                 OfferBundle bundle = new OfferBundle();
@@ -546,18 +540,18 @@ namespace Supercell.Laser.Logic.Home
 
             GenerateOffer2(
                 new DateTime(2024, 4, 20, 12, 0, 0), new DateTime(2025, 5, 25, 10, 0, 0),
-                4, 999, 0, ShopItem.MegaBox, 
+                4, 999, 0, ShopItem.MegaBox,
                 4, 999, 0, ShopItem.BigBox,
-                0, 0, 0, 
+                0, 0, 0,
                 "mamadea", "A gift! :3", "offer_boxes"
             );
-            
+
             GenerateOffer(
                 new DateTime(2024, 4, 20, 12, 0, 0), new DateTime(2025, 5, 25, 10, 0, 0),
-                1, 999, 201, ShopItem.Skin, 
-                299, 0, 0, 
+                1, 999, 201, ShopItem.Skin,
+                299, 0, 0,
                 "skin1", "Special offer!", "offer_boxes"
-            );  
+            );
         }
 
         public void GenerateOffer(
@@ -573,14 +567,15 @@ namespace Supercell.Laser.Logic.Home
             string Claim,
             string Title,
             string BGR
-            ){
+            )
+        {
 
             OfferBundle bundle = new OfferBundle();
             bundle.IsDailyDeals = false;
             bundle.IsTrue = true;
             bundle.EndTime = OfferEnd;
-            bundle.Cost = Cost; 
-            bundle.OldCost = OldCost; 
+            bundle.Cost = Cost;
+            bundle.OldCost = OldCost;
             bundle.Currency = Currency;
             bundle.Claim = Claim;
             bundle.Title = Title;
@@ -622,14 +617,15 @@ namespace Supercell.Laser.Logic.Home
             string Claim,
             string Title,
             string BGR
-            ){
+            )
+        {
 
             OfferBundle bundle = new OfferBundle();
             bundle.IsDailyDeals = false;
             bundle.IsTrue = true;
             bundle.EndTime = OfferEnd;
-            bundle.Cost = Cost; 
-            bundle.OldCost = OldCost; 
+            bundle.Cost = Cost;
+            bundle.OldCost = OldCost;
             bundle.Currency = Currency;
             bundle.Claim = Claim;
             bundle.Title = Title;
@@ -677,14 +673,15 @@ namespace Supercell.Laser.Logic.Home
             string Claim,
             string Title,
             string BGR
-            ){
+            )
+        {
 
             OfferBundle bundle = new OfferBundle();
             bundle.IsDailyDeals = false;
             bundle.IsTrue = true;
             bundle.EndTime = OfferEnd;
-            bundle.Cost = Cost; 
-            bundle.OldCost = OldCost; 
+            bundle.Cost = Cost;
+            bundle.OldCost = OldCost;
             bundle.Currency = Currency;
             bundle.Claim = Claim;
             bundle.Title = Title;
@@ -882,7 +879,7 @@ namespace Supercell.Laser.Logic.Home
             bundle.IsDailyDeals = true;
             bundle.EndTime = DateTime.UtcNow.Date.AddDays(1).AddHours(8); // tomorrow at 8:00 utc (11:00 MSK)
             bundle.Cost = 0;
-            
+
             Offer offer1 = new Offer(ShopItem.BrawlBox, 1);
             bundle.Items.Add(offer1);
 
@@ -974,7 +971,7 @@ namespace Supercell.Laser.Logic.Home
             encoder.WriteBoolean(true);
             encoder.WriteVInt(TokenDoublers);
             encoder.WriteVInt(5963600); // trophy league season timer
-            encoder.WriteVInt(0); 
+            encoder.WriteVInt(0);
             encoder.WriteVInt(5963600); //brawl pass season timer
 
             encoder.WriteVInt(0);

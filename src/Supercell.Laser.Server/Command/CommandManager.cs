@@ -13,6 +13,7 @@
     using Supercell.Laser.Logic.Home.Quest;
     using Supercell.Laser.Logic.Home.Structures;
     using Supercell.Laser.Logic.Listener;
+    using Supercell.Laser.Logic.Message.Account.Auth;
     using Supercell.Laser.Logic.Message.Club;
     using Supercell.Laser.Logic.Message.Friends;
     using Supercell.Laser.Logic.Message.Home;
@@ -22,7 +23,6 @@
     using Supercell.Laser.Server.Logic.Game;
     using Supercell.Laser.Server.Networking;
     using Supercell.Laser.Titan.Debug;
-    using Supercell.Laser.Logic.Message.Account.Auth;
     //using System.Diagnostics;
 
     public class CommandManager
@@ -278,14 +278,15 @@
                     }
                     return true;
                 }
-            } else
+            }
+            else
             {
                 if (HomeMode.Avatar.UseDiamonds(249))
                 {
                     HomeMode.Home.HasPremiumPass = true;
 
                     var test = 0;
-                    while (test<10)
+                    while (test < 10)
                     {
                         for (int x = 966; x < 1036 + 1; x++)
                         {
@@ -298,7 +299,7 @@
                             }
                         }
                     }
-                    
+
 
                     if (HomeMode.Avatar.AllianceId > 0)
                     {

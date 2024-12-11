@@ -2,7 +2,6 @@
 {
     using Supercell.Laser.Logic.Command.Home;
     using Supercell.Laser.Titan.DataStream;
-    using Supercell.Laser.Titan.Debug;
 
     public class CommandManager
     {
