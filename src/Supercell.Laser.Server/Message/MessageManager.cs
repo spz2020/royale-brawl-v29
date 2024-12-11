@@ -1415,8 +1415,66 @@ public void ShowLobbyInfo()
 
             Alliance alliance = Alliances.Load(HomeMode.Avatar.AllianceId);
             if (alliance == null) return;
+            if (HomeMode.Avatar.AllianceRole == AllianceRole.Leader)
+            {
+                AllianceMember nextLeader = alliance.GetNextRoleMember();
+                if (nextLeader == null)
+                {
+                    alliance.RemoveMemberById(HomeMode.Avatar.AccountId);
+                    if (alliance.Members.Count < 1)
+                    {
+                        Alliances.Delete(HomeMode.Avatar.AllianceId);
+                    }
+                    HomeMode.Avatar.AllianceId = -1;
+                    HomeMode.Avatar.AllianceRole = AllianceRole.None;
 
+                    Connection.Send(new AllianceResponseMessage
+                    {
+                        ResponseType = 80
+                    });
+
+                    Connection.Send(new MyAllianceMessage());
+
+                    return;
+                };
+                Account target = Accounts.Load(nextLeader.AccountId);
+                if (target == null) return;
+                target.Avatar.AllianceRole = AllianceRole.Leader;
+                nextLeader.Role = AllianceRole.Leader;
+                if (LogicServerListener.Instance.IsPlayerOnline(target.AccountId))
+                {
+                    LogicServerListener.Instance.GetGameListener(target.AccountId).SendTCPMessage(new AllianceResponseMessage()
+                    {
+                        ResponseType = 101
+                    });
+                    MyAllianceMessage targetAlliance = new()
+                    {
+                        AllianceHeader = alliance.Header,
+                        Role = HomeMode.Avatar.AllianceRole
+                    };
+                    LogicServerListener.Instance.GetGameListener(target.AccountId).SendTCPMessage(targetAlliance);
+                }
+            }
             alliance.RemoveMemberById(HomeMode.Avatar.AccountId);
+            if (alliance.Members.Count < 1)
+            {
+                Alliances.Delete(HomeMode.Avatar.AllianceId);
+            }
+            else
+            {
+                AllianceStreamEntry entry = new()
+                {
+                    AuthorId = HomeMode.Avatar.AccountId,
+                    AuthorName = HomeMode.Avatar.Name,
+                    Id = ++alliance.Stream.EntryIdCounter,
+                    PlayerId = HomeMode.Avatar.AccountId,
+                    PlayerName = HomeMode.Avatar.Name,
+                    Type = 4,
+                    Event = 4,
+                    AuthorRole = HomeMode.Avatar.AllianceRole
+                };
+                alliance.AddStreamEntry(entry);
+            }
             HomeMode.Avatar.AllianceId = -1;
             HomeMode.Avatar.AllianceRole = AllianceRole.None;
 
