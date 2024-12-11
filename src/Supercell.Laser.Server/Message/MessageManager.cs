@@ -1624,21 +1624,17 @@ public void ShowLobbyInfo()
             }
         }
 
-    private void AskForJoinableAllianceListReceived(AskForJoinableAllianceListMessage message)
-    {
-        JoinableAllianceListMessage list = new JoinableAllianceListMessage();
-        List<Alliance> alliances = Alliances.GetRandomAlliances(10);
-        foreach (Alliance alliance in alliances)
+        private void AskForJoinableAllianceListReceived(AskForJoinableAllianceListMessage message)
         {
-            list.JoinableAlliances.Add(alliance.Header);
-        }
-        Connection.Send(list);
-    }
-
-        private void ClientCapabilitesReceived(ClientCapabilitiesMessage message)
-        {
-            Connection.PingUpdated(message.Ping);
-            ShowLobbyInfo();
+            JoinableAllianceListMessage list = new JoinableAllianceListMessage();
+            List<Alliance> alliances = Alliances.GetRandomAlliances(HomeMode.Avatar, 20)
+                                              .Distinct()
+                                              .ToList();
+            foreach (Alliance alliance in alliances)
+            {
+                list.JoinableAlliances.Add(alliance.Header);
+            }
+            Connection.Send(list);
         }
 
 private bool RegisterUserToDatabase(string username, string password, long id)
