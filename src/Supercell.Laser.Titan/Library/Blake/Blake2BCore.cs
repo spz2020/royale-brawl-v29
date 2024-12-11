@@ -154,6 +154,6 @@
             buf[offset] = (byte)value;
         }
 
-        partial void Compress(byte[] block, int start);
+        partial void Compress(byte[] _Block, int _Start);
     }
 }
