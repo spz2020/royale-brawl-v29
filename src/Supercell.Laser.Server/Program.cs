@@ -10,7 +10,7 @@ namespace Supercell.Laser.Server
         public const string SERVER_VERSION = "29.270";
         public const string BUILD_TYPE = "Beta";
 
-        private static async Task Main(string[] args)
+        private static void Main(string[] args)
         {
             Console.Title = "BrawlStars - server emulator v" + SERVER_VERSION + " Build: " + BUILD_TYPE;
             Directory.SetCurrentDirectory(AppContext.BaseDirectory);

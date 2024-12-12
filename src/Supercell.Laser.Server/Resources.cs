@@ -52,10 +52,28 @@ namespace Supercell.Laser.Server
         /// <summary>
         /// Initializes the Discord bot
         /// </summary>
-        public static async Task InitDiscord()
+        public static void InitDiscord()
         {
-            var discordBot = new Supercell.Laser.Server.Discord.DiscordBot();
-            await discordBot.StartAsync();
+            try
+            {
+                if (Configuration.Instance.BotToken == "YOUR_BOT_TOKEN_HERE" ||
+                    Configuration.Instance.ChannelId == 1234567890123456789)
+                {
+                    Console.WriteLine("[DISCORD] To enable Discord integration, configure BotToken and ChannelId in config.json");
+                    return;
+                }
+
+                if (!string.IsNullOrEmpty(Configuration.Instance.BotToken))
+                {
+                    var discordBot = new Discord.DiscordBot();
+                    Task.Run(discordBot.StartAsync).GetAwaiter().GetResult();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[DISCORD] Failed to initialize Discord bot: {ex.Message}");
+                Console.WriteLine("[DISCORD] Continuing without Discord integration...");
+            }
         }
     }
 }

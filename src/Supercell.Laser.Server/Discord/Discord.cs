@@ -28,25 +28,25 @@ namespace Supercell.Laser.Server.Discord
     public class DiscordBot
     {
         private readonly CustomLogger _logger = new CustomLogger();
+        private GatewayClient _client;
 
         public async Task StartAsync()
         {
-            GatewayClient client =
-                new(
-                    new BotToken(Configuration.Instance.BotToken),
-                    new GatewayClientConfiguration()
-                    {
-                        Intents =
-                            GatewayIntents.GuildMessages
-                            | GatewayIntents.DirectMessages
-                            | GatewayIntents.MessageContent,
-                    }
-                );
+            _client = new GatewayClient(
+                new BotToken(Configuration.Instance.BotToken),
+                new GatewayClientConfiguration()
+                {
+                    Intents =
+                        GatewayIntents.GuildMessages
+                        | GatewayIntents.DirectMessages
+                        | GatewayIntents.MessageContent,
+                }
+            );
 
             CommandService<CommandContext> commandService = new();
             commandService.AddModules(typeof(DiscordBot).Assembly);
 
-            client.MessageCreate += async message =>
+            _client.MessageCreate += async message =>
             {
                 if (message.ChannelId != Configuration.Instance.ChannelId)
                     return;
@@ -56,7 +56,7 @@ namespace Supercell.Laser.Server.Discord
 
                 var result = await commandService.ExecuteAsync(
                     prefixLength: 1,
-                    new CommandContext(message, client)
+                    new CommandContext(message, _client)
                 );
 
                 if (result is not IFailResult failResult)
@@ -69,14 +69,13 @@ namespace Supercell.Laser.Server.Discord
                 catch { }
             };
 
-            client.Log += message =>
+            _client.Log += message =>
             {
                 _logger.Log(message.Severity, message.Message, message.Exception);
                 return default;
             };
 
-            await client.StartAsync();
-            await Task.Delay(-1);
+            await _client.StartAsync();
         }
     }
 }
