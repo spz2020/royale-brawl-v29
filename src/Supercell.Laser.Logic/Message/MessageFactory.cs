@@ -1,4 +1,4 @@
-﻿namespace Supercell.Laser.Logic.Message
+namespace Supercell.Laser.Logic.Message
 {
     using Supercell.Laser.Logic.Message.Account;
     using Supercell.Laser.Logic.Message.Account.Auth;
@@ -95,11 +95,6 @@
                 {19001, typeof(LatencyTestResultMessage)},
 
                 //{14330, typeof(SendAllianceMailMessage)},
-
-                //{19996, typeof(RequestMaintenance)},
-                //{19997, typeof(RequestSaveAll)},
-                //{19998, typeof(RequestDBChanges)},
-                //{19999, typeof(RequestServerStatus)},
             };
         }
 

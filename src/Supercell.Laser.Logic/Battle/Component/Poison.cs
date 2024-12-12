@@ -18,6 +18,7 @@ namespace Supercell.Laser.Logic.Battle.Component
             m_source = source;
             m_damage = damage / tickCount;
             m_tickCount = tickCount;
+            m_slowDown = slowDown;
         }
 
         public bool HasSlowDownEffect()
