@@ -280,9 +280,9 @@ namespace Supercell.Laser.Server.Message
                 case 19001:
                     LatencyTestResultReceived((LatencyTestResultMessage)message);
                     break;
-                default:
-                    Logger.Print($"MessageManager::ReceiveMessage - no case for {message.GetType().Name} ({message.GetMessageType()})");
-                    break;
+                //default:
+                //    Logger.Print($"MessageManager::ReceiveMessage - no case for {message.GetType().Name} ({message.GetMessageType()})");
+                //    break;
             }
         }
 
