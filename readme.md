@@ -26,19 +26,21 @@ why did I create this server? because all public v29 servers suck
 
 #### discord bot commands
 
-- !help - shows all available commands
-- !status - show server status
-- !ping - will respond with pong
-- !resetseason - resets the season
-- !reports - sneds a link to all reported messages
+- !help - shows all available commands  
+- !status - show server status  
+- !ping - will respond with pong  
+- !unlockall - will unlock EVERYTHING on the player's account (!unlockall [TAG])  
+- !ban - ban an account (!ban [TAG])  
+- !unban - unban an account (!unban [TAG])  
+- !mute - mute a player (!mute [TAG])  
+- !unmute - unmute a player (!unmute [TAG])  
+- !resetseason - resets the season  
+- !reports - sends a link to all reported messages  
+- !userinfo - show player info (!userinfo [TAG])  
+- !changecredentials - change username/password of an account (!changecredentials [TAG] [newUsername] [newPassword])  
+- !settrophies - set trophies for all brawlers (!settrophies [TAG] [Trophies])  
+- !addgems - grant gems to a player (!addgems [TAG] [Gems])  
 - !givepremium - give premium to an account for one month (!givepremium [TAG])
-- !ban - ban an account (!ban [TAG])
-- !unban - unban an account (!unban [TAG])
-- !mute - mute a player (!mute [TAG])
-- !unmute - unmute a player (!unmute [TAG])
-- !userinfo - show player info (!userinfo [TAG])
-- !settrophies - set trophies for all brawlers (!settrophies [TAG] [Trophies])
-- !addgems - grant gems to a player (!addgems [TAG] [Gems])
 
 #### club commands
 
