@@ -81,102 +81,102 @@ function showFloater(message) {
 }
 
 let Message = {
-    _getByteStream: function (a) {
+    _getByteStream: function(a) {
         return a.add(8)
     },
-    _getVersion: function (a) {
+    _getVersion: function(a) {
         return Memory.readInt(a.add(4))
     },
-    _setVersion: function (a, b) {
+    _setVersion: function(a, b) {
         Memory.writeInt(a.add(4), b)
     },
-    _getMessageType: function (a) {
+    _getMessageType: function(a) {
         return (new NativeFunction(Memory.readPointer(Memory.readPointer(a).add(20)), 'int', ['pointer']))(a)
     },
-    _encode: function (a) {
+    _encode: function(a) {
         (new NativeFunction(Memory.readPointer(Memory.readPointer(a).add(8)), 'void', ['pointer']))(a)
     },
-    _decode: function (a) {
+    _decode: function(a) {
         (new NativeFunction(Memory.readPointer(Memory.readPointer(a).add(12)), 'void', ['pointer']))(a)
     },
-    _free: function (a) {
+    _free: function(a) {
         (new NativeFunction(Memory.readPointer(Memory.readPointer(a).add(24)), 'void', ['pointer']))(a);
         (new NativeFunction(Memory.readPointer(Memory.readPointer(a).add(4)), 'void', ['pointer']))(a)
     }
 };
 let ByteStream = {
-    _getOffset: function (a) {
+    _getOffset: function(a) {
         return Memory.readInt(a.add(16))
     },
-    _getByteArray: function (a) {
+    _getByteArray: function(a) {
         return Memory.readPointer(a.add(28))
     },
-    _setByteArray: function (a, b) {
+    _setByteArray: function(a, b) {
         Memory.writePointer(a.add(28), b)
     },
-    _getLength: function (a) {
+    _getLength: function(a) {
         return Memory.readInt(a.add(20))
     },
-    _setLength: function (a, b) {
+    _setLength: function(a, b) {
         Memory.writeInt(a.add(20), b)
     }
 };
 let Buffer = {
-    _getEncodingLength: function (a) {
+    _getEncodingLength: function(a) {
         return Memory.readU8(a.add(2)) << 16 | Memory.readU8(a.add(3)) << 8 | Memory.readU8(a.add(4))
     },
-    _setEncodingLength: function (a, b) {
+    _setEncodingLength: function(a, b) {
         Memory.writeU8(a.add(2), b >> 16 & 0xFF);
         Memory.writeU8(a.add(3), b >> 8 & 0xFF);
         Memory.writeU8(a.add(4), b & 0xFF)
     },
-    _setMessageType: function (a, b) {
+    _setMessageType: function(a, b) {
         Memory.writeU8(a.add(0), b >> 8 & 0xFF);
         Memory.writeU8(a.add(1), b & 0xFF)
     },
-    _getMessageVersion: function (a) {
+    _getMessageVersion: function(a) {
         return Memory.readU8(a.add(5)) << 8 | Memory.readU8(a.add(6))
     },
-    _setMessageVersion: function (a, b) {
+    _setMessageVersion: function(a, b) {
         Memory.writeU8(a.add(5), b >> 8 & 0xFF);
         Memory.writeU8(a.add(6), b & 0xFF)
     },
-    _getMessageType: function (a) {
+    _getMessageType: function(a) {
         return Memory.readU8(a) << 8 | Memory.readU8(a.add(1))
     }
 };
 let MessageQueue = {
-    _getCapacity: function (a) {
+    _getCapacity: function(a) {
         return Memory.readInt(a.add(4))
     },
-    _get: function (a, b) {
+    _get: function(a, b) {
         return Memory.readPointer(Memory.readPointer(a).add(POINTER_SIZE * b))
     },
-    _set: function (a, b, c) {
+    _set: function(a, b, c) {
         Memory.writePointer(Memory.readPointer(a).add(POINTER_SIZE * b), c)
     },
-    _count: function (a) {
+    _count: function(a) {
         return Memory.readInt(a.add(8))
     },
-    _decrementCount: function (a) {
+    _decrementCount: function(a) {
         Memory.writeInt(a.add(8), Memory.readInt(a.add(8)) - 1)
     },
-    _incrementCount: function (a) {
+    _incrementCount: function(a) {
         Memory.writeInt(a.add(8), Memory.readInt(a.add(8)) + 1)
     },
-    _getDequeueIndex: function (a) {
+    _getDequeueIndex: function(a) {
         return Memory.readInt(a.add(12))
     },
-    _getEnqueueIndex: function (a) {
+    _getEnqueueIndex: function(a) {
         return Memory.readInt(a.add(16))
     },
-    _setDequeueIndex: function (a, b) {
+    _setDequeueIndex: function(a, b) {
         Memory.writeInt(a.add(12), b)
     },
-    _setEnqueueIndex: function (a, b) {
+    _setEnqueueIndex: function(a, b) {
         Memory.writeInt(a.add(16), b)
     },
-    _enqueue: function (a, b) {
+    _enqueue: function(a, b) {
         pthread_mutex_lock(a.sub(4));
         let c = MessageQueue._getEnqueueIndex(a);
         MessageQueue._set(a, c, b);
@@ -184,7 +184,7 @@ let MessageQueue = {
         MessageQueue._incrementCount(a);
         pthread_mutex_unlock(a.sub(4))
     },
-    _dequeue: function (a) {
+    _dequeue: function(a) {
         let b = null;
         pthread_mutex_lock(a.sub(4));
         if (MessageQueue._count(a)) {
@@ -204,13 +204,13 @@ function OfflineBattles() {
             retval.replace(ptr(1))
         }
     });
-    Interceptor.attach(cache.base.add(0xC88108), { // LogicBattleModeServer::setBotDifficulty
-        onLeave(retval) {
-            retval.replace(ptr(9))
-        }
-    });
+    Interceptor.replace(base.add(0x5878A0), new NativeCallback(function(LogicBattleModeServer, diff) { // LogicBattleModeServer::setBotDifficulty
+        console.log("LogicBattleModeServer::setBotDifficulty has been called!")
+        LogicBattleModeServer.add(184).writeInt(9)
+        return LogicBattleModeServer
+    }, 'pointer', ['pointer', 'int']))
     Interceptor.attach(cache.base.add(0x67FEBC), {
-        onEnter: function (a) {
+        onEnter: function(a) {
             a[3] = ptr(3)
         }
     })
@@ -227,7 +227,7 @@ function setupMessaging() {
     cache.state = cache.messaging.add(208);
     cache.loginMessagePtr = cache.messaging.add(212);
     cache.createMessageByType = new NativeFunction(cache.base.add(CREATE_MESSAGE_BY_TYPE), 'pointer', ['pointer', 'int']);
-    cache.sendMessage = function (a) {
+    cache.sendMessage = function(a) {
         Message._encode(a);
         let b = Message._getByteStream(a);
         let c = ByteStream._getOffset(b);
@@ -286,12 +286,12 @@ function setupMessaging() {
         free(e)
     }
     Interceptor.attach(Module.findExportByName('libc.so', 'pthread_cond_signal'), {
-        onEnter: function (a) {
+        onEnter: function(a) {
             onWakeup()
         }
     });
     Interceptor.attach(Module.findExportByName('libc.so', 'select'), {
-        onEnter: function (a) {
+        onEnter: function(a) {
             onReceive()
         }
     })
@@ -305,38 +305,9 @@ function ColorFull() {
     });
 }
 
-function checkCpuInfo() {
-    Java.perform(function () {
-        let File = Java.use("java.io.File");
-        let FileInputStream = Java.use("java.io.FileInputStream");
-        let InputStreamReader = Java.use("java.io.InputStreamReader");
-        let BufferedReader = Java.use("java.io.BufferedReader");
-
-        let filePath = "/proc/cpuinfo";
-
-        let file = File.$new(filePath);
-        let fileInputStream = FileInputStream.$new(file);
-        let inputStreamReader = InputStreamReader.$new(fileInputStream);
-        let bufferedReader = BufferedReader.$new(inputStreamReader);
-
-        let line = bufferedReader.readLine();
-        while (line !== null) {
-            if (line.includes("AMD") || line.includes("Intel")) {
-                console.log("emulator detected method 2")
-                break
-            }
-            line = bufferedReader.readLine();
-        }
-
-        bufferedReader.close();
-        inputStreamReader.close();
-        fileInputStream.close();
-    });
-}
-
 function setup(b, c) {
     Interceptor.attach(Module.findExportByName('libc.so', 'connect'), {
-        onEnter: function (a) {
+        onEnter: function(a) {
             if (ntohs(Memory.readU16(a[1].add(2))) === 9339) {
                 cache.fd = a[0].toInt32();
                 Memory.writeInt(a[1].add(4), inet_addr(Memory.allocUtf8String(b)));
@@ -350,13 +321,12 @@ function setup(b, c) {
 
 function hacksupermod() {
     const base2 = Module.findBaseAddress('lib39285EFA.so');
-    Interceptor.replace(base2.add(0x000C0D0), new NativeCallback(function (a) {
+    Interceptor.replace(base2.add(0x000C0D0), new NativeCallback(function(a) {
         return 0
     }, 'int', ['int']))
 }
 
 function init() {
-    //checkCpuInfo() // uncomment to crash app if emulator is detected
     setup("127.0.0.1", 9339)
 }
 
