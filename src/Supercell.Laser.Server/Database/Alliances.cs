@@ -22,11 +22,12 @@
             builder.Database = Configuration.Instance.DatabaseName;
             builder.CharacterSet = "utf8mb4";
 
-            JsonConvert.DefaultSettings = () => new JsonSerializerSettings
-            {
-                DefaultValueHandling = DefaultValueHandling.Ignore,
-                NullValueHandling = NullValueHandling.Ignore
-            };
+            JsonConvert.DefaultSettings = () =>
+                new JsonSerializerSettings
+                {
+                    DefaultValueHandling = DefaultValueHandling.Ignore,
+                    NullValueHandling = NullValueHandling.Ignore
+                };
 
             ConnectionString = builder.ToString();
 
@@ -36,11 +37,8 @@
         }
         public static List<Alliance> GetRandomAlliances(ClientAvatar avatar, int maxCount)
         {
-            //long count = Math.Min(maxCount, AllianceIdCounter);
-            //long alliancesCount = AllianceIdCounter;
             int found = 0;
 
-            #region GetGlobal
             Random r = new Random();
             List<Alliance> list = new();
             while (found < maxCount)
@@ -48,45 +46,35 @@
                 try
                 {
                     Alliance alliance = Load(r.NextInt64(1, AllianceIdCounter + 1));
-                    if (alliance == null) continue;
-                    if (alliance.RequiredTrophies > avatar.Trophies) continue;
-                    if (alliance.Members.Count >= 100) continue;
-                    if (alliance.Type == 2) continue;
+                    if (alliance == null)
+                        continue;
+                    if (alliance.RequiredTrophies > avatar.Trophies)
+                        continue;
+                    if (alliance.Members.Count >= 100)
+                        continue;
+                    if (alliance.Type == 2)
+                        continue;
                     found++;
                     list.Add(alliance);
-                    if (found == maxCount) break;
+                    if (found == maxCount)
+                        break;
                 }
                 catch (Exception)
                 {
-                    //Logger.Error("ff Error" + e.ToString());
+                    // Logger.Error("ff Error" + e.ToString());
                 }
             }
             return list;
-
-            //try
-            //{
-            //    Random rand = new();
-            //    for (int i = 0; i < count; i++)
-            //    {
-            //        var alliance = Load(rand.NextInt64(1, AllianceIdCounter+1));
-            //       if (alliance != null) list.Add(alliance);
-            //   }
-            //
-            //    return list;
-            //}
-            //catch (Exception exception)
-            //{
-            //    return list;
-            //}
-
-            #endregion
         }
 
         public static long GetMaxAllianceId()
         {
             var Connection = new MySqlConnection(ConnectionString);
             Connection.Open();
-            MySqlCommand command = new MySqlCommand("SELECT coalesce(MAX(Id), 0) FROM alliances", Connection);
+            MySqlCommand command = new MySqlCommand(
+                "SELECT coalesce(MAX(Id), 0) FROM alliances",
+                Connection
+            );
 
             long result = Convert.ToInt64(command.ExecuteScalar());
             Connection.Close();
@@ -95,13 +83,17 @@
 
         public static void Create(Alliance alliance)
         {
-            if (alliance == null) return;
+            if (alliance == null)
+                return;
             alliance.Id = ++AllianceIdCounter;
             string json = JsonConvert.SerializeObject(alliance);
 
             var Connection = new MySqlConnection(ConnectionString);
             Connection.Open();
-            MySqlCommand command = new MySqlCommand($"INSERT INTO alliances (`Id`, `Name`, `Trophies`, `Data`) VALUES ({(long)alliance.Id}, @name, {alliance.Trophies}, @data)", Connection);
+            MySqlCommand command = new MySqlCommand(
+                $"INSERT INTO alliances (`Id`, `Name`, `Trophies`, `Data`) VALUES ({(long)alliance.Id}, @name, {alliance.Trophies}, @data)",
+                Connection
+            );
             command.Parameters?.AddWithValue("@data", json);
             command.Parameters?.AddWithValue("@name", alliance.Name);
             command.ExecuteNonQuery();
@@ -123,13 +115,17 @@
 
         public static void Save(Alliance alliance)
         {
-            if (alliance == null) return;
+            if (alliance == null)
+                return;
 
             string json = JsonConvert.SerializeObject(alliance);
 
             var Connection = new MySqlConnection(ConnectionString);
             Connection.Open();
-            MySqlCommand command = new MySqlCommand($"UPDATE alliances SET `Trophies`='{alliance.Trophies}', `Data`=@data WHERE Id = '{(long)alliance.Id}'", Connection);
+            MySqlCommand command = new MySqlCommand(
+                $"UPDATE alliances SET `Trophies`='{alliance.Trophies}', `Data`=@data WHERE Id = '{(long)alliance.Id}'",
+                Connection
+            );
             command.Parameters?.AddWithValue("@data", json);
             command.ExecuteNonQuery();
             Connection.Close();
@@ -144,7 +140,10 @@
 
             var Connection = new MySqlConnection(ConnectionString);
             Connection.Open();
-            MySqlCommand command = new MySqlCommand($"SELECT * FROM alliances WHERE Id = '{id}'", Connection);
+            MySqlCommand command = new MySqlCommand(
+                $"SELECT * FROM alliances WHERE Id = '{id}'",
+                Connection
+            );
             MySqlDataReader reader = command.ExecuteReader();
             if (reader.Read())
             {
@@ -169,13 +168,19 @@
                 {
                     connection.Open();
 
-                    using (var cmd = new MySqlCommand($"SELECT * FROM alliances ORDER BY `Trophies` DESC LIMIT 200",
-                        connection))
+                    using (
+                        var cmd = new MySqlCommand(
+                            $"SELECT * FROM alliances ORDER BY `Trophies` DESC LIMIT 200",
+                            connection
+                        )
+                    )
                     {
                         var reader = cmd.ExecuteReader();
 
                         while (reader.Read())
-                            list.Add(JsonConvert.DeserializeObject<Alliance>((string)reader["Data"]));
+                            list.Add(
+                                JsonConvert.DeserializeObject<Alliance>((string)reader["Data"])
+                            );
                     }
 
                     connection.Close();
@@ -187,7 +192,6 @@
             {
                 return list;
             }
-
             #endregion
         }
 
@@ -205,7 +209,8 @@
                 for (int i = 0; i < count; i++)
                 {
                     var alliance = Load(rand.NextInt64(1, AllianceIdCounter + 1));
-                    if (alliance != null) list.Add(alliance);
+                    if (alliance != null)
+                        list.Add(alliance);
                 }
 
                 return list;
@@ -214,7 +219,6 @@
             {
                 return list;
             }
-
             #endregion
         }
     }
