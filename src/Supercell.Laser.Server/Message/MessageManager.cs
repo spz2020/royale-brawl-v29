@@ -2228,4 +2228,872 @@ namespace Supercell.Laser.Server.Message
                                         (double)Trophies[message.BattleResult] / 4
                                     );
                                     trophiesResult += underdogTrophiesResult;
-                                    HomeMode.Home.TrophiesReward
+                                    HomeMode.Home.TrophiesReward = Math.Max(trophiesResult, 0);
+                                }
+                            }
+                        }
+
+                        if (HomeMode.Home.Quests != null)
+                        {
+                            if (location.GameMode == "BountyHunter")
+                            {
+                                q = HomeMode.Home.Quests.UpdateQuestsProgress(3, OwnPlayer.CharacterId, 0, 0, 0, HomeMode.Home);
+                            }
+                            else if (location.GameMode == "CoinRush")
+                            {
+                                q = HomeMode.Home.Quests.UpdateQuestsProgress(0, OwnPlayer.CharacterId, 0, 0, 0, HomeMode.Home);
+                            }
+                            else if (location.GameMode == "AttackDefend")
+                            {
+                                q = HomeMode.Home.Quests.UpdateQuestsProgress(2, OwnPlayer.CharacterId, 0, 0, 0, HomeMode.Home);
+                            }
+                            else if (location.GameMode == "LaserBall")
+                            {
+                                q = HomeMode.Home.Quests.UpdateQuestsProgress(5, OwnPlayer.CharacterId, 0, 0, 0, HomeMode.Home);
+                            }
+                            else if (location.GameMode == "RoboWars")
+                            {
+                                q = HomeMode.Home.Quests.UpdateQuestsProgress(11, OwnPlayer.CharacterId, 0, 0, 0, HomeMode.Home);
+                            }
+                        }
+
+                    }
+
+                    tokensResult = TokensRewards[message.BattleResult];
+                    totalTokensResult = tokensResult;
+
+                    experienceResult = ExperienceRewards[message.BattleResult];
+                    HomeMode.Home.Experience += experienceResult;
+                }
+                else if (location.GameMode == "BattleRoyale")
+                {
+                    if (message.Rank < 5)
+                    {
+                        /*if (Events.PlaySlot(HomeMode.Avatar.AccountId, slot))
+                        {
+                            starToken = true;
+                            HomeMode.Avatar.AddStarTokens(1);
+                            HomeMode.Home.StarTokensReward = 1;
+                        }*/
+                    }
+                    if (brawlerTrophies >= 0 && brawlerTrophies <= 49)
+                    {
+                        Trophies = new[] { 10, 8, 7, 6, 4, 2, 2, 1, 0, 0 };
+                    }
+                    else if (brawlerTrophies >= 50 && brawlerTrophies <= 99)
+                    {
+                        Trophies = new[] { 10, 8, 7, 6, 3, 2, 2, 0, -1, -2 };
+                    }
+                    else if (brawlerTrophies >= 100 && brawlerTrophies <= 199)
+                    {
+                        Trophies = new[] { 10, 8, 7, 6, 3, 1, 0, -1, -2, -2 };
+                    }
+                    else if (brawlerTrophies >= 200 && brawlerTrophies <= 299)
+                    {
+                        Trophies = new[] { 10, 8, 6, 5, 3, 1, 0, -2, -3, -3 };
+                    }
+                    else if (brawlerTrophies >= 300 && brawlerTrophies <= 399)
+                    {
+                        Trophies = new[] { 10, 8, 6, 5, 2, 0, 0, -3, -4, -4 };
+                    }
+                    else if (brawlerTrophies >= 400 && brawlerTrophies <= 499)
+                    {
+                        Trophies = new[] { 10, 8, 6, 5, 2, -1, -2, -3, -5, -5 };
+                    }
+                    else if (brawlerTrophies >= 500 && brawlerTrophies <= 599)
+                    {
+                        Trophies = new[] { 10, 8, 6, 4, 2, -1, -2, -5, -6, -6 };
+                    }
+                    else if (brawlerTrophies >= 600 && brawlerTrophies <= 699)
+                    {
+                        Trophies = new[] { 10, 8, 6, 4, 1, -2, -2, -5, -7, -8 };
+                    }
+                    else if (brawlerTrophies >= 700 && brawlerTrophies <= 799)
+                    {
+                        Trophies = new[] { 10, 8, 6, 4, 1, -3, -4, -5, -8, -9 };
+                    }
+                    else if (brawlerTrophies >= 800 && brawlerTrophies <= 899)
+                    {
+                        Trophies = new[] { 9, 7, 5, 2, 0, -3, -4, -7, -9, -10 };
+                    }
+                    else if (brawlerTrophies >= 900 && brawlerTrophies <= 999)
+                    {
+                        Trophies = new[] { 8, 6, 4, 1, -1, -3, -6, -8, -10, -11 };
+                    }
+                    else if (brawlerTrophies >= 1000 && brawlerTrophies <= 1099)
+                    {
+                        Trophies = new[] { 6, 5, 3, 1, -2, -5, -6, -9, -11, -12 };
+                    }
+                    else if (brawlerTrophies >= 1100 && brawlerTrophies <= 1199)
+                    {
+                        Trophies = new[] { 5, 4, 1, 0, -2, -6, -7, -10, -12, -13 };
+                    }
+                    else if (brawlerTrophies >= 1200)
+                    {
+                        Trophies = new[] { 5, 3, 0, -1, -2, -6, -8, -11, -12, -13 };
+                    }
+
+                    gameMode = 2;
+                    trophiesResult = Trophies[message.Rank - 1];
+
+                    ExperienceRewards = new[] { 15, 12, 9, 6, 5, 4, 3, 2, 1, 0 };
+                    TokensRewards = new[] { 30, 24, 21, 15, 12, 8, 6, 4, 2, 0 };
+
+
+
+                    HomeMode.Home.TrophiesReward = Math.Max(trophiesResult, 0);
+
+                    if (message.Rank == 1) // Win
+                    {
+                        HomeMode.Avatar.SoloWins++;
+                    }
+                    if (message.Rank < 5 && HomeMode.Home.Quests != null)
+                        q = HomeMode.Home.Quests.UpdateQuestsProgress(6, OwnPlayer.CharacterId, 0, 0, 0, HomeMode.Home);
+                    tokensResult = TokensRewards[message.Rank - 1];
+                    totalTokensResult = tokensResult;
+
+                    experienceResult = ExperienceRewards[message.Rank - 1];
+                    HomeMode.Home.Experience += experienceResult;
+                }
+                else if (location.GameMode == "BattleRoyaleTeam")
+                {
+                    if (message.Rank < 3)
+                    {
+                        /*if (Events.PlaySlot(HomeMode.Avatar.AccountId, slot))
+                        {
+                            starToken = true;
+                            HomeMode.Avatar.AddStarTokens(1);
+                            HomeMode.Home.StarTokensReward = 1;
+                        }*/
+                    }
+                    if (brawlerTrophies >= 0 && brawlerTrophies <= 49)
+                    {
+                        Trophies[0] = 9;
+                        Trophies[1] = 7;
+                        Trophies[2] = 4;
+                        Trophies[3] = 0;
+                        Trophies[4] = 0;
+                    }
+                    else if (brawlerTrophies <= 999)
+                    {
+                        Trophies[0] = 9;
+                        Trophies[1] = 7;
+                        int rankDiff = (brawlerTrophies - 100) / 100;
+                        Trophies[2] = Math.Max(3 - rankDiff, 0);
+                        Trophies[3] = Math.Max(-1 - rankDiff, -3);
+                        Trophies[4] = Math.Max(-2 - rankDiff, -4);
+                    }
+                    else if (brawlerTrophies <= 1099)
+                    {
+                        Trophies[0] = 5;
+                        Trophies[1] = 4;
+                        int rankDiff = (brawlerTrophies - 1000) / 100;
+                        Trophies[2] = Math.Max(-4 - rankDiff, -6);
+                        Trophies[3] = Math.Max(-9 - rankDiff, -10);
+                        Trophies[4] = Math.Max(-11 - rankDiff, -12);
+                    }
+                    else
+                    {
+                        Trophies[0] = 4;
+                        Trophies[1] = 2;
+                        Trophies[2] = -6;
+                        Trophies[3] = -10;
+                        Trophies[4] = -12;
+                    }
+
+                    gameMode = 5;
+                    trophiesResult = Trophies[message.Rank - 1];
+
+                    ExperienceRewards = new[] { 14, 8, 4, 2, 0 };
+                    TokensRewards = new[] { 32, 20, 8, 4, 0 };
+
+                    HomeMode.Home.TrophiesReward = Math.Max(trophiesResult, 0);
+
+                    if (message.Rank < 3) // Win
+                    {
+                        HomeMode.Avatar.DuoWins++;
+                    }
+                    if (message.Rank < 3 && HomeMode.Home.Quests != null)
+                        q = HomeMode.Home.Quests.UpdateQuestsProgress(9, OwnPlayer.CharacterId, 0, 0, 0, HomeMode.Home);
+                    tokensResult = TokensRewards[message.Rank - 1];
+                    totalTokensResult = tokensResult;
+
+                    experienceResult = ExperienceRewards[message.Rank - 1];
+                    HomeMode.Home.Experience += experienceResult;
+                }
+
+                else if (location.GameMode == "BossFight")
+                {
+                    gameMode = 4;
+                }
+                else if (location.GameMode == "Raid_TownCrush")
+                {
+                    isPvP = false;
+                    message.BattleResult = 0;
+                    gameMode = 6;
+                }
+                else if (location.GameMode == "Raid")
+                {
+                    isPvP = false;
+                    message.BattleResult = 0;
+                    gameMode = 6;
+                }
+
+                if (HomeMode.Avatar.PremiumLevel > 0)
+                {
+                    switch (HomeMode.Avatar.PremiumLevel)
+                    {
+                        case 1:
+                            if (location.GameMode == "BountyHunter" || location.GameMode == "CoinRush" || location.GameMode == "AttackDefend" || location.GameMode == "LaserBall" || location.GameMode == "RoboWars" || location.GameMode == "KingOfHill")
+                            {
+                                underdogTrophiesResult += (int)Math.Floor((double)Trophies[0] / 2);
+                                trophiesResult += (int)Math.Floor((double)Trophies[0] / 2);
+                            }
+                            else if (location.GameMode == "BattleRoyale" || location.GameMode == "BattleRoyaleTeam")
+                            {
+                                underdogTrophiesResult += (int)Math.Floor((double)Math.Abs(Trophies[message.Rank - 1]) / 2);
+                                trophiesResult += (int)Math.Floor((double)Math.Abs(Trophies[message.Rank - 1]) / 2);
+                            }
+                            break;
+                        case 3:
+                            if (location.GameMode == "BountyHunter" || location.GameMode == "CoinRush" || location.GameMode == "AttackDefend" || location.GameMode == "LaserBall" || location.GameMode == "RoboWars" || location.GameMode == "KingOfHill")
+                            {
+                                underdogTrophiesResult += (int)(Math.Floor((double)Trophies[0] * 2 * 1.5));
+                                trophiesResult += (int)(Math.Floor((double)Trophies[0] * 2 * 1.5));
+                            }
+                            else if (location.GameMode == "BattleRoyale" || location.GameMode == "BattleRoyaleTeam")
+                            {
+                                underdogTrophiesResult += (int)(Math.Floor((double)Math.Abs(Trophies[message.Rank - 1]) * 2 * 1.5));
+                                trophiesResult += (int)(Math.Floor((double)Math.Abs(Trophies[message.Rank - 1]) * 2 * 1.5));
+                            }
+                            break;
+                        case 2:
+                            if (location.GameMode == "BountyHunter" || location.GameMode == "CoinRush" || location.GameMode == "AttackDefend" || location.GameMode == "LaserBall" || location.GameMode == "RoboWars" || location.GameMode == "KingOfHill")
+                            {
+                                underdogTrophiesResult += (int)(Math.Floor((double)Trophies[0] / 2) + (Math.Round((double)Trophies[0] / 4)));
+                                trophiesResult += (int)(Math.Floor((double)Trophies[0] / 2) + (Math.Round((double)Trophies[0] / 4)));
+                            }
+                            else if (location.GameMode == "BattleRoyale" || location.GameMode == "BattleRoyaleTeam")
+                            {
+                                underdogTrophiesResult += (int)(Math.Floor((double)Math.Abs(Trophies[message.Rank - 1]) / 2) + (Math.Round((double)Math.Abs(Trophies[message.Rank - 1]) / 4)));
+                                trophiesResult += (int)(Math.Floor((double)Math.Abs(Trophies[message.Rank - 1]) / 2) + (Math.Round((double)Math.Abs(Trophies[message.Rank - 1]) / 4)));
+                            }
+                            break;
+                    }
+                    HomeMode.Home.TrophiesReward = Math.Max(trophiesResult, 0);
+                }
+
+                if (HomeMode.Home.BattleTokens > 0)
+                {
+                    if (!(HomeMode.Home.BattleTokens - tokensResult >= 0))
+                    {
+                        tokensResult = HomeMode.Home.BattleTokens;
+                        totalTokensResult += tokensResult;
+                        HomeMode.Home.BattleTokens = 0;
+                    }
+                    else
+                    {
+                        HomeMode.Home.BattleTokens -= tokensResult;
+                    }
+                    if (HomeMode.Home.BattleTokensRefreshStart == new DateTime())
+                    {
+                        HomeMode.Home.BattleTokensRefreshStart = DateTime.UtcNow;
+                    }
+                }
+                else
+                {
+                    tokensResult = 0;
+                    totalTokensResult = 0;
+                    HasNoTokens = true;
+                }
+                int starteh = HomeMode.Home.Experience;
+                HomeMode.Home.Experience += experienceResult;
+                HomeMode.Home.Experience += starExperienceResult;
+                int endeh = HomeMode.Home.Experience;
+
+                for (int i = 34; i < 500; i++)
+                {
+                    MilestoneData m = DataTables.Get(DataType.Milestone).GetDataByGlobalId<MilestoneData>(GlobalId.CreateGlobalId(39, i));
+                    int trr = m.ProgressStart + m.Progress;
+                    if (starteh < trr && endeh >= trr)
+                    {
+                        MilestoneReward = GlobalId.CreateGlobalId(39, i);
+                        MilestoneRewards.Add(MilestoneReward);
+                        HomeMode.Avatar.StarPoints += m.SecondaryLvlUpRewardCount;
+                        HomeMode.Home.StarPointsGained += m.SecondaryLvlUpRewardCount;
+                        totalTokensResult += m.PrimaryLvlUpRewardCount;
+                        break;
+                    }
+                }
+
+                int starth = hero.HighestTrophies;
+                HomeMode.Avatar.AddTrophies(trophiesResult);
+                hero.AddTrophies(trophiesResult);
+                int endh = hero.HighestTrophies;
+                for (int i = 0; i < 34; i++)
+                {
+                    MilestoneData m = DataTables.Get(DataType.Milestone).GetDataByGlobalId<MilestoneData>(GlobalId.CreateGlobalId(39, i));
+                    int trr = m.ProgressStart + m.Progress;
+                    if (starth < trr && endh >= trr)
+                    {
+                        MilestoneReward = GlobalId.CreateGlobalId(39, i);
+                        MilestoneRewards.Add(MilestoneReward);
+                        HomeMode.Avatar.StarPoints += m.SecondaryLvlUpRewardCount;
+                        HomeMode.Home.StarPointsGained += m.SecondaryLvlUpRewardCount;
+                        totalTokensResult += m.PrimaryLvlUpRewardCount;
+                        break;
+                    }
+                }
+
+
+                if (HomeMode.Home.TokenDoublers > 0)
+                {
+                    doubledTokensResult = Math.Min(totalTokensResult, HomeMode.Home.TokenDoublers);
+                    HomeMode.Home.TokenDoublers -= doubledTokensResult;
+                    totalTokensResult += doubledTokensResult;
+                }
+                HomeMode.Home.BrawlPassTokens += totalTokensResult;
+                HomeMode.Home.TokenReward += totalTokensResult;
+            }
+            else
+            {
+                if (location.GameMode == "BountyHunter" || location.GameMode == "CoinRush" || location.GameMode == "AttackDefend" || location.GameMode == "LaserBall" || location.GameMode == "RoboWars")
+                {
+                    gameMode = 1;
+                }
+                else if (location.GameMode == "BattleRoyale")
+                {
+                    gameMode = 2;
+                }
+                else if (location.GameMode == "BattleRoyaleTeam")
+                {
+                    gameMode = 5;
+                }
+                else if (location.GameMode == "BossFight")
+                {
+                    gameMode = 4;
+                }
+
+            }
+            //string r = "";
+            string[] d = { "win", "lose", "draw" };
+            if (location.GameMode.StartsWith("BattleRoyale"))
+            {
+                Logger.BLog($"Player {LogicLongCodeGenerator.ToCode(HomeMode.Avatar.AccountId)} ended battle! Battle Rank: {message.BattleResult} in {DateTime.UtcNow.Subtract(HomeMode.Avatar.BattleStartTime).TotalSeconds}s gamemode: {location.GameMode}!");
+            }
+            else
+            {
+                Logger.BLog($"Player {LogicLongCodeGenerator.ToCode(HomeMode.Avatar.AccountId)} ended battle! Battle Result: {d[message.BattleResult]} in {DateTime.UtcNow.Subtract(HomeMode.Avatar.BattleStartTime).TotalSeconds}s gamemode: {location.GameMode}!");
+            }
+            HomeMode.Avatar.BattleStartTime = new();
+
+            BattleEndMessage battleend = new()
+            {
+                GameMode = gameMode,
+                Result = message.BattleResult,
+                StarToken = starToken,
+                IsPowerPlay = isPowerPlay,
+                IsPvP = isPvP,
+                pp = message.BattlePlayers,
+                OwnPlayer = OwnPlayer,
+                TrophiesReward = trophiesResult,
+                ExperienceReward = experienceResult,
+                StarExperienceReward = starExperienceResult,
+                DoubledTokensReward = doubledTokensResult,
+                TokenDoublersLeft = HomeMode.Home.TokenDoublers,
+                TokensReward = tokensResult,
+                Experience = StartExperience,
+                MilestoneReward = MilestoneReward,
+                ProgressiveQuests = q,
+                UnderdogTrophies = underdogTrophiesResult,
+                PowerPlayScoreGained = powerPlayScoreGained,
+                PowerPlayEpicScoreGained = powerPlayEpicScoreGained,
+                HasNoTokens = HasNoTokens,
+                MilestoneRewards = MilestoneRewards,
+            };
+
+            Connection.Send(battleend);
+        }
+
+        private void GetLeaderboardReceived(GetLeaderboardMessage message)
+        {
+            if (message.LeaderboardType == 1)
+            {
+                Account[] rankingList = Leaderboards.GetAvatarRankingList();
+
+                LeaderboardMessage leaderboard = new()
+                {
+                    LeaderboardType = 1,
+                    Region = message.IsRegional ? "US" : null
+                };
+                foreach (Account data in rankingList)
+                {
+                    leaderboard.Avatars.Add(new KeyValuePair<ClientHome, ClientAvatar>(data.Home, data.Avatar));
+                }
+                leaderboard.OwnAvatarId = Connection.Avatar.AccountId;
+
+                Connection.Send(leaderboard);
+            }
+            else if (message.LeaderboardType == 2)
+            {
+                Alliance[] rankingList = Leaderboards.GetAllianceRankingList();
+
+                LeaderboardMessage leaderboard = new()
+                {
+                    LeaderboardType = 2,
+                    Region = message.IsRegional ? "US" : null
+                };
+                leaderboard.AllianceList.AddRange(rankingList);
+
+                Connection.Send(leaderboard);
+            }
+            else if (message.LeaderboardType == 0)
+            {
+                Dictionary<int, List<Account>> rankingList = Leaderboards.GetBrawlersRankingList();
+
+                LeaderboardMessage leaderboard = new()
+                {
+                    LeaderboardType = 0,
+                    Region = message.IsRegional ? "US" : null,
+                };
+                Dictionary<ClientHome, ClientAvatar> aaaa = new();
+                foreach (KeyValuePair<int, List<Account>> data in rankingList)
+                {
+                    if (data.Key == message.CharachterId)
+                    {
+                        foreach (Account account in data.Value)
+                        {
+                            aaaa.Add(account.Home, account.Avatar);
+                        }
+
+                    }
+                }
+
+                leaderboard.CharachterId = message.CharachterId;
+                aaaa = aaaa.OrderBy(x => x.Value.GetHero(message.CharachterId).Trophies).Reverse().ToDictionary(x => x.Key, x => x.Value);
+                aaaa = aaaa.Take(Math.Min(aaaa.Count, 200)).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+                leaderboard.Brawlers = aaaa;
+                leaderboard.OwnAvatarId = Connection.Avatar.AccountId;
+                Connection.Send(leaderboard);
+            }
+            else if (message.LeaderboardType == 3)
+            {
+                Account[] rankingList = Leaderboards.GetAvatarRankingList();
+
+                LeaderboardMessage leaderboard = new()
+                {
+                    LeaderboardType = 3,
+                    Region = message.IsRegional ? "US" : null
+                };
+                foreach (Account data in rankingList)
+                {
+                    leaderboard.Avatars.Add(new KeyValuePair<ClientHome, ClientAvatar>(data.Home, data.Avatar));
+                }
+                leaderboard.OwnAvatarId = Connection.Avatar.AccountId;
+
+                Connection.Send(leaderboard);
+            }
+        }
+
+        private void GoHomeReceived(GoHomeMessage message)
+        {
+            if (Connection.Home != null && Connection.Avatar != null)
+            {
+                Connection.Home.Events = Events.GetEventsById(HomeMode.Home.PowerPlayGamesPlayed, Connection.Avatar.AccountId);
+                OwnHomeDataMessage ohd = new OwnHomeDataMessage();
+                ohd.Home = Connection.Home;
+                ohd.Avatar = Connection.Avatar;
+                Connection.Send(ohd);
+                ShowLobbyInfo();
+            }
+        }
+
+        private void ClientInfoReceived(ClientInfoMessage message)
+        {
+            UdpConnectionInfoMessage info = new UdpConnectionInfoMessage();
+            info.SessionId = Connection.UdpSessionId;
+            info.ServerAddress = Configuration.Instance.UdpHost;
+            info.ServerPort = Configuration.Instance.UdpPort;
+            Connection.Send(info);
+        }
+
+        private void CancelMatchMaking(CancelMatchmakingMessage message)
+        {
+            Matchmaking.CancelMatchmake(Connection);
+            Connection.Send(new MatchMakingCancelledMessage());
+        }
+
+        private void MatchmakeRequestReceived(MatchmakeRequestMessage message)
+        {
+            int slot = message.EventSlot;
+
+            if (HomeMode.Home.Character.Disabled)
+            {
+                Connection.Send(new OutOfSyncMessage());
+                return;
+            }
+
+            if (!Events.HasSlot(slot))
+            {
+                slot = 1;
+            }
+
+            Matchmaking.RequestMatchmake(Connection, slot);
+        }
+
+        private void EndClientTurnReceived(EndClientTurnMessage message)
+        {
+            foreach (Command command in message.Commands)
+            {
+                if (!CommandManager.ReceiveCommand(command))
+                {
+                    OutOfSyncMessage outOfSync = new();
+                    Connection.Send(outOfSync);
+                }
+            }
+            HomeMode.ClientTurnReceived(message.Tick, message.Checksum, message.Commands);
+        }
+
+        private void GetPlayerProfile(GetPlayerProfileMessage message)
+        {
+            if (message.AccountId == 0)
+            {
+                Profile p = Profile.CreateConsole();
+                PlayerProfileMessage a = new PlayerProfileMessage();
+                a.Profile = p;
+
+                Connection.Send(a);
+                return;
+            }
+            Account data = Accounts.Load(message.AccountId);
+            if (data == null) return;
+
+            Profile profile = Profile.Create(data.Home, data.Avatar);
+
+            PlayerProfileMessage profileMessage = new PlayerProfileMessage();
+            profileMessage.Profile = profile;
+            if (data.Avatar.AllianceId >= 0)
+            {
+                Alliance alliance = Alliances.Load(data.Avatar.AllianceId);
+                if (alliance != null)
+                {
+                    profileMessage.AllianceHeader = alliance.Header;
+                    profileMessage.AllianceRole = data.Avatar.AllianceRole;
+                }
+            }
+            Connection.Send(profileMessage);
+        }
+
+        private void ChangeName(ChangeAvatarNameMessage message)
+        {
+            LogicChangeAvatarNameCommand command = new()
+            {
+                Name = message.Name,
+                ChangeNameCost = 0
+            };
+            if (HomeMode.Avatar.AllianceId >= 0)
+            {
+                Alliance a = Alliances.Load(HomeMode.Avatar.AllianceId);
+                if (a == null) return;
+                AllianceMember m = a.GetMemberById(HomeMode.Avatar.AccountId);
+                m.DisplayData.Name = message.Name;
+            }
+            command.Execute(HomeMode);
+            AvailableServerCommandMessage serverCommandMessage = new()
+            {
+                Command = command
+            };
+            Connection.Send(serverCommandMessage);
+        }
+
+        private void OnChangeCharacter(int characterId)
+        {
+            TeamEntry team = Teams.Get(HomeMode.Avatar.TeamId);
+            if (team == null) return;
+
+            TeamMember member = team.GetMember(HomeMode.Avatar.AccountId);
+            if (member == null) return;
+
+            Hero hero = HomeMode.Avatar.GetHero(characterId);
+            if (hero == null) return;
+            member.CharacterId = characterId;
+            member.HeroTrophies = hero.Trophies;
+            member.HeroHighestTrophies = hero.HighestTrophies;
+            member.HeroLevel = hero.PowerLevel;
+
+            team.TeamUpdated();
+        }
+
+        private void LoginReceived(AuthenticationMessage message)
+        {
+            Account account = null;
+
+            if (message.AccountId == 0)
+            {
+                account = Accounts.Create();
+            }
+            else
+            {
+                account = Accounts.Load(message.AccountId);
+                if (account.PassToken != message.PassToken)
+                {
+                    account = null;
+                }
+            }
+
+            if (Sessions.IsSessionActive(account.Avatar.AccountIdRedirect))
+            {
+                var session = Sessions.GetSession(account.Avatar.AccountIdRedirect);
+                session.GameListener.SendTCPMessage(new AuthenticationFailedMessage()
+                {
+                    Message = "Another device has connected to this game!"
+                });
+                Sessions.Remove(account.Avatar.AccountIdRedirect);
+            }
+
+            if (Sessions.IsSessionActive(message.AccountId))
+            {
+                var session = Sessions.GetSession(message.AccountId);
+                session.GameListener.SendTCPMessage(new AuthenticationFailedMessage()
+                {
+                    Message = "Another device has connected to this game!"
+                });
+                Sessions.Remove(message.AccountId);
+            }
+
+            if (account.Avatar.AccountIdRedirect != 0)
+            {
+                account = Accounts.Load(account.Avatar.AccountIdRedirect);
+            }
+
+            if (account == null)
+            {
+                AuthenticationFailedMessage loginFailed = new AuthenticationFailedMessage();
+                loginFailed.ErrorCode = 1;
+                loginFailed.Message = "Unknown Error occured while loading account";
+                Connection.Send(loginFailed);
+
+                return;
+            }
+
+            string GameVersion = "29.270";
+
+            if (message.ClientVersion != GameVersion)
+            {
+                AuthenticationFailedMessage loginFailed = new AuthenticationFailedMessage();
+                loginFailed.ErrorCode = 8;
+                loginFailed.Message = "wrong game version dumbass " + message.ClientVersion + " should be: " + GameVersion;
+                loginFailed.UpdateUrl = "https://github.com/erder00";
+                Connection.Send(loginFailed);
+                return;
+            }
+
+            if (account.Avatar.Banned)
+            {
+                AuthenticationFailedMessage loginFailed = new AuthenticationFailedMessage();
+                loginFailed.ErrorCode = 11;
+                Connection.Send(loginFailed);
+                return;
+            }
+            AuthenticationOkMessage loginOk = new AuthenticationOkMessage();
+            if (!account.Avatar.ShouldRedirect)
+            {
+                loginOk.AccountId = account.AccountId;
+                loginOk.PassToken = account.PassToken;
+                loginOk.Major = message.Major;
+                loginOk.Minor = message.Minor;
+                loginOk.Build = message.Build;
+                loginOk.ServerEnvironment = "prod";
+            }
+            else
+            {
+                //account.Avatar.ShouldRedirect = false;
+                Account t = Accounts.Load(account.Avatar.RedirectId);
+                account = t;
+                loginOk.AccountId = t.AccountId;
+                loginOk.PassToken = t.PassToken;
+                loginOk.Major = message.Major;
+                loginOk.Minor = message.Minor;
+                loginOk.Build = message.Build;
+                loginOk.ServerEnvironment = "prod";
+            }
+
+            Connection.Send(loginOk);
+
+            HomeMode = HomeMode.LoadHomeState(new HomeGameListener(Connection), account.Home, account.Avatar, Events.GetEventsById(account.Home.PowerPlayGamesPlayed, account.Avatar.AccountId));
+            HomeMode.CharacterChanged += OnChangeCharacter;
+            HomeMode.Home.IpAddress = Connection.Socket.RemoteEndPoint.ToString().Split(" ")[0];
+            HomeMode.Home.Device = message.DeviceId;
+            if (HomeMode.Avatar.HighestTrophies == 0 && HomeMode.Avatar.Trophies != 0)
+            {
+                HomeMode.Avatar.HighestTrophies = HomeMode.Avatar.Trophies;
+            }
+            CommandManager = new(HomeMode, Connection);
+
+            if (HomeMode.Avatar.BattleStartTime != new DateTime())
+            {
+                Hero h = HomeMode.Avatar.GetHero(HomeMode.Home.CharacterId);
+                int lose = 0;
+                int brawlerTrophies = h.Trophies;
+                if (brawlerTrophies <= 49)
+                {
+                    lose = 0;
+                }
+                else if (50 <= brawlerTrophies && brawlerTrophies <= 99)
+                {
+                    lose = -1;
+                }
+                else if (100 <= brawlerTrophies && brawlerTrophies <= 199)
+                {
+                    lose = -2;
+                }
+                else if (200 <= brawlerTrophies && brawlerTrophies <= 299)
+                {
+                    lose = -3;
+                }
+                else if (300 <= brawlerTrophies && brawlerTrophies <= 399)
+                {
+                    lose = -4;
+                }
+                else if (400 <= brawlerTrophies && brawlerTrophies <= 499)
+                {
+                    lose = -5;
+                }
+                else if (500 <= brawlerTrophies && brawlerTrophies <= 599)
+                {
+                    lose = -6;
+                }
+                else if (600 <= brawlerTrophies && brawlerTrophies <= 699)
+                {
+                    lose = -7;
+                }
+                else if (700 <= brawlerTrophies && brawlerTrophies <= 799)
+                {
+                    lose = -8;
+                }
+                else if (800 <= brawlerTrophies && brawlerTrophies <= 899)
+                {
+                    lose = -9;
+                }
+                else if (900 <= brawlerTrophies && brawlerTrophies <= 999)
+                {
+                    lose = -10;
+                }
+                else if (1000 <= brawlerTrophies && brawlerTrophies <= 1099)
+                {
+                    lose = -11;
+                }
+                else if (1100 <= brawlerTrophies && brawlerTrophies <= 1199)
+                {
+                    lose = -12;
+                }
+                else if (brawlerTrophies >= 1200)
+                {
+                    lose = -12;
+                }
+                h.AddTrophies(lose);
+                HomeMode.Home.PowerPlayGamesPlayed = Math.Max(0, HomeMode.Home.PowerPlayGamesPlayed - 1);
+                Connection.Home.Events = Events.GetEventsById(HomeMode.Home.PowerPlayGamesPlayed, Connection.Avatar.AccountId);
+                HomeMode.Avatar.BattleStartTime = new DateTime();
+            }
+
+            BattleMode battle = null;
+            if (HomeMode.Avatar.BattleId > 0)
+            {
+                battle = Battles.Get(HomeMode.Avatar.BattleId);
+            }
+
+            if (battle == null)
+            {
+                OwnHomeDataMessage ohd = new OwnHomeDataMessage();
+                ohd.Home = HomeMode.Home;
+                ohd.Avatar = HomeMode.Avatar;
+                Connection.Send(ohd);
+            }
+            else
+            {
+                StartLoadingMessage startLoading = new StartLoadingMessage();
+                startLoading.LocationId = battle.Location.GetGlobalId();
+                startLoading.TeamIndex = HomeMode.Avatar.TeamIndex;
+                startLoading.OwnIndex = HomeMode.Avatar.OwnIndex;
+                startLoading.GameMode = battle.GetGameModeVariation() == 6 ? 6 : 1;
+                startLoading.Players.AddRange(battle.GetPlayers());
+                UDPSocket socket = UDPGateway.CreateSocket();
+                socket.TCPConnection = Connection;
+                socket.Battle = battle;
+                Connection.UdpSessionId = socket.SessionId;
+                battle.ChangePlayerSessionId(HomeMode.Avatar.UdpSessionId, socket.SessionId);
+                HomeMode.Avatar.UdpSessionId = socket.SessionId;
+                Connection.Send(startLoading);
+            }
+
+            Connection.Avatar.LastOnline = DateTime.UtcNow;
+
+            Sessions.Create(HomeMode, Connection);
+            if (true)
+            {
+                FriendListMessage friendList = new FriendListMessage();
+                friendList.Friends = HomeMode.Avatar.Friends.ToArray();
+                Connection.Send(friendList);
+
+
+
+                if (HomeMode.Avatar.AllianceRole != AllianceRole.None && HomeMode.Avatar.AllianceId > 0)
+                {
+                    Alliance alliance = Alliances.Load(HomeMode.Avatar.AllianceId);
+
+                    if (alliance != null)
+                    {
+                        SendMyAllianceData(alliance);
+                        AllianceDataMessage data = new AllianceDataMessage();
+                        data.Alliance = alliance;
+                        data.IsMyAlliance = true;
+                        Connection.Send(data);
+                    }
+                }
+
+                foreach (Friend entry in HomeMode.Avatar.Friends.ToArray())
+                {
+                    if (LogicServerListener.Instance.IsPlayerOnline(entry.AccountId))
+                    {
+                        FriendOnlineStatusEntryMessage statusEntryMessage = new FriendOnlineStatusEntryMessage();
+                        statusEntryMessage.AvatarId = entry.AccountId;
+                        statusEntryMessage.PlayerStatus = entry.Avatar.PlayerStatus;
+                        Connection.Send(statusEntryMessage);
+                    }
+                }
+
+                if (HomeMode.Avatar.TeamId > 0)
+                {
+                    TeamMessage teamMessage = new TeamMessage();
+                    teamMessage.Team = Teams.Get(HomeMode.Avatar.TeamId);
+                    if (teamMessage.Team != null)
+                    {
+                        Connection.Send(teamMessage);
+                        TeamMember member = teamMessage.Team.GetMember(HomeMode.Avatar.AccountId);
+                        member.State = 0;
+                        teamMessage.Team.TeamUpdated();
+                    }
+                }
+            }
+            //Connection.Send(new StartLatencyTestRequestMessage());
+        }
+
+        private void ClientHelloReceived(ClientHelloMessage message)
+        {
+            if (message.KeyVersion != PepperKey.VERSION)
+            {
+                //return;
+            }
+
+            Connection.Messaging.Seed = message.ClientSeed;
+            Random r = new();
+
+            Connection.Messaging.serversc = (byte)r.Next(1, 256);
+            ServerHelloMessage hello = new ServerHelloMessage();
+            hello.serversc = Connection.Messaging.serversc;
+            hello.SetServerHelloToken(Connection.Messaging.SessionToken);
+            Connection.Send(hello);
+        }
+    }
+}
