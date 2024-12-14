@@ -62,6 +62,7 @@ namespace Supercell.Laser.Server.Message
             LastKeepAlive = DateTime.UtcNow;
         }
 
+
         public bool IsAlive()
         {
             return (int)(DateTime.UtcNow - LastKeepAlive).TotalSeconds < 30;
@@ -93,9 +94,7 @@ namespace Supercell.Laser.Server.Message
                 "{0}{1}{2}{3}",
                 uptime.Days > 0 ? $"{uptime.Days} Days, " : string.Empty,
                 uptime.Hours > 0 || uptime.Days > 0 ? $"{uptime.Hours} Hours, " : string.Empty,
-                uptime.Minutes > 0 || uptime.Hours > 0
-                  ? $"{uptime.Minutes} Minutes, "
-                  : string.Empty,
+                uptime.Minutes > 0 || uptime.Hours > 0 ? $"{uptime.Minutes} Minutes, " : string.Empty,
                 uptime.Seconds > 0 ? $"{uptime.Seconds} Seconds" : string.Empty
             );
             string abd = $"Connection: {GetPingIconByMs(0)} (---ms)\n";
@@ -106,13 +105,11 @@ namespace Supercell.Laser.Server.Message
 
             bool hasPremium = HomeMode.Home.PremiumEndTime >= DateTime.UtcNow;
 
-            LobbyInfoMessage b =
-                new()
-                {
-                    LobbyData =
-                        $"<cff001f>R<cff003f>o<cff005f>y<cff007f>a<cff009f>l<cff00bf>e<cff00df> <cff00ff>B<cdf00ff>r<cbf00ff>a<c9f00ff>w<c7f00ff>l<c5f00ff> <c3f00ff>v<c1f00ff>2<c0000ff>9</c>\n<c001cff>g<c0038ff>i<c0055ff>t<c0071ff>h<c008dff>u<c00aaff>b<c00c6ff>.<c00e2ff>c<c00ffff>o<c00ffe2>m<c00ffc6>/<c00ffa9>e<c00ff8d>r<c00ff71>d<c00ff54>e<c00ff38>r<c00ff1c>0<c00ff00>0</c>\n{abd}Players Online: {Sessions.Count}\nUptime: {formattedUptime}\nPremium: {hasPremium}\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nhi'",
-                    PlayersCount = 0
-                };
+            LobbyInfoMessage b = new()
+            {
+                LobbyData = $"<cff001f>R<cff003f>o<cff005f>y<cff007f>a<cff009f>l<cff00bf>e<cff00df> <cff00ff>B<cdf00ff>r<cbf00ff>a<c9f00ff>w<c7f00ff>l<c5f00ff> <c3f00ff>v<c1f00ff>2<c0000ff>9</c>\n<c001cff>g<c0038ff>i<c0055ff>t<c0071ff>h<c008dff>u<c00aaff>b<c00c6ff>.<c00e2ff>c<c00ffff>o<c00ffe2>m<c00ffc6>/<c00ffa9>e<c00ff8d>r<c00ff71>d<c00ff54>e<c00ff38>r<c00ff1c>0<c00ff00>0</c>\n{abd}Players Online: {Sessions.Count}\nUptime: {formattedUptime}\nPremium: {hasPremium}\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nhi'",
+                PlayersCount = 0
+            };
             Connection.Send(b);
         }
 
@@ -289,34 +286,25 @@ namespace Supercell.Laser.Server.Message
             }
         }
 
+
         private void TeamSpectateMessageReceived(TeamSpectateMessage message)
         {
             TeamEntry team = Teams.Get(message.TeamId);
-            if (team == null)
-                return;
+            if (team == null) return;
             HomeMode.Avatar.TeamId = team.Id;
             TeamMember member = new TeamMember();
             member.AccountId = HomeMode.Avatar.AccountId;
             member.CharacterId = HomeMode.Home.CharacterId;
-            member.DisplayData = new PlayerDisplayData(
-                HomeMode.Home.HasPremiumPass,
-                HomeMode.Home.ThumbnailId,
-                HomeMode.Home.NameColorId,
-                HomeMode.Avatar.Name
-            );
+            member.DisplayData = new PlayerDisplayData(HomeMode.Home.HasPremiumPass, HomeMode.Home.ThumbnailId, HomeMode.Home.NameColorId, HomeMode.Avatar.Name);
 
             Hero hero = HomeMode.Avatar.GetHero(HomeMode.Home.CharacterId);
             member.HeroLevel = hero.PowerLevel;
             if (hero.HasStarpower)
             {
                 CardData card = null;
-                CharacterData cd = DataTables
-                    .Get(DataType.Character)
-                    .GetDataByGlobalId<CharacterData>(hero.CharacterId);
+                CharacterData cd = DataTables.Get(DataType.Character).GetDataByGlobalId<CharacterData>(hero.CharacterId);
                 card = DataTables.Get(DataType.Card).GetData<CardData>(cd.Name + "_unique");
-                CardData card2 = DataTables
-                    .Get(DataType.Card)
-                    .GetData<CardData>(cd.Name + "_unique_2");
+                CardData card2 = DataTables.Get(DataType.Card).GetData<CardData>(cd.Name + "_unique_2");
                 if (HomeMode.Avatar.SelectedStarpowers.Contains(card.GetGlobalId()))
                 {
                     member.HeroLevel = 9;
@@ -358,6 +346,7 @@ namespace Supercell.Laser.Server.Message
                             member.Gadget = WildCard.GetGlobalId();
                             break;
                         }
+
                     }
                 }
             }
@@ -365,10 +354,7 @@ namespace Supercell.Laser.Server.Message
             {
                 member.Gadget = 0;
             }
-            member.SkinId = GlobalId.CreateGlobalId(
-                29,
-                HomeMode.Home.SelectedSkins[GlobalId.GetInstanceId(HomeMode.Home.CharacterId)]
-            );
+            member.SkinId = GlobalId.CreateGlobalId(29, HomeMode.Home.SelectedSkins[GlobalId.GetInstanceId(HomeMode.Home.CharacterId)]);
             member.HeroTrophies = hero.Trophies;
             member.HeroHighestTrophies = hero.HighestTrophies;
 
@@ -385,14 +371,15 @@ namespace Supercell.Laser.Server.Message
 
         private void ReportAllianceStreamReceived(ReportAllianceStreamMessage message)
         {
-            if (HomeMode.Avatar.AllianceId < 0)
-                return;
+            if (HomeMode.Avatar.AllianceId < 0) return;
             Alliance myAlliance = Alliances.Load(HomeMode.Avatar.AllianceId);
-            if (myAlliance == null)
-                return;
+            if (myAlliance == null) return;
             if (HomeMode.Home.ReportsIds.Count > 5)
             {
-                Connection.Send(new ReportUserStatusMessage() { Status = 2 });
+                Connection.Send(new ReportUserStatusMessage()
+                {
+                    Status = 2
+                });
                 return;
             }
             long index = 0;
@@ -403,7 +390,10 @@ namespace Supercell.Laser.Server.Message
                 {
                     if (HomeMode.Home.ReportsIds.Contains(e.AuthorId))
                     {
-                        Connection.Send(new ReportUserStatusMessage() { Status = 3 });
+                        Connection.Send(new ReportUserStatusMessage()
+                        {
+                            Status = 3
+                        });
                         return;
                     }
                     string reporterTag = LogicLongCodeGenerator.ToCode(HomeMode.Avatar.AccountId);
@@ -442,8 +432,7 @@ namespace Supercell.Laser.Server.Message
             HomeMode.Avatar.DoNotDisturb = message.State;
             LogicInviteBlockingChangedCommand command = new LogicInviteBlockingChangedCommand();
             command.State = message.State;
-            AvailableServerCommandMessage serverCommandMessage =
-                new AvailableServerCommandMessage();
+            AvailableServerCommandMessage serverCommandMessage = new AvailableServerCommandMessage();
             serverCommandMessage.Command = command;
             Connection.Send(serverCommandMessage);
             if (HomeMode.Avatar.AllianceId > 0)
@@ -461,17 +450,18 @@ namespace Supercell.Laser.Server.Message
         }
         private void LatencyTestResultReceived(LatencyTestResultMessage message)
         {
-            LatencyTestStatusMessage l = new() { Ping = Connection.Ping };
+            LatencyTestStatusMessage l = new()
+            {
+                Ping = Connection.Ping
+            };
             Connection.Send(l);
         }
         private void TeamPremadeChatReceived(TeamPremadeChatMessage message)
         {
-            if (HomeMode.Avatar.TeamId <= 0)
-                return;
+            if (HomeMode.Avatar.TeamId <= 0) return;
 
             TeamEntry team = GetTeam();
-            if (team == null)
-                return;
+            if (team == null) return;
 
             QuickChatStreamEntry entry = new QuickChatStreamEntry();
             entry.AccountId = HomeMode.Avatar.AccountId;
@@ -496,14 +486,11 @@ namespace Supercell.Laser.Server.Message
 
         private void TeamChatReceived(TeamChatMessage message)
         {
-            if (HomeMode.Avatar.TeamId <= 0)
-                return;
-            if (HomeMode.Avatar.IsCommunityBanned)
-                return;
+            if (HomeMode.Avatar.TeamId <= 0) return;
+            if (HomeMode.Avatar.IsCommunityBanned) return;
 
             TeamEntry team = GetTeam();
-            if (team == null)
-                return;
+            if (team == null) return;
 
             ChatStreamEntry entry = new ChatStreamEntry();
             entry.AccountId = HomeMode.Avatar.AccountId;
@@ -522,31 +509,25 @@ namespace Supercell.Laser.Server.Message
             if (HomeMode.Avatar.AllianceId >= 0)
             {
                 Alliance a = Alliances.Load(HomeMode.Avatar.AllianceId);
-                if (a == null)
-                    return;
+                if (a == null) return;
                 AllianceMember m = a.GetMemberById(HomeMode.Avatar.AccountId);
                 m.DisplayData.Name = message.Name;
             }
-            AvailableServerCommandMessage serverCommandMessage =
-                new AvailableServerCommandMessage();
+            AvailableServerCommandMessage serverCommandMessage = new AvailableServerCommandMessage();
             serverCommandMessage.Command = command;
             Connection.Send(serverCommandMessage);
         }
 
         private void TeamSetEventReceived(TeamSetEventMessage message)
         {
-            if (HomeMode.Avatar.TeamId <= 0)
-                return;
+            if (HomeMode.Avatar.TeamId <= 0) return;
 
             TeamEntry team = GetTeam();
-            if (team == null)
-                return;
-            if (message.EventSlot == 2)
-                return;
+            if (team == null) return;
+            if (message.EventSlot == 2) return;
 
             EventData data = Events.GetEvent(message.EventSlot);
-            if (data == null)
-                return;
+            if (data == null) return;
 
             team.EventSlot = message.EventSlot;
             team.LocationId = data.LocationId;
@@ -574,15 +555,13 @@ namespace Supercell.Laser.Server.Message
         private void StartSpectateReceived(StartSpectateMessage message)
         {
             Account data = Accounts.Load(message.AccountId);
-            if (data == null)
-                return;
+            if (data == null) return;
 
             ClientAvatar avatar = data.Avatar;
             long battleId = avatar.BattleId;
 
             BattleMode battle = Battles.Get(battleId);
-            if (battle == null)
-                return;
+            if (battle == null) return;
 
             SpectatedBattle = battle;
             UDPSocket socket = UDPGateway.CreateSocket();
@@ -617,10 +596,7 @@ namespace Supercell.Laser.Server.Message
                 {
                     Connection.Avatar.SkipTutorial();
                 }
-                Connection.Home.Events = Events.GetEventsById(
-                    HomeMode.Home.PowerPlayGamesPlayed,
-                    Connection.Avatar.AccountId
-                );
+                Connection.Home.Events = Events.GetEventsById(HomeMode.Home.PowerPlayGamesPlayed, Connection.Avatar.AccountId);
 
                 OwnHomeDataMessage ohd = new OwnHomeDataMessage();
                 ohd.Home = Connection.Home;
@@ -632,12 +608,10 @@ namespace Supercell.Laser.Server.Message
 
         private void TeamSetLocationReceived(TeamSetLocationMessage message)
         {
-            if (HomeMode.Avatar.TeamId <= 0)
-                return;
+            if (HomeMode.Avatar.TeamId <= 0) return;
 
             TeamEntry team = GetTeam();
-            if (team == null)
-                return;
+            if (team == null) return;
 
             team.Type = 1;
             team.TeamUpdated();
@@ -645,20 +619,14 @@ namespace Supercell.Laser.Server.Message
 
         private void ChangeAllianceSettingsReceived(ChangeAllianceSettingsMessage message)
         {
-            if (HomeMode.Avatar.AllianceId <= 0)
-                return;
+            if (HomeMode.Avatar.AllianceId <= 0) return;
 
-            if (HomeMode.Avatar.AllianceRole != AllianceRole.Leader)
-                return;
+            if (HomeMode.Avatar.AllianceRole != AllianceRole.Leader) return;
 
             Alliance alliance = Alliances.Load(HomeMode.Avatar.AllianceId);
-            if (alliance == null)
-                return;
+            if (alliance == null) return;
 
-            if (
-                message.BadgeId >= 8000000
-                && message.BadgeId < 8000000 + DataTables.Get(DataType.AllianceBadge).Count
-            )
+            if (message.BadgeId >= 8000000 && message.BadgeId < 8000000 + DataTables.Get(DataType.AllianceBadge).Count)
             {
                 alliance.AllianceBadgeId = message.BadgeId;
             }
@@ -670,7 +638,10 @@ namespace Supercell.Laser.Server.Message
             alliance.Description = message.Description;
             alliance.RequiredTrophies = message.RequiredTrophies;
 
-            Connection.Send(new AllianceResponseMessage() { ResponseType = 10 });
+            Connection.Send(new AllianceResponseMessage()
+            {
+                ResponseType = 10
+            });
 
             MyAllianceMessage myAlliance = new MyAllianceMessage();
             myAlliance.Role = HomeMode.Avatar.AllianceRole;
@@ -681,21 +652,17 @@ namespace Supercell.Laser.Server.Message
 
         private void KickAllianceMemberReceived(KickAllianceMemberMessage message)
         {
-            if (HomeMode.Avatar.AllianceId <= 0)
-                return;
+            if (HomeMode.Avatar.AllianceId <= 0) return;
 
             Alliance alliance = Alliances.Load(HomeMode.Avatar.AllianceId);
-            if (alliance == null)
-                return;
+            if (alliance == null) return;
 
             AllianceMember member = alliance.GetMemberById(message.AccountId);
-            if (member == null)
-                return;
+            if (member == null) return;
 
             ClientAvatar avatar = Accounts.Load(message.AccountId).Avatar;
 
-            if (HomeMode.Avatar.AllianceRole <= avatar.AllianceRole)
-                return;
+            if (HomeMode.Avatar.AllianceRole <= avatar.AllianceRole) return;
 
             alliance.Members.Remove(member);
             avatar.AllianceId = -1;
@@ -717,28 +684,26 @@ namespace Supercell.Laser.Server.Message
 
             if (LogicServerListener.Instance.IsPlayerOnline(avatar.AccountId))
             {
-                LogicServerListener.Instance
-                    .GetGameListener(avatar.AccountId)
-                    .SendTCPMessage(new AllianceResponseMessage() { ResponseType = 100 });
-                LogicServerListener.Instance
-                    .GetGameListener(avatar.AccountId)
-                    .SendTCPMessage(new MyAllianceMessage());
+                LogicServerListener.Instance.GetGameListener(avatar.AccountId).SendTCPMessage(new AllianceResponseMessage()
+                {
+                    ResponseType = 100
+                });
+                LogicServerListener.Instance.GetGameListener(avatar.AccountId).SendTCPMessage(new MyAllianceMessage());
             }
         }
 
         private void TeamSetMemberReadyReceived(TeamSetMemberReadyMessage message)
         {
             TeamEntry team = Teams.Get(HomeMode.Avatar.TeamId);
-            if (team == null)
-                return;
+            if (team == null) return;
 
             TeamMember member = team.GetMember(HomeMode.Avatar.AccountId);
-            if (member == null)
-                return;
+            if (member == null) return;
 
             member.IsReady = message.IsReady;
 
             team.TeamUpdated();
+
             //if (team.IsEveryoneReady())
             // {
             //Teams.StartGame(team);
@@ -752,17 +717,13 @@ namespace Supercell.Laser.Server.Message
 
         private void TeamMemberStatusReceived(TeamMemberStatusMessage message)
         {
-            if (HomeMode == null)
-                return;
-            if (message.Status < 0)
-                return;
+            if (HomeMode == null) return;
+            if (message.Status < 0) return;
             TeamEntry team = Teams.Get(HomeMode.Avatar.TeamId);
-            if (team == null)
-                return;
+            if (team == null) return;
 
             TeamMember member = team.GetMember(HomeMode.Avatar.AccountId);
-            if (member == null)
-                return;
+            if (member == null) return;
 
             member.State = message.Status;
             team.TeamUpdated();
@@ -773,12 +734,10 @@ namespace Supercell.Laser.Server.Message
             bool isAccept = message.Response == 1;
 
             TeamEntry team = Teams.Get(message.TeamId);
-            if (team == null)
-                return;
+            if (team == null) return;
 
             TeamInviteEntry invite = team.GetInviteById(HomeMode.Avatar.AccountId);
-            if (invite == null)
-                return;
+            if (invite == null) return;
 
             team.Invites.Remove(invite);
 
@@ -787,12 +746,7 @@ namespace Supercell.Laser.Server.Message
                 TeamMember member = new TeamMember();
                 member.AccountId = HomeMode.Avatar.AccountId;
                 member.CharacterId = HomeMode.Home.CharacterId;
-                member.DisplayData = new PlayerDisplayData(
-                    HomeMode.Home.HasPremiumPass,
-                    HomeMode.Home.ThumbnailId,
-                    HomeMode.Home.NameColorId,
-                    HomeMode.Avatar.Name
-                );
+                member.DisplayData = new PlayerDisplayData(HomeMode.Home.HasPremiumPass, HomeMode.Home.ThumbnailId, HomeMode.Home.NameColorId, HomeMode.Avatar.Name);
 
                 Hero hero = HomeMode.Avatar.GetHero(HomeMode.Home.CharacterId);
                 member.HeroTrophies = hero.Trophies;
@@ -816,12 +770,10 @@ namespace Supercell.Laser.Server.Message
         private void TeamInviteReceived(TeamInviteMessage message)
         {
             TeamEntry team = GetTeam();
-            if (team == null)
-                return;
+            if (team == null) return;
 
             Account data = Accounts.Load(message.AvatarId);
-            if (data == null)
-                return;
+            if (data == null) return;
 
             TeamInviteEntry entry = new TeamInviteEntry();
             entry.Slot = message.Team;
@@ -833,9 +785,7 @@ namespace Supercell.Laser.Server.Message
 
             team.TeamUpdated();
 
-            LogicGameListener gameListener = LogicServerListener.Instance.GetGameListener(
-                message.AvatarId
-            );
+            LogicGameListener gameListener = LogicServerListener.Instance.GetGameListener(message.AvatarId);
             if (gameListener != null)
             {
                 TeamInvitationMessage teamInvitationMessage = new TeamInvitationMessage();
@@ -843,12 +793,7 @@ namespace Supercell.Laser.Server.Message
 
                 Friend friendEntry = new Friend();
                 friendEntry.AccountId = HomeMode.Avatar.AccountId;
-                friendEntry.DisplayData = new PlayerDisplayData(
-                    HomeMode.Home.HasPremiumPass,
-                    HomeMode.Home.ThumbnailId,
-                    HomeMode.Home.NameColorId,
-                    HomeMode.Avatar.Name
-                );
+                friendEntry.DisplayData = new PlayerDisplayData(HomeMode.Home.HasPremiumPass, HomeMode.Home.ThumbnailId, HomeMode.Home.NameColorId, HomeMode.Avatar.Name);
                 friendEntry.Trophies = HomeMode.Avatar.Trophies;
                 teamInvitationMessage.Unknown = 1;
                 teamInvitationMessage.FriendEntry = friendEntry;
@@ -859,8 +804,7 @@ namespace Supercell.Laser.Server.Message
 
         private void TeamLeaveReceived(TeamLeaveMessage message)
         {
-            if (HomeMode.Avatar.TeamId <= 0)
-                return;
+            if (HomeMode.Avatar.TeamId <= 0) return;
 
             TeamEntry team = Teams.Get(HomeMode.Avatar.TeamId);
 
@@ -874,8 +818,7 @@ namespace Supercell.Laser.Server.Message
 
             TeamMember entry = team.GetMember(HomeMode.Avatar.AccountId);
 
-            if (entry == null)
-                return;
+            if (entry == null) return;
             HomeMode.Avatar.TeamId = -1;
 
             team.Members.Remove(entry);
@@ -899,25 +842,16 @@ namespace Supercell.Laser.Server.Message
             TeamMember member = new TeamMember();
             member.AccountId = HomeMode.Avatar.AccountId;
             member.CharacterId = HomeMode.Home.CharacterId;
-            member.DisplayData = new PlayerDisplayData(
-                HomeMode.Home.HasPremiumPass,
-                HomeMode.Home.ThumbnailId,
-                HomeMode.Home.NameColorId,
-                HomeMode.Avatar.Name
-            );
+            member.DisplayData = new PlayerDisplayData(HomeMode.Home.HasPremiumPass, HomeMode.Home.ThumbnailId, HomeMode.Home.NameColorId, HomeMode.Avatar.Name);
 
             Hero hero = HomeMode.Avatar.GetHero(HomeMode.Home.CharacterId);
             member.HeroLevel = hero.PowerLevel;
             if (hero.HasStarpower)
             {
                 CardData card = null;
-                CharacterData cd = DataTables
-                    .Get(DataType.Character)
-                    .GetDataByGlobalId<CharacterData>(hero.CharacterId);
+                CharacterData cd = DataTables.Get(DataType.Character).GetDataByGlobalId<CharacterData>(hero.CharacterId);
                 card = DataTables.Get(DataType.Card).GetData<CardData>(cd.Name + "_unique");
-                CardData card2 = DataTables
-                    .Get(DataType.Card)
-                    .GetData<CardData>(cd.Name + "_unique_2");
+                CardData card2 = DataTables.Get(DataType.Card).GetData<CardData>(cd.Name + "_unique_2");
                 if (HomeMode.Avatar.SelectedStarpowers.Contains(card.GetGlobalId()))
                 {
                     member.HeroLevel = 9;
@@ -984,13 +918,11 @@ namespace Supercell.Laser.Server.Message
         private void AcceptFriendReceived(AcceptFriendMessage message)
         {
             Account data = Accounts.Load(message.AvatarId);
-            if (data == null)
-                return;
+            if (data == null) return;
 
             {
                 Friend entry = HomeMode.Avatar.GetRequestFriendById(message.AvatarId);
-                if (entry == null)
-                    return;
+                if (entry == null) return;
 
                 Friend oldFriend = HomeMode.Avatar.GetAcceptedFriendById(message.AvatarId);
                 if (oldFriend != null)
@@ -1011,8 +943,7 @@ namespace Supercell.Laser.Server.Message
             {
                 ClientAvatar avatar = data.Avatar;
                 Friend entry = avatar.GetFriendById(HomeMode.Avatar.AccountId);
-                if (entry == null)
-                    return;
+                if (entry == null) return;
 
                 entry.FriendState = 4;
                 entry.FriendReason = 0;
@@ -1021,9 +952,7 @@ namespace Supercell.Laser.Server.Message
                 {
                     FriendListUpdateMessage update = new FriendListUpdateMessage();
                     update.Entry = entry;
-                    LogicServerListener.Instance
-                        .GetGameListener(avatar.AccountId)
-                        .SendTCPMessage(update);
+                    LogicServerListener.Instance.GetGameListener(avatar.AccountId).SendTCPMessage(update);
                 }
             }
         }
@@ -1031,14 +960,12 @@ namespace Supercell.Laser.Server.Message
         private void RemoveFriendReceived(RemoveFriendMessage message)
         {
             Account data = Accounts.Load(message.AvatarId);
-            if (data == null)
-                return;
+            if (data == null) return;
 
             ClientAvatar avatar = data.Avatar;
 
             Friend MyEntry = HomeMode.Avatar.GetFriendById(message.AvatarId);
-            if (MyEntry == null)
-                return;
+            if (MyEntry == null) return;
 
             MyEntry.FriendState = 0;
 
@@ -1050,8 +977,7 @@ namespace Supercell.Laser.Server.Message
 
             Friend OtherEntry = avatar.GetFriendById(HomeMode.Avatar.AccountId);
 
-            if (OtherEntry == null)
-                return;
+            if (OtherEntry == null) return;
 
             OtherEntry.FriendState = 0;
 
@@ -1061,9 +987,7 @@ namespace Supercell.Laser.Server.Message
             {
                 FriendListUpdateMessage update2 = new FriendListUpdateMessage();
                 update2.Entry = OtherEntry;
-                LogicServerListener.Instance
-                    .GetGameListener(avatar.AccountId)
-                    .SendTCPMessage(update2);
+                LogicServerListener.Instance.GetGameListener(avatar.AccountId).SendTCPMessage(update2);
             }
         }
 
@@ -1072,7 +996,10 @@ namespace Supercell.Laser.Server.Message
             Account data = Accounts.Load(message.AvatarId);
             if (data == null)
             {
-                Connection.Send(new AddFriendFailedMessage { Reason = 5 });
+                Connection.Send(new AddFriendFailedMessage
+                {
+                    Reason = 5
+                });
                 return;
             }
             if (data.Avatar.AccountId == HomeMode.Avatar.AccountId)
@@ -1082,12 +1009,18 @@ namespace Supercell.Laser.Server.Message
                 // 5 doesnt exist
                 // 7 - u have too many friends, rm
                 // 8 - u have too many friends
-                Connection.Send(new AddFriendFailedMessage { Reason = 4 });
+                Connection.Send(new AddFriendFailedMessage
+                {
+                    Reason = 4
+                });
                 return;
             }
             if (data.Home.BlockFriendRequests)
             {
-                Connection.Send(new AddFriendFailedMessage { Reason = 0 });
+                Connection.Send(new AddFriendFailedMessage
+                {
+                    Reason = 0
+                });
                 return;
             }
 
@@ -1096,40 +1029,31 @@ namespace Supercell.Laser.Server.Message
             Friend requestEntry = HomeMode.Avatar.GetFriendById(message.AvatarId);
             if (requestEntry != null)
             {
-                AcceptFriendReceived(new AcceptFriendMessage() { AvatarId = message.AvatarId });
+                AcceptFriendReceived(new AcceptFriendMessage()
+                {
+                    AvatarId = message.AvatarId
+                });
                 return;
             }
             else
             {
                 Friend friendEntry = new Friend();
                 friendEntry.AccountId = HomeMode.Avatar.AccountId;
-                friendEntry.DisplayData = new PlayerDisplayData(
-                    HomeMode.Home.HasPremiumPass,
-                    HomeMode.Home.ThumbnailId,
-                    HomeMode.Home.NameColorId,
-                    HomeMode.Avatar.Name
-                );
+                friendEntry.DisplayData = new PlayerDisplayData(HomeMode.Home.HasPremiumPass, HomeMode.Home.ThumbnailId, HomeMode.Home.NameColorId, HomeMode.Avatar.Name);
                 friendEntry.FriendReason = message.Reason;
                 friendEntry.FriendState = 3;
                 avatar.Friends.Add(friendEntry);
 
                 Friend request = new Friend();
                 request.AccountId = avatar.AccountId;
-                request.DisplayData = new PlayerDisplayData(
-                    data.Home.HasPremiumPass,
-                    data.Home.ThumbnailId,
-                    data.Home.NameColorId,
-                    data.Avatar.Name
-                );
+                request.DisplayData = new PlayerDisplayData(data.Home.HasPremiumPass, data.Home.ThumbnailId, data.Home.NameColorId, data.Avatar.Name);
                 request.FriendReason = 0;
                 request.FriendState = 2;
                 HomeMode.Avatar.Friends.Add(request);
 
                 if (LogicServerListener.Instance.IsPlayerOnline(message.AvatarId))
                 {
-                    var gameListener = LogicServerListener.Instance.GetGameListener(
-                        message.AvatarId
-                    );
+                    var gameListener = LogicServerListener.Instance.GetGameListener(message.AvatarId);
 
                     FriendListUpdateMessage update = new FriendListUpdateMessage();
                     update.Entry = friendEntry;
@@ -1152,10 +1076,8 @@ namespace Supercell.Laser.Server.Message
 
         private void PlayerStatusReceived(PlayerStatusMessage message)
         {
-            if (HomeMode == null)
-                return;
-            if (message.Status < 0)
-                return;
+            if (HomeMode == null) return;
+            if (message.Status < 0) return;
             int oldstatus = HomeMode.Avatar.PlayerStatus;
             int newstatus = message.Status;
             /*
@@ -1237,26 +1159,19 @@ namespace Supercell.Laser.Server.Message
                     lose = -12;
                 }
                 h.AddTrophies(lose);
-                HomeMode.Home.PowerPlayGamesPlayed = Math.Max(
-                    0,
-                    HomeMode.Home.PowerPlayGamesPlayed - 1
-                );
+                HomeMode.Home.PowerPlayGamesPlayed = Math.Max(0, HomeMode.Home.PowerPlayGamesPlayed - 1);
                 HomeMode.Avatar.BattleStartTime = new DateTime();
                 HomeMode.Home.TrophiesReward = 0;
-                Logger.BLog(
-                    $"Player {LogicLongCodeGenerator.ToCode(HomeMode.Avatar.AccountId)} left battle!"
-                );
+                Logger.BLog($"Player {LogicLongCodeGenerator.ToCode(HomeMode.Avatar.AccountId)} left battle!");
                 HomeMode.Avatar.BattleStartTime = DateTime.MinValue;
                 if (HomeMode.Home.NotificationFactory.NotificationList.Count < 5)
                 {
                     HomeMode.Home.NotificationFactory.Add(
-                        new Notification()
-                        {
-                            Id = 81,
-                            MessageEntry =
-                                $"Because of leaving match, you recieved leave penalty: {lose} trophies!"
-                        }
-                    );
+                    new Notification()
+                    {
+                        Id = 81,
+                        MessageEntry = $"Because of leaving match, you recieved leave penalty: {lose} trophies!"
+                    });
                 }
             }
 
@@ -1268,9 +1183,7 @@ namespace Supercell.Laser.Server.Message
             {
                 if (LogicServerListener.Instance.IsPlayerOnline(friend.AccountId))
                 {
-                    LogicServerListener.Instance
-                        .GetGameListener(friend.AccountId)
-                        .SendTCPMessage(entryMessage);
+                    LogicServerListener.Instance.GetGameListener(friend.AccountId).SendTCPMessage(entryMessage);
                 }
             }
         }
@@ -1291,78 +1204,64 @@ namespace Supercell.Laser.Server.Message
         private void ChatToAllianceStreamReceived(ChatToAllianceStreamMessage message)
         {
             Alliance alliance = Alliances.Load(HomeMode.Avatar.AllianceId);
-            if (alliance == null)
-                return;
+            if (alliance == null) return;
 
             if (message.Message.StartsWith("/"))
             {
                 string[] cmd = message.Message.Substring(1).Split(' ');
-                if (cmd.Length == 0)
-                    return;
+                if (cmd.Length == 0) return;
+
+                DebugOpenMessage debugopen = new()
+                {
 
                 };
 
-                AllianceStreamEntryMessage response =
-                    new()
+                AllianceStreamEntryMessage response = new()
+                {
+                    Entry = new AllianceStreamEntry
                     {
-                        Entry = new AllianceStreamEntry
-                        {
-                            AuthorName = "Alliance Bot",
-                            AuthorId = HomeMode.Avatar.AccountId + 1,
-                            Id = alliance.Stream.EntryIdCounter + 1,
-                            AuthorRole = AllianceRole.Member,
-                            Type = 2
-                        }
-                    };
+                        AuthorName = "Alliance Bot",
+                        AuthorId = HomeMode.Avatar.AccountId + 1,
+                        Id = alliance.Stream.EntryIdCounter + 1,
+                        AuthorRole = AllianceRole.Member,
+                        Type = 2
+                    }
+                };
 
                 long accountId = HomeMode.Avatar.AccountId;
 
                 switch (cmd[0])
                 {
                     case "status":
-                        long megabytesUsed =
-                            Process.GetCurrentProcess().PrivateMemorySize64 / (1024 * 1024);
+                        long megabytesUsed = Process.GetCurrentProcess().PrivateMemorySize64 / (1024 * 1024);
                         DateTime now = Process.GetCurrentProcess().StartTime;
                         DateTime futureDate = DateTime.Now;
 
                         TimeSpan timeDifference = futureDate - now;
 
-                        string formattedTime = string.Format(
-                            "{0}{1}{2}{3}",
-                            timeDifference.Days > 0
-                              ? $"{timeDifference.Days} Days, "
-                              : string.Empty,
-                            timeDifference.Hours > 0 || timeDifference.Days > 0
-                              ? $"{timeDifference.Hours} Hours, "
-                              : string.Empty,
-                            timeDifference.Minutes > 0 || timeDifference.Hours > 0
-                              ? $"{timeDifference.Minutes} Minutes, "
-                              : string.Empty,
-                            timeDifference.Seconds > 0
-                              ? $"{timeDifference.Seconds} Seconds"
-                              : string.Empty
-                        );
+                        string formattedTime = string.Format("{0}{1}{2}{3}",
+                        timeDifference.Days > 0 ? $"{timeDifference.Days} Days, " : string.Empty,
+                        timeDifference.Hours > 0 || timeDifference.Days > 0 ? $"{timeDifference.Hours} Hours, " : string.Empty,
+                        timeDifference.Minutes > 0 || timeDifference.Hours > 0 ? $"{timeDifference.Minutes} Minutes, " : string.Empty,
+                        timeDifference.Seconds > 0 ? $"{timeDifference.Seconds} Seconds" : string.Empty);
 
-                        response.Entry.Message =
-                            $"Server Status:\n"
-                            + $"Server Game Version: v29.270\n"
-                            + $"Server Build: v5.0 from 18.05.2024\n"
-                            + $"Resources Sha: {Fingerprint.Sha}\n"
-                            + $"Environment: Prod\n"
-                            + $"Server Time: {DateTime.Now} EEST\n"
-                            + $"Players Online: {Sessions.Count}\n"
-                            + $"Memory Used: {megabytesUsed} MB\n"
-                            + $"Uptime: {formattedTime}\n";
+                        response.Entry.Message = $"Server Status:\n" +
+                            $"Server Game Version: v29.270\n" +
+                            $"Server Build: v5.0 from 18.05.2024\n" +
+                            $"Resources Sha: {Fingerprint.Sha}\n" +
+                            $"Environment: Prod\n" +
+                            $"Server Time: {DateTime.Now} EEST\n" +
+                            $"Players Online: {Sessions.Count}\n" +
+                            $"Memory Used: {megabytesUsed} MB\n" +
+                            $"Uptime: {formattedTime}\n";
                         Connection.Send(response);
                         break;
                     case "help":
-                        response.Entry.Message =
-                            $"Avaliable commands:\n/help - show all server commands list\n/status - show server status\n\n                               --- royale ID ---\n/register [username] [password] - register an account\n/login [username] [password] - login to an account";
+                        response.Entry.Message = $"Avaliable commands:\n/help - show all server commands list\n/status - show server status\n\n                               --- royale ID ---\n/register [username] [password] - register an account\n/login [username] [password] - login to an account";
                         Connection.Send(response);
                         break;
                     default:
-                        response.Entry.Message =
-                            $"Unknown command \"{cmd[0]}\" - type \"/help\" to get command list!";
+                        response.Entry.Message = $"Unknown command \"{cmd[0]}\" - type \"/help\" to get command list!";
                         Connection.Send(response);
                         break;
                     // ACCOUNT SYSTEM HERE
@@ -1377,30 +1276,23 @@ namespace Supercell.Laser.Server.Message
                         string username = cmd[1];
                         string password = cmd[2];
 
-                        bool registrationSuccess = RegisterUserToDatabase(
-                            username,
-                            password,
-                            accountId
-                        );
+                        bool registrationSuccess = RegisterUserToDatabase(username, password, accountId);
 
                         if (!registrationSuccess)
                         {
-                            response.Entry.Message =
-                                $"Registration was unsuccessful. Username is already being used.";
+                            response.Entry.Message = $"Registration was unsuccessful. Username is already being used.";
                             Connection.Send(response);
                             return;
                         }
                         Account plreaccount = Accounts.Load(accountId);
-                        Notification brlyn =
-                            new()
-                            {
-                                Id = 89,
-                                DonationCount = 200,
-                                MessageEntry = "<c6>royale ID Thank you for connecting!</c>"
-                            };
+                        Notification brlyn = new()
+                        {
+                            Id = 89,
+                            DonationCount = 200,
+                            MessageEntry = "<c6>royale ID Thank you for connecting!</c>"
+                        };
                         plreaccount.Home.NotificationFactory.Add(brlyn);
-                        response.Entry.Message =
-                            $"Registration is successful! You can log into your account now. You can also get your registration gift by restarting the game.";
+                        response.Entry.Message = $"Registration is successful! You can log into your account now. You can also get your registration gift by restarting the game.";
                         Connection.Send(response);
                         break;
                     case "login":
@@ -1413,6 +1305,7 @@ namespace Supercell.Laser.Server.Message
 
                         string loginUsername = cmd[1];
                         string loginPassword = cmd[2];
+
 
                         string accountIdS = LoginUserFromDatabase(loginUsername, loginPassword);
 
@@ -1432,21 +1325,17 @@ namespace Supercell.Laser.Server.Message
                             return;
                         }
 
-                        Connection.Send(
-                            new CreateAccountOkMessage
-                            {
-                                AccountId = account.AccountId,
-                                PassToken = account.PassToken
-                            }
-                        );
+                        Connection.Send(new CreateAccountOkMessage
+                        {
+                            AccountId = account.AccountId,
+                            PassToken = account.PassToken
+                        });
 
-                        Connection.Send(
-                            new AuthenticationFailedMessage
-                            {
-                                ErrorCode = 8,
-                                Message = "Logged in successfully."
-                            }
-                        );
+                        Connection.Send(new AuthenticationFailedMessage
+                        {
+                            ErrorCode = 8,
+                            Message = "Logged in successfully."
+                        });
                         break;
                 }
                 return;
@@ -1457,37 +1346,34 @@ namespace Supercell.Laser.Server.Message
             }
             else if (HomeMode.Avatar.IsCommunityBanned)
             {
-                AllianceStreamEntryMessage response =
-                    new()
+                AllianceStreamEntryMessage response = new()
+                {
+                    Entry = new AllianceStreamEntry
                     {
-                        Entry = new AllianceStreamEntry
-                        {
-                            AuthorName = "Console",
-                            AuthorId = 0,
-                            Id = alliance.Stream.EntryIdCounter + 1,
-                            AuthorRole = AllianceRole.Member,
-                            Message =
-                                "This message is not visible, wait until the end of the blocking period!",
-                            Type = 2
-                        }
-                    };
+                        AuthorName = "Console",
+                        AuthorId = 0,
+                        Id = alliance.Stream.EntryIdCounter + 1,
+                        AuthorRole = AllianceRole.Member,
+                        Message = "This message is not visible, wait until the end of the blocking period!",
+                        Type = 2
+                    }
+                };
                 Connection.Send(response);
             }
             else
             {
-                AllianceStreamEntryMessage response =
-                    new()
+                AllianceStreamEntryMessage response = new()
+                {
+                    Entry = new AllianceStreamEntry
                     {
-                        Entry = new AllianceStreamEntry
-                        {
-                            AuthorName = "Console",
-                            AuthorId = 0,
-                            Id = alliance.Stream.EntryIdCounter + 1,
-                            AuthorRole = AllianceRole.Member,
-                            Message = "Unknown error occured. Contact an administrator.",
-                            Type = 2
-                        }
-                    };
+                        AuthorName = "Console",
+                        AuthorId = 0,
+                        Id = alliance.Stream.EntryIdCounter + 1,
+                        AuthorRole = AllianceRole.Member,
+                        Message = "Unknown error occured. Contact an administrator.",
+                        Type = 2
+                    }
+                };
                 Connection.Send(response);
             }
         }
@@ -1495,12 +1381,9 @@ namespace Supercell.Laser.Server.Message
         private void JoinAllianceReceived(JoinAllianceMessage message)
         {
             Alliance alliance = Alliances.Load(message.AllianceId);
-            if (HomeMode.Avatar.AllianceId > 0)
-                return;
-            if (alliance == null)
-                return;
-            if (alliance.Members.Count >= 100)
-                return;
+            if (HomeMode.Avatar.AllianceId > 0) return;
+            if (alliance == null) return;
+            if (alliance.Members.Count >= 100) return;
 
             AllianceStreamEntry entry = new AllianceStreamEntry();
             entry.AuthorId = HomeMode.Avatar.AccountId;
@@ -1526,12 +1409,10 @@ namespace Supercell.Laser.Server.Message
 
         private void LeaveAllianceReceived(LeaveAllianceMessage message)
         {
-            if (HomeMode.Avatar.AllianceId < 0 || HomeMode.Avatar.AllianceRole == AllianceRole.None)
-                return;
+            if (HomeMode.Avatar.AllianceId < 0 || HomeMode.Avatar.AllianceRole == AllianceRole.None) return;
 
             Alliance alliance = Alliances.Load(HomeMode.Avatar.AllianceId);
-            if (alliance == null)
-                return;
+            if (alliance == null) return;
             if (HomeMode.Avatar.AllianceRole == AllianceRole.Leader)
             {
                 AllianceMember nextLeader = alliance.GetNextRoleMember();
@@ -1545,32 +1426,31 @@ namespace Supercell.Laser.Server.Message
                     HomeMode.Avatar.AllianceId = -1;
                     HomeMode.Avatar.AllianceRole = AllianceRole.None;
 
-                    Connection.Send(new AllianceResponseMessage { ResponseType = 80 });
+                    Connection.Send(new AllianceResponseMessage
+                    {
+                        ResponseType = 80
+                    });
 
                     Connection.Send(new MyAllianceMessage());
 
                     return;
-                }
-                ;
+                };
                 Account target = Accounts.Load(nextLeader.AccountId);
-                if (target == null)
-                    return;
+                if (target == null) return;
                 target.Avatar.AllianceRole = AllianceRole.Leader;
                 nextLeader.Role = AllianceRole.Leader;
                 if (LogicServerListener.Instance.IsPlayerOnline(target.AccountId))
                 {
-                    LogicServerListener.Instance
-                        .GetGameListener(target.AccountId)
-                        .SendTCPMessage(new AllianceResponseMessage() { ResponseType = 101 });
-                    MyAllianceMessage targetAlliance =
-                        new()
-                        {
-                            AllianceHeader = alliance.Header,
-                            Role = HomeMode.Avatar.AllianceRole
-                        };
-                    LogicServerListener.Instance
-                        .GetGameListener(target.AccountId)
-                        .SendTCPMessage(targetAlliance);
+                    LogicServerListener.Instance.GetGameListener(target.AccountId).SendTCPMessage(new AllianceResponseMessage()
+                    {
+                        ResponseType = 101
+                    });
+                    MyAllianceMessage targetAlliance = new()
+                    {
+                        AllianceHeader = alliance.Header,
+                        Role = HomeMode.Avatar.AllianceRole
+                    };
+                    LogicServerListener.Instance.GetGameListener(target.AccountId).SendTCPMessage(targetAlliance);
                 }
             }
             alliance.RemoveMemberById(HomeMode.Avatar.AccountId);
@@ -1580,18 +1460,17 @@ namespace Supercell.Laser.Server.Message
             }
             else
             {
-                AllianceStreamEntry allianceentry =
-                    new()
-                    {
-                        AuthorId = HomeMode.Avatar.AccountId,
-                        AuthorName = HomeMode.Avatar.Name,
-                        Id = ++alliance.Stream.EntryIdCounter,
-                        PlayerId = HomeMode.Avatar.AccountId,
-                        PlayerName = HomeMode.Avatar.Name,
-                        Type = 4,
-                        Event = 4,
-                        AuthorRole = HomeMode.Avatar.AllianceRole
-                    };
+                AllianceStreamEntry allianceentry = new()
+                {
+                    AuthorId = HomeMode.Avatar.AccountId,
+                    AuthorName = HomeMode.Avatar.Name,
+                    Id = ++alliance.Stream.EntryIdCounter,
+                    PlayerId = HomeMode.Avatar.AccountId,
+                    PlayerName = HomeMode.Avatar.Name,
+                    Type = 4,
+                    Event = 4,
+                    AuthorRole = HomeMode.Avatar.AllianceRole
+                };
                 alliance.AddStreamEntry(allianceentry);
             }
             HomeMode.Avatar.AllianceId = -1;
@@ -1618,18 +1497,14 @@ namespace Supercell.Laser.Server.Message
 
         private void CreateAllianceReceived(CreateAllianceMessage message)
         {
-            if (HomeMode.Avatar.AllianceId >= 0)
-                return;
+            if (HomeMode.Avatar.AllianceId >= 0) return;
 
             Alliance alliance = new Alliance();
             alliance.Name = message.Name;
             alliance.Description = message.Description;
             alliance.RequiredTrophies = message.RequiredTrophies;
 
-            if (
-                message.BadgeId >= 8000000
-                && message.BadgeId < 8000000 + DataTables.Get(DataType.AllianceBadge).Count
-            )
+            if (message.BadgeId >= 8000000 && message.BadgeId < 8000000 + DataTables.Get(DataType.AllianceBadge).Count)
             {
                 alliance.AllianceBadgeId = message.BadgeId;
             }
@@ -1655,8 +1530,7 @@ namespace Supercell.Laser.Server.Message
         private void AskForAllianceDataReceived(AskForAllianceDataMessage message)
         {
             Alliance alliance = Alliances.Load(message.AllianceId);
-            if (alliance == null)
-                return;
+            if (alliance == null) return;
 
             AllianceDataMessage data = new AllianceDataMessage();
             data.Alliance = alliance;
@@ -1665,30 +1539,23 @@ namespace Supercell.Laser.Server.Message
         }
         private void ChangeAllianceMemberRoleReceived(ChangeAllianceMemberRoleMessage message)
         {
-            if (HomeMode.Avatar.AllianceId <= 0)
-                return;
-            if (
-                HomeMode.Avatar.AllianceRole == AllianceRole.Member
-                || HomeMode.Avatar.AllianceRole == AllianceRole.None
-            )
-                return;
+            if (HomeMode.Avatar.AllianceId <= 0) return;
+            if (HomeMode.Avatar.AllianceRole == AllianceRole.Member || HomeMode.Avatar.AllianceRole == AllianceRole.None) return;
 
             Alliance alliance = Alliances.Load(HomeMode.Avatar.AllianceId);
-            if (alliance == null)
-                return;
+            if (alliance == null) return;
 
             AllianceMember member = alliance.GetMemberById(message.AccountId);
-            if (member == null)
-                return;
+            if (member == null) return;
 
             ClientAvatar avatar = Accounts.Load(message.AccountId).Avatar;
 
-            AllianceRole Member = (AllianceRole)1,
-                Leader = (AllianceRole)2,
-                Elder = (AllianceRole)3,
-                CoLeader = (AllianceRole)4;
-            if (HomeMode.Avatar.AllianceRole == (AllianceRole)Member)
-                return;
+            AllianceRole
+                    Member = (AllianceRole)1,
+                    Leader = (AllianceRole)2,
+                    Elder = (AllianceRole)3,
+                    CoLeader = (AllianceRole)4;
+            if (HomeMode.Avatar.AllianceRole == (AllianceRole)Member) return;
             //if (member.Role == Leader) return;
             if (alliance.getRoleVector(member.Role, (AllianceRole)message.Role))
             {
@@ -1704,54 +1571,61 @@ namespace Supercell.Laser.Server.Message
                 {
                     HomeMode.Avatar.AllianceRole = (AllianceRole)CoLeader;
                     avatar.AllianceRole = (AllianceRole)Leader;
-                    AllianceStreamEntry entry2 =
-                        new()
-                        {
-                            AuthorId = HomeMode.Avatar.AccountId,
-                            AuthorName = HomeMode.Avatar.Name,
-                            Id = ++alliance.Stream.EntryIdCounter,
-                            PlayerId = HomeMode.Avatar.AccountId,
-                            PlayerName = HomeMode.Avatar.Name,
-                            Type = 4,
-                            Event = 6,
-                            AuthorRole = HomeMode.Avatar.AllianceRole
-                        };
-                    alliance.AddStreamEntry(entry2);
-
-                    AllianceMember me = alliance.GetMemberById(HomeMode.Avatar.AccountId);
-                    me.Role = HomeMode.Avatar.AllianceRole;
-                }
-                member.Role = avatar.AllianceRole;
-
-                AllianceStreamEntry entry =
-                    new()
+                    AllianceStreamEntry entry2 = new()
                     {
                         AuthorId = HomeMode.Avatar.AccountId,
                         AuthorName = HomeMode.Avatar.Name,
                         Id = ++alliance.Stream.EntryIdCounter,
-                        PlayerId = avatar.AccountId,
-                        PlayerName = avatar.Name,
+                        PlayerId = HomeMode.Avatar.AccountId,
+                        PlayerName = HomeMode.Avatar.Name,
                         Type = 4,
-                        Event = 5,
+                        Event = 6,
                         AuthorRole = HomeMode.Avatar.AllianceRole
                     };
+                    alliance.AddStreamEntry(entry2);
+
+                    AllianceMember me = alliance.GetMemberById(HomeMode.Avatar.AccountId);
+                    me.Role = HomeMode.Avatar.AllianceRole;
+
+                }
+                member.Role = avatar.AllianceRole;
+
+                AllianceStreamEntry entry = new()
+                {
+                    AuthorId = HomeMode.Avatar.AccountId,
+                    AuthorName = HomeMode.Avatar.Name,
+                    Id = ++alliance.Stream.EntryIdCounter,
+                    PlayerId = avatar.AccountId,
+                    PlayerName = avatar.Name,
+                    Type = 4,
+                    Event = 5,
+                    AuthorRole = HomeMode.Avatar.AllianceRole
+                };
                 alliance.AddStreamEntry(entry);
 
-                AllianceResponseMessage response = new() { ResponseType = 81 };
+                AllianceResponseMessage response = new()
+                {
+                    ResponseType = 81
+                };
                 Connection.Send(response);
-                MyAllianceMessage myAlliance =
-                    new() { AllianceHeader = alliance.Header, Role = HomeMode.Avatar.AllianceRole };
+                MyAllianceMessage myAlliance = new()
+                {
+                    AllianceHeader = alliance.Header,
+                    Role = HomeMode.Avatar.AllianceRole
+                };
                 Connection.Send(myAlliance);
                 if (LogicServerListener.Instance.IsPlayerOnline(avatar.AccountId))
                 {
-                    LogicServerListener.Instance
-                        .GetGameListener(avatar.AccountId)
-                        .SendTCPMessage(new AllianceResponseMessage() { ResponseType = 101 });
-                    MyAllianceMessage targetAlliance =
-                        new() { AllianceHeader = alliance.Header, Role = avatar.AllianceRole };
-                    LogicServerListener.Instance
-                        .GetGameListener(avatar.AccountId)
-                        .SendTCPMessage(targetAlliance);
+                    LogicServerListener.Instance.GetGameListener(avatar.AccountId).SendTCPMessage(new AllianceResponseMessage()
+                    {
+                        ResponseType = 101
+                    });
+                    MyAllianceMessage targetAlliance = new()
+                    {
+                        AllianceHeader = alliance.Header,
+                        Role = avatar.AllianceRole
+                    };
+                    LogicServerListener.Instance.GetGameListener(avatar.AccountId).SendTCPMessage(targetAlliance);
                 }
             }
             else
@@ -1766,35 +1640,42 @@ namespace Supercell.Laser.Server.Message
                 }
                 member.Role = avatar.AllianceRole;
 
-                AllianceStreamEntry entry =
-                    new()
-                    {
-                        AuthorId = HomeMode.Avatar.AccountId,
-                        AuthorName = HomeMode.Avatar.Name,
-                        Id = ++alliance.Stream.EntryIdCounter,
-                        PlayerId = avatar.AccountId,
-                        PlayerName = avatar.Name,
-                        Type = 4,
-                        Event = 6,
-                        AuthorRole = HomeMode.Avatar.AllianceRole
-                    };
+                AllianceStreamEntry entry = new()
+                {
+                    AuthorId = HomeMode.Avatar.AccountId,
+                    AuthorName = HomeMode.Avatar.Name,
+                    Id = ++alliance.Stream.EntryIdCounter,
+                    PlayerId = avatar.AccountId,
+                    PlayerName = avatar.Name,
+                    Type = 4,
+                    Event = 6,
+                    AuthorRole = HomeMode.Avatar.AllianceRole
+                };
                 alliance.AddStreamEntry(entry);
 
-                AllianceResponseMessage response = new() { ResponseType = 82 };
+                AllianceResponseMessage response = new()
+                {
+                    ResponseType = 82
+                };
                 Connection.Send(response);
-                MyAllianceMessage myAlliance =
-                    new() { AllianceHeader = alliance.Header, Role = HomeMode.Avatar.AllianceRole };
+                MyAllianceMessage myAlliance = new()
+                {
+                    AllianceHeader = alliance.Header,
+                    Role = HomeMode.Avatar.AllianceRole
+                };
                 Connection.Send(myAlliance);
                 if (LogicServerListener.Instance.IsPlayerOnline(avatar.AccountId))
                 {
-                    LogicServerListener.Instance
-                        .GetGameListener(avatar.AccountId)
-                        .SendTCPMessage(new AllianceResponseMessage() { ResponseType = 102 });
-                    MyAllianceMessage targetAlliance =
-                        new() { AllianceHeader = alliance.Header, Role = avatar.AllianceRole };
-                    LogicServerListener.Instance
-                        .GetGameListener(avatar.AccountId)
-                        .SendTCPMessage(targetAlliance);
+                    LogicServerListener.Instance.GetGameListener(avatar.AccountId).SendTCPMessage(new AllianceResponseMessage()
+                    {
+                        ResponseType = 102
+                    });
+                    MyAllianceMessage targetAlliance = new()
+                    {
+                        AllianceHeader = alliance.Header,
+                        Role = avatar.AllianceRole
+                    };
+                    LogicServerListener.Instance.GetGameListener(avatar.AccountId).SendTCPMessage(targetAlliance);
                 }
             }
         }
@@ -1802,20 +1683,13 @@ namespace Supercell.Laser.Server.Message
         private void AskForJoinableAllianceListReceived(AskForJoinableAllianceListMessage message)
         {
             JoinableAllianceListMessage list = new JoinableAllianceListMessage();
-            List<Alliance> alliances = Alliances.GetRandomAlliances(10);
-
-            // Check if the alliances list is empty
-            if (alliances.Count == 0)
-            {
-                // If no alliances are available, do not send anything
-                return;
-            }
-
+            List<Alliance> alliances = Alliances.GetRandomAlliances(HomeMode.Avatar, 20)
+                                              .Distinct()
+                                              .ToList();
             foreach (Alliance alliance in alliances)
             {
                 list.JoinableAlliances.Add(alliance.Header);
             }
-
             Connection.Send(list);
         }
 
@@ -1824,25 +1698,24 @@ namespace Supercell.Laser.Server.Message
             Connection.PingUpdated(message.Ping);
             ShowLobbyInfo();
         }
+
         private bool RegisterUserToDatabase(string username, string password, long id)
         {
             bool success = false;
 
             try
             {
-                string connectionString =
-                    $"server=127.0.0.1;"
-                    + $"user={Configuration.Instance.DatabaseUsername};"
-                    + $"database={Configuration.Instance.DatabaseName};"
-                    + $"port=3306;"
-                    + $"password={Configuration.Instance.DatabasePassword}";
+                string connectionString = $"server=127.0.0.1;" +
+                                          $"user={Configuration.Instance.DatabaseUsername};" +
+                                          $"database={Configuration.Instance.DatabaseName};" +
+                                          $"port=3306;" +
+                                          $"password={Configuration.Instance.DatabasePassword}";
 
                 using (MySqlConnection connection = new MySqlConnection(connectionString))
                 {
                     connection.Open();
 
-                    string query =
-                        "INSERT INTO users (username, password, id) VALUES (@username, @password, @id)";
+                    string query = "INSERT INTO users (username, password, id) VALUES (@username, @password, @id)";
                     MySqlCommand cmd = new MySqlCommand(query, connection);
                     cmd.Parameters.AddWithValue("@username", username);
                     cmd.Parameters.AddWithValue("@password", password);
@@ -1870,19 +1743,17 @@ namespace Supercell.Laser.Server.Message
 
             try
             {
-                string connectionString =
-                    $"server=127.0.0.1;"
-                    + $"user={Configuration.Instance.DatabaseUsername};"
-                    + $"database={Configuration.Instance.DatabaseName};"
-                    + $"port=3306;"
-                    + $"password={Configuration.Instance.DatabasePassword}";
+                string connectionString = $"server=127.0.0.1;" +
+                                          $"user={Configuration.Instance.DatabaseUsername};" +
+                                          $"database={Configuration.Instance.DatabaseName};" +
+                                          $"port=3306;" +
+                                          $"password={Configuration.Instance.DatabasePassword}";
 
                 using (MySqlConnection connection = new MySqlConnection(connectionString))
                 {
                     connection.Open();
 
-                    string query =
-                        "SELECT id FROM users WHERE username = @username AND password = @password";
+                    string query = "SELECT id FROM users WHERE username = @username AND password = @password";
                     MySqlCommand cmd = new MySqlCommand(query, connection);
                     cmd.Parameters.AddWithValue("@username", username);
                     cmd.Parameters.AddWithValue("@password", password);
@@ -1908,9 +1779,7 @@ namespace Supercell.Laser.Server.Message
             bool isPvP;
             BattlePlayer OwnPlayer = null;
 
-            LocationData location = DataTables
-                .Get(DataType.Location)
-                .GetDataWithId<LocationData>(message.LocationId);
+            LocationData location = DataTables.Get(DataType.Location).GetDataWithId<LocationData>(message.LocationId);
             if (location == null || location.Disabled)
             {
                 return;
@@ -1918,17 +1787,15 @@ namespace Supercell.Laser.Server.Message
             if (DateTime.UtcNow > HomeMode.Home.PremiumEndTime && HomeMode.Avatar.PremiumLevel > 1)
             {
                 HomeMode.Avatar.PremiumLevel = 0;
-                HomeMode.Home.NotificationFactory.Add(
-                    new Notification
-                    {
-                        Id = 81,
-                        //TimePassed =
-                        MessageEntry = $"Hello!\nYour VIP status has expired."
-                    }
-                );
+                HomeMode.Home.NotificationFactory.Add(new Notification
+                {
+                    Id = 81,
+                    //TimePassed =
+                    MessageEntry = $"Hello!\nYour VIP status has expired."
+                });
             }
 
-            isPvP = true; //Events.HasLocation(message.LocationId);
+            isPvP = true;//Events.HasLocation(message.LocationId);
 
             for (int x = 0; x < message.BattlePlayersCount; x++)
             {
@@ -1943,28 +1810,17 @@ namespace Supercell.Laser.Server.Message
                     {
                         return;
                     }
-                    message.BattlePlayers[x].HeroPowerLevel =
-                        hero.PowerLevel + (hero.HasStarpower ? 1 : 0);
+                    message.BattlePlayers[x].HeroPowerLevel = hero.PowerLevel + (hero.HasStarpower ? 1 : 0);
                     OwnPlayer.HeroPowerLevel = hero.PowerLevel + (hero.HasStarpower ? 1 : 0);
                     OwnPlayer.Trophies = hero.Trophies;
                     OwnPlayer.HighestTrophies = hero.HighestTrophies;
                     OwnPlayer.PowerPlayScore = HomeMode.Home.PowerPlayScore;
 
-                    battlePlayer.DisplayData = new PlayerDisplayData(
-                        HomeMode.Home.HasPremiumPass,
-                        HomeMode.Home.ThumbnailId,
-                        HomeMode.Home.NameColorId,
-                        HomeMode.Avatar.Name
-                    );
+                    battlePlayer.DisplayData = new PlayerDisplayData(HomeMode.Home.HasPremiumPass, HomeMode.Home.ThumbnailId, HomeMode.Home.NameColorId, HomeMode.Avatar.Name);
                 }
                 else
                 {
-                    battlePlayer.DisplayData = new PlayerDisplayData(
-                        false,
-                        28000000,
-                        43000000,
-                        "Bot " + battlePlayer.DisplayData.Name
-                    );
+                    battlePlayer.DisplayData = new PlayerDisplayData(false, 28000000, 43000000, "Bot " + battlePlayer.DisplayData.Name);
                 }
             }
 
@@ -2020,11 +1876,7 @@ namespace Supercell.Laser.Server.Message
                         HomeMode.Avatar.TrioWins++;
                         if (location.GameMode == "CoinRush")
                         {
-                            if (
-                                DateTime.UtcNow.Subtract(
-                                    HomeMode.Avatar.BattleStartTime
-                                ).TotalSeconds <= 90
-                            )
+                            if (DateTime.UtcNow.Subtract(HomeMode.Avatar.BattleStartTime).TotalSeconds <= 90)
                             {
                                 HomeMode.Home.PowerPlayTrophiesReward += 3;
                                 HomeMode.Home.PowerPlayScore += 3;
@@ -2033,11 +1885,7 @@ namespace Supercell.Laser.Server.Message
                         }
                         else if (location.GameMode == "LaserBall")
                         {
-                            if (
-                                DateTime.UtcNow.Subtract(
-                                    HomeMode.Avatar.BattleStartTime
-                                ).TotalSeconds <= 30
-                            )
+                            if (DateTime.UtcNow.Subtract(HomeMode.Avatar.BattleStartTime).TotalSeconds <= 30)
                             {
                                 HomeMode.Home.PowerPlayTrophiesReward += 3;
                                 HomeMode.Home.PowerPlayScore += 3;
@@ -2046,11 +1894,7 @@ namespace Supercell.Laser.Server.Message
                         }
                         else if (location.GameMode == "AttackDefend")
                         {
-                            if (
-                                DateTime.UtcNow.Subtract(
-                                    HomeMode.Avatar.BattleStartTime
-                                ).TotalSeconds <= 45
-                            )
+                            if (DateTime.UtcNow.Subtract(HomeMode.Avatar.BattleStartTime).TotalSeconds <= 45)
                             {
                                 HomeMode.Home.PowerPlayTrophiesReward += 3;
                                 HomeMode.Home.PowerPlayScore += 3;
@@ -2059,11 +1903,7 @@ namespace Supercell.Laser.Server.Message
                         }
                         else if (location.GameMode == "RoboWars")
                         {
-                            if (
-                                DateTime.UtcNow.Subtract(
-                                    HomeMode.Avatar.BattleStartTime
-                                ).TotalSeconds <= 45
-                            )
+                            if (DateTime.UtcNow.Subtract(HomeMode.Avatar.BattleStartTime).TotalSeconds <= 45)
                             {
                                 HomeMode.Home.PowerPlayTrophiesReward += 3;
                                 HomeMode.Home.PowerPlayScore += 3;
@@ -2098,6 +1938,8 @@ namespace Supercell.Laser.Server.Message
                             }
                         }
                     }
+
+
                 }
                 else if (location.GameMode == "BountyHunter" || location.GameMode == "CoinRush" || location.GameMode == "AttackDefend" || location.GameMode == "LaserBall" || location.GameMode == "RoboWars" || location.GameMode == "KingOfHill")
                 {
@@ -2198,17 +2040,11 @@ namespace Supercell.Laser.Server.Message
                         HomeMode.Avatar.TrioWins++;
                         if (location.GameMode == "CoinRush")
                         {
-                            if (
-                                DateTime.UtcNow.Subtract(
-                                    HomeMode.Avatar.BattleStartTime
-                                ).TotalSeconds <= 90
-                            )
+                            if (DateTime.UtcNow.Subtract(HomeMode.Avatar.BattleStartTime).TotalSeconds <= 90)
                             {
                                 if (HomeMode.Avatar.PremiumLevel > 0)
                                 {
-                                    underdogTrophiesResult += (int)Math.Round(
-                                        (double)Trophies[message.BattleResult] / 4
-                                    );
+                                    underdogTrophiesResult += (int)Math.Round((double)Trophies[message.BattleResult] / 4);
                                     trophiesResult += underdogTrophiesResult;
                                     HomeMode.Home.TrophiesReward = Math.Max(trophiesResult, 0);
                                 }
@@ -2216,17 +2052,11 @@ namespace Supercell.Laser.Server.Message
                         }
                         else if (location.GameMode == "LaserBall")
                         {
-                            if (
-                                DateTime.UtcNow.Subtract(
-                                    HomeMode.Avatar.BattleStartTime
-                                ).TotalSeconds <= 30
-                            )
+                            if (DateTime.UtcNow.Subtract(HomeMode.Avatar.BattleStartTime).TotalSeconds <= 30)
                             {
                                 if (HomeMode.Avatar.PremiumLevel > 0)
                                 {
-                                    underdogTrophiesResult += (int)Math.Round(
-                                        (double)Trophies[message.BattleResult] / 4
-                                    );
+                                    underdogTrophiesResult += (int)Math.Round((double)Trophies[message.BattleResult] / 4);
                                     trophiesResult += underdogTrophiesResult;
                                     HomeMode.Home.TrophiesReward = Math.Max(trophiesResult, 0);
                                 }
