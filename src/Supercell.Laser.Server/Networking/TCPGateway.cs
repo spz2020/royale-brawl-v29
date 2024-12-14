@@ -91,7 +91,7 @@ namespace Supercell.Laser.Server.Networking
 
                         ConnectionAttempts[clientIP]++;
 
-                        if (ConnectionAttempts[clientIP] > 3)
+                        if (ConnectionAttempts[clientIP] > 6)
                         {
                             Logger.Print($"DDoS from {clientIP} detected. Has been added to blacklist.");
                             IPBlacklist.Add(clientIP);
