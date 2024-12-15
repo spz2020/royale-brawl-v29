@@ -36,7 +36,7 @@ namespace Supercell.Laser.Server.Networking
             {
                 LoadBlacklist();
                 // reload blacklist every 60 seconds
-                BlacklistReloadTimer = new Timer(ReloadBlacklist, null, TimeSpan.FromSeconds(60), TimeSpan.FromSeconds(60));
+                BlacklistReloadTimer = new Timer(ReloadBlacklist, null, TimeSpan.FromSeconds(100), TimeSpan.FromSeconds(100));
             }
 
             Socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -91,7 +91,7 @@ namespace Supercell.Laser.Server.Networking
 
                         ConnectionAttempts[clientIP]++;
 
-                        if (ConnectionAttempts[clientIP] > 6)
+                        if (ConnectionAttempts[clientIP] > 10)
                         {
                             Logger.Print($"DDoS from {clientIP} detected. Has been added to blacklist.");
                             IPBlacklist.Add(clientIP);

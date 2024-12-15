@@ -379,7 +379,6 @@ namespace Supercell.Laser.Logic.Home
             bool SHOULD_FREE3 = false;
             bool SHOULD_FREE4 = false;
             bool WELCOME_BP = true;
-            bool WELCOME_MEGA = true;
             bool WELCOME_100 = true;
 
             foreach (OfferBundle o in OfferBundles)
@@ -387,10 +386,6 @@ namespace Supercell.Laser.Logic.Home
                 if (o.Title == "Welcome 170")
                 {
                     WELCOME_BP = false;
-                }
-                if (o.Title == "Welcome offer")
-                {
-                    WELCOME_MEGA = false;
                 }
                 if (o.Title == "FIRST 100 PLAYER OFFER!")
                 {
@@ -439,20 +434,6 @@ namespace Supercell.Laser.Logic.Home
                 bundle.Currency = 0;
                 //OfferBundles.Add(bundle);
             }
-
-            if (WELCOME_MEGA)
-            {
-                OfferBundle bundle = new OfferBundle();
-                bundle.Title = "Welcome offer";
-                bundle.IsDailyDeals = false;
-                bundle.EndTime = DateTime.UtcNow.AddDays(7); // tomorrow at 8:00 utc (11:00 MSK)
-                bundle.BackgroundExportName = "offer_special";
-                Offer megaBoxOffer = new Offer(ShopItem.MegaBox, 1);
-                bundle.Items.Add(megaBoxOffer);
-                bundle.Cost = 0;
-                bundle.Currency = 0;
-                OfferBundles.Add(bundle);
-            }
             if (SHOULD_FREE3)
             {
                 OfferBundle bundle = new OfferBundle();
@@ -485,7 +466,7 @@ namespace Supercell.Laser.Logic.Home
             {
                 ShouldUpdateDay = true;
             }
-            if (WELCOME_BP || WELCOME_MEGA || WELCOME_100)
+            if (WELCOME_BP || WELCOME_100)
             {
                 ShouldUpdateDay = false;
             }
@@ -538,14 +519,6 @@ namespace Supercell.Laser.Logic.Home
         {
             OfferBundles.RemoveAll(bundle => bundle.IsTrue);
 
-            GenerateOffer2(
-                new DateTime(2024, 4, 20, 12, 0, 0), new DateTime(2025, 5, 25, 10, 0, 0),
-                4, 999, 0, ShopItem.MegaBox,
-                4, 999, 0, ShopItem.BigBox,
-                0, 0, 0,
-                "mamadea", "A gift! :3", "offer_boxes"
-            );
-
             GenerateOffer(
                 new DateTime(2024, 4, 20, 12, 0, 0), new DateTime(2025, 5, 25, 10, 0, 0),
                 1, 999, 201, ShopItem.Skin,
@@ -596,116 +569,6 @@ namespace Supercell.Laser.Logic.Home
 
             Offer offer = new Offer(Item, Count, (16000000 + BrawlerID), Extra);
             bundle.Items.Add(offer);
-
-            OfferBundles.Add(bundle);
-        }
-
-        public void GenerateOffer2(
-            DateTime OfferStart,
-            DateTime OfferEnd,
-            int Count,
-            int BrawlerID,
-            int Extra,
-            ShopItem Item,
-            int Count2,
-            int BrawlerID2,
-            int Extra2,
-            ShopItem Item2,
-            int Cost,
-            int OldCost,
-            int Currency,
-            string Claim,
-            string Title,
-            string BGR
-            )
-        {
-
-            OfferBundle bundle = new OfferBundle();
-            bundle.IsDailyDeals = false;
-            bundle.IsTrue = true;
-            bundle.EndTime = OfferEnd;
-            bundle.Cost = Cost;
-            bundle.OldCost = OldCost;
-            bundle.Currency = Currency;
-            bundle.Claim = Claim;
-            bundle.Title = Title;
-            bundle.BackgroundExportName = BGR;
-
-            if (OffersClaimed.Contains(bundle.Claim))
-            {
-                bundle.Purchased = true;
-            }
-            if (TimerMath(OfferStart, OfferEnd) == -1)
-            {
-                bundle.Purchased = true;
-            }
-            if (HomeMode.HasHeroUnlocked(16000000 + BrawlerID))
-            {
-                bundle.Purchased = true;
-            }
-
-            Offer offer = new Offer(Item, Count, (16000000 + BrawlerID), Extra);
-            bundle.Items.Add(offer);
-            Offer offer2 = new Offer(Item2, Count2, (16000000 + BrawlerID2), Extra2);
-            bundle.Items.Add(offer2);
-
-            OfferBundles.Add(bundle);
-        }
-
-        public void GenerateOffer3(
-            DateTime OfferStart,
-            DateTime OfferEnd,
-            int Count,
-            int BrawlerID,
-            int Extra,
-            ShopItem Item,
-            int Count2,
-            int BrawlerID2,
-            int Extra2,
-            ShopItem Item2,
-            int Count3,
-            int BrawlerID3,
-            int Extra3,
-            ShopItem Item3,
-            int Cost,
-            int OldCost,
-            int Currency,
-            string Claim,
-            string Title,
-            string BGR
-            )
-        {
-
-            OfferBundle bundle = new OfferBundle();
-            bundle.IsDailyDeals = false;
-            bundle.IsTrue = true;
-            bundle.EndTime = OfferEnd;
-            bundle.Cost = Cost;
-            bundle.OldCost = OldCost;
-            bundle.Currency = Currency;
-            bundle.Claim = Claim;
-            bundle.Title = Title;
-            bundle.BackgroundExportName = BGR;
-
-            if (OffersClaimed.Contains(bundle.Claim))
-            {
-                bundle.Purchased = true;
-            }
-            if (TimerMath(OfferStart, OfferEnd) == -1)
-            {
-                bundle.Purchased = true;
-            }
-            if (HomeMode.HasHeroUnlocked(16000000 + BrawlerID))
-            {
-                bundle.Purchased = true;
-            }
-
-            Offer offer = new Offer(Item, Count, (16000000 + BrawlerID), Extra);
-            bundle.Items.Add(offer);
-            Offer offer2 = new Offer(Item2, Count2, (16000000 + BrawlerID2), Extra2);
-            bundle.Items.Add(offer2);
-            Offer offer3 = new Offer(Item3, Count3, (16000000 + BrawlerID3), Extra3);
-            bundle.Items.Add(offer3);
 
             OfferBundles.Add(bundle);
         }
