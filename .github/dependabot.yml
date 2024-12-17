@@ -1,8 +1,22 @@
 version: 2
 updates:
-- package-ecosystem: nuget
-  directory: "/src/dependadotnet"
-  schedule:
-    interval: daily
-    time: "13:00"
-  open-pull-requests-limit: 10
+  - package-ecosystem: nuget
+    directory: "/src/Supercell.Laser.Server.Server"
+    schedule:
+      interval: daily
+      time: "13:00"
+    open-pull-requests-limit: 10
+
+  - package-ecosystem: nuget
+    directory: "/src/Supercell.Laser.Server.Logic"
+    schedule:
+      interval: daily
+      time: "13:00"
+    open-pull-requests-limit: 10
+
+  - package-ecosystem: nuget
+    directory: "/Supercell.Laser.Server.Titan"
+    schedule:
+      interval: daily
+      time: "13:00"
+    open-pull-requests-limit: 10
