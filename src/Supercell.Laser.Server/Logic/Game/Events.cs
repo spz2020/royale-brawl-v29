@@ -43,21 +43,13 @@
 
                 if (eventspair.Length > 1)
                 {
-                    if (!Slots.ContainsKey(ConfigSlots[i].Slot))
-                    {
-                        Slots[ConfigSlots[i].Slot] = eventspair[0];
-                    }
-                    if (!Slots.ContainsKey(5))
-                    {
-                        Slots[5] = eventspair[1];
-                    }
+                    Slots[ConfigSlots[i].Slot] = eventspair[0];
+                    i++;
+                    Slots[5] = eventspair[1];
                 }
                 else
                 {
-                    if (!Slots.ContainsKey(ConfigSlots[index].Slot))
-                    {
-                        Slots[ConfigSlots[index].Slot] = eventspair[0];
-                    }
+                    Slots[ConfigSlots[index].Slot] = eventspair[0];
                 }
             }
         }
@@ -73,9 +65,15 @@
             EventData[] Updated = GetEvents();
             foreach (Session session in Sessions.ActiveSessions.Values.ToArray())
             {
-                LogicDayChangedCommand newday = new() { Home = session.Home.Home };
+                LogicDayChangedCommand newday = new()
+                {
+                    Home = session.Home.Home
+                };
                 newday.Home.Events = Updated;
-                AvailableServerCommandMessage eventupdated = new() { Command = newday, };
+                AvailableServerCommandMessage eventupdated = new()
+                {
+                    Command = newday,
+                };
                 session.Connection.Send(eventupdated);
             }
             //LogicGameListener
@@ -91,7 +89,10 @@
                     GenerateEvents();
                     v1 = true;
                 }
-                catch (Exception) { }
+                catch (Exception)
+                {
+
+                }
             }
         }
 
@@ -99,15 +100,16 @@
         {
             int count = DataTables.Get(DataType.Location).Count;
             Random rand = new();
+
             while (true)
             {
                 LocationData location = DataTables.Get(DataType.Location).GetDataWithId<LocationData>(rand.Next(0, count));
+
                 if (!location.Disabled && gameModes.Contains(location.GameMode))
                 {
-                    int[] modifires = { 1, 2, 3, 5 };
+                    int[] modifiers = { 1, 2, 3, 5 };
                     Random random = new();
 
-                    // Randomly determine the number of modifiers (0 to 2) with weighted probability
                     int modifierCount = random.Next(0, 100);
                     if (modifierCount < 50) // 50% chance of no modifiers
                     {
@@ -122,28 +124,27 @@
                         modifierCount = 2;
                     }
 
-                    int[] sel = new int[modifierCount];
+                    int[] selectedModifiers = new int[modifierCount];
 
-                    // Select the modifiers
                     for (int i = 0; i < modifierCount; i++)
                     {
-                        sel[i] = modifires[random.Next(modifires.Length)];
+                        selectedModifiers[i] = modifiers[random.Next(modifiers.Length)];
                     }
 
                     EventData ev = null;
                     if (slot != 9)
                     {
-                        ev = new()
+                        ev = new EventData
                         {
                             EndTime = DateTime.Now.AddMinutes(REFRESH_MINUTES),
                             LocationId = location.GetGlobalId(),
                             Slot = slot,
-                            Modifiers = sel,
+                            Modifiers = selectedModifiers,
                         };
                     }
                     else
                     {
-                        ev = new()
+                        ev = new EventData
                         {
                             EndTime = DateTime.Now.AddMinutes(REFRESH_MINUTES),
                             LocationId = location.GetGlobalId(),
@@ -151,9 +152,12 @@
                             Modifiers = new int[0]
                         };
                     }
+
                     Locations[EventWriter] = location.GetGlobalId();
                     EventWriter++;
+
                     SlotsLocations.Add(location.GetGlobalId(), slot);
+
                     SlotsCollected.Add(slot, new List<long>());
                     SlotsPlayed.Add(slot, new List<long>());
 
@@ -167,22 +171,28 @@
                             sep = "s";
                         }
                         string duomode = mode[0] + sep + "Team" + mode[1];
+
                         LocationData locationa = DataTables.Get(DataType.Location).GetData<LocationData>(duomode);
-                        EventData evs = new()
+
+                        EventData evs = new EventData
                         {
                             EndTime = DateTime.Now.AddMinutes(REFRESH_MINUTES),
                             LocationId = locationa.GetGlobalId(),
                             Slot = 5,
-                            Modifiers = sel,
+                            Modifiers = selectedModifiers,
                         };
+
                         Locations[EventWriter] = locationa.GetGlobalId();
                         EventWriter++;
+
                         SlotsLocations.Add(locationa.GetGlobalId(), 5);
+
                         SlotsCollected.Add(5, new List<long>());
                         SlotsPlayed.Add(5, new List<long>());
 
                         return new EventData[] { ev, evs };
                     }
+
                     return new EventData[] { ev };
                 }
             }

@@ -1798,7 +1798,7 @@ namespace Supercell.Laser.Server.Message
                 {
                     Id = 81,
                     //TimePassed =
-                    MessageEntry = $"Hello!\nYour VIP status has expired."
+                    MessageEntry = $"Hello!\nYour Premium status has expired."
                 });
             }
 
