@@ -33,12 +33,9 @@
         public void AddRandomQuests(List<Hero> unlockedHeroes, int count)
         {
             List<int> characters = unlockedHeroes.Select(x => x.CharacterId).ToList();
-
             Random rand = new Random();
 
             Add100Quest(rand, characters, false);
-            Add100Quest(rand, characters, false);
-            Add250Quest(rand, characters, false);
             Add250Quest(rand, characters, false);
             Add500Quest(rand, characters, false);
             Add500Quest(rand, characters, true);
@@ -46,9 +43,13 @@
 
         private void Add500Quest(Random rand, List<int> characters, bool IsPremium)
         {
-            Quest quest = new Quest();
-
-            quest.MissionType = 1;
+            Quest quest = new Quest
+            {
+                MissionType = 1,
+                QuestGoal = 10,
+                Reward = 750,
+                BrawlPassExclusive = IsPremium
+            };
 
             bool forCharacter = rand.Next(120) > 40;
             if (forCharacter)
@@ -60,24 +61,19 @@
             {
                 quest.GameModeVariation = ALLOWED_MODES[rand.Next(0, ALLOWED_MODES.Length)];
             }
-
-            switch (quest.MissionType)
-            {
-                case 1:
-                    quest.QuestGoal = 10;
-                    quest.Reward = 500;
-                    break;
-            }
-            quest.BrawlPassExclusive = IsPremium;
 
             QuestList.Add(quest);
         }
 
         private void Add250Quest(Random rand, List<int> characters, bool IsPremium)
         {
-            Quest quest = new Quest();
-
-            quest.MissionType = 1;
+            Quest quest = new Quest
+            {
+                MissionType = 1,
+                QuestGoal = 6,
+                Reward = 500,
+                BrawlPassExclusive = IsPremium
+            };
 
             bool forCharacter = rand.Next(120) > 40;
             if (forCharacter)
@@ -89,24 +85,20 @@
             {
                 quest.GameModeVariation = ALLOWED_MODES[rand.Next(0, ALLOWED_MODES.Length)];
             }
-
-            switch (quest.MissionType)
-            {
-                case 1:
-                    quest.QuestGoal = 6;
-                    quest.Reward = 250;
-                    break;
-            }
-            quest.BrawlPassExclusive = IsPremium;
 
             QuestList.Add(quest);
         }
 
         private void Add100Quest(Random rand, List<int> characters, bool IsPremium)
         {
-            Quest quest = new Quest();
-
-            quest.MissionType = 1;
+            Quest quest = new Quest
+            {
+                MissionType = 1,
+                QuestGoal = 3,
+                Reward = 350,
+                BrawlPassExclusive = IsPremium,
+                IsDailyQuest = true
+            };
 
             bool forCharacter = rand.Next(120) > 40;
             if (forCharacter)
@@ -118,16 +110,6 @@
             {
                 quest.GameModeVariation = ALLOWED_MODES[rand.Next(0, ALLOWED_MODES.Length)];
             }
-
-            switch (quest.MissionType)
-            {
-                case 1:
-                    quest.QuestGoal = 3;
-                    quest.Reward = 100;
-                    break;
-            }
-            quest.BrawlPassExclusive = IsPremium;
-            quest.IsDailyQuest = true;
 
             QuestList.Add(quest);
         }
@@ -141,12 +123,14 @@
             {
                 return progressive;
             }
+
             foreach (Quest quest in QuestList.ToArray())
             {
                 if ((quest.GameModeVariation == gameModeVariation || quest.GameModeVariation == -1)
                     && (quest.CharacterId == characterId || quest.CharacterId == 0))
                 {
                     if (quest.BrawlPassExclusive && !home.HasPremiumPass) continue;
+
                     if (quest.MissionType == 1)
                     {
                         var progress = quest.Clone();
@@ -160,7 +144,7 @@
 
                         progressive.Add(progress);
                     }
-                    else if (quest.MissionType == 2)
+                    else if (quest.MissionType == 2) // kills quest
                     {
                         var progress = quest.Clone();
                         progress.Progress = kills;
