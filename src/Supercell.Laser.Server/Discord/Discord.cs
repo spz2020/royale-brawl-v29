@@ -48,25 +48,28 @@ namespace Supercell.Laser.Server.Discord
 
             _client.MessageCreate += async message =>
             {
-                if (message.ChannelId != Configuration.Instance.ChannelId)
-                    return;
-
-                if (!message.Content.StartsWith('!') || message.Author.IsBot)
-                    return;
-
-                var result = await commandService.ExecuteAsync(
-                    prefixLength: 1,
-                    new CommandContext(message, _client)
-                );
-
-                if (result is not IFailResult failResult)
-                    return;
-
                 try
                 {
-                    await message.ReplyAsync(failResult.Message);
+                    if (message.ChannelId != Configuration.Instance.ChannelId)
+                        return;
+
+                    if (!message.Content.StartsWith('!') || message.Author.IsBot)
+                        return;
+
+                    var result = await commandService.ExecuteAsync(
+                        prefixLength: 1,
+                        new CommandContext(message, _client)
+                    ).ConfigureAwait(false);
+
+                    if (result is IFailResult failResult)
+                    {
+                        await message.ReplyAsync(failResult.Message).ConfigureAwait(false);
+                    }
                 }
-                catch { }
+                catch (Exception ex)
+                {
+                    _logger.Log(LogSeverity.Error, ex.Message, ex);
+                }
             };
 
             _client.Log += message =>
@@ -75,7 +78,7 @@ namespace Supercell.Laser.Server.Discord
                 return default;
             };
 
-            await _client.StartAsync();
+            await _client.StartAsync().ConfigureAwait(false);
         }
     }
 }

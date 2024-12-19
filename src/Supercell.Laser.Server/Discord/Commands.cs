@@ -3,6 +3,7 @@ namespace Supercell.Laser.Server.Discord
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Threading.Tasks;
     using NetCord.Services.Commands;
     using Supercell.Laser.Logic.Command.Home;
     using Supercell.Laser.Logic.Data;
@@ -91,7 +92,7 @@ namespace Supercell.Laser.Server.Discord
     public class Help : CommandModule<CommandContext>
     {
         [Command("help")]
-        public static string help()
+        public static string HelpCommand()
         {
             return "# Available Commands:\n"
                 + "!help - shows all available commands\n"
@@ -115,7 +116,7 @@ namespace Supercell.Laser.Server.Discord
     public class Ban : CommandModule<CommandContext>
     {
         [Command("ban")]
-        public static string ban([CommandParameter(Remainder = true)] string playerId)
+        public static string BanCommand([CommandParameter(Remainder = true)] string playerId)
         {
             if (!playerId.StartsWith("#"))
             {
@@ -149,7 +150,7 @@ namespace Supercell.Laser.Server.Discord
     public class Unban : CommandModule<CommandContext>
     {
         [Command("unban")]
-        public static string unban([CommandParameter(Remainder = true)] string playerId)
+        public static string UnbanCommand([CommandParameter(Remainder = true)] string playerId)
         {
             if (!playerId.StartsWith("#"))
             {
@@ -182,7 +183,7 @@ namespace Supercell.Laser.Server.Discord
     public class Mute : CommandModule<CommandContext>
     {
         [Command("mute")]
-        public static string mute([CommandParameter(Remainder = true)] string playerId)
+        public static string MuteCommand([CommandParameter(Remainder = true)] string playerId)
         {
             if (!playerId.StartsWith("#"))
             {
@@ -198,13 +199,11 @@ namespace Supercell.Laser.Server.Discord
             }
 
             account.Avatar.IsCommunityBanned = true;
-            Notification notification =
-                new()
-                {
-                    Id = 81,
-                    MessageEntry =
-                        "Social functions have been disabled for your account. If you think that an error has occurred, contact an administration."
-                };
+            Notification notification = new()
+            {
+                Id = 81,
+                MessageEntry = "Social functions have been disabled for your account. If you think that an error has occurred, contact an admin."
+            };
             account.Home.NotificationFactory.Add(notification);
 
             if (Sessions.IsSessionActive(lowID))
@@ -223,7 +222,7 @@ namespace Supercell.Laser.Server.Discord
     public class UnMute : CommandModule<CommandContext>
     {
         [Command("unmute")]
-        public static string unmute([CommandParameter(Remainder = true)] string playerId)
+        public static string UnmuteCommand([CommandParameter(Remainder = true)] string playerId)
         {
             if (!playerId.StartsWith("#"))
             {
@@ -239,8 +238,7 @@ namespace Supercell.Laser.Server.Discord
             }
 
             account.Avatar.IsCommunityBanned = false;
-            Notification notification =
-                new() { Id = 81, MessageEntry = "you have been unmuted, you can now chat again." };
+            Notification notification = new() { Id = 81, MessageEntry = "You have been unmuted, you can now chat again." };
             account.Home.NotificationFactory.Add(notification);
 
             if (Sessions.IsSessionActive(lowID))
@@ -259,7 +257,7 @@ namespace Supercell.Laser.Server.Discord
     public class UserInfo : CommandModule<CommandContext>
     {
         [Command("userinfo")]
-        public static string userInfo([CommandParameter(Remainder = true)] string playerId)
+        public static string UserInfoCommand([CommandParameter(Remainder = true)] string playerId)
         {
             if (!playerId.StartsWith("#"))
             {
@@ -321,7 +319,7 @@ namespace Supercell.Laser.Server.Discord
     public class ResetSeason : CommandModule<CommandContext>
     {
         [Command("resetseason")]
-        public static string resetseason()
+        public static string ResetSeasonCommand()
         {
             long lastAccId2 = Accounts.GetMaxAvatarId();
             for (int accid = 1; accid <= lastAccId2; accid++)
@@ -481,6 +479,7 @@ namespace Supercell.Laser.Server.Discord
             return "Season reset completed for all players.";
         }
     }
+
 
     public class UnlockAll : CommandModule<CommandContext>
     {
