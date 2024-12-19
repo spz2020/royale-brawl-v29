@@ -30,6 +30,7 @@ why did I create this server? because all public v29 servers suck
 - !status - show server status  
 - !ping - will respond with pong  
 - !unlockall - will unlock EVERYTHING on the player's account (!unlockall [TAG])  
+- !givepremium - gives premium to an account (!givepremium [TAG])
 - !ban - ban an account (!ban [TAG])  
 - !unban - unban an account (!unban [TAG])  
 - !mute - mute a player (!mute [TAG])  

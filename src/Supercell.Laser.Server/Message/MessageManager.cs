@@ -1683,9 +1683,9 @@ namespace Supercell.Laser.Server.Message
         private void AskForJoinableAllianceListReceived(AskForJoinableAllianceListMessage message)
         {
             JoinableAllianceListMessage list = new JoinableAllianceListMessage();
-            List<Alliance> alliances = Alliances.GetRandomAlliances(HomeMode.Avatar, 20)
-                                              .Distinct()
-                                              .ToList();
+            List<Alliance> alliances = Alliances.GetRandomAlliances(10)
+                                            .Distinct()
+                                            .ToList();
 
             if (alliances.Count == 0) // if there are no clubs, don't send anything
             {

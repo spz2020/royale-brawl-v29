@@ -98,6 +98,7 @@ namespace Supercell.Laser.Server.Discord
                 + "!status - show server status\n"
                 + "!ping - will respond with pong\n"
                 + "!unlockall - will unlock EVERYTHING on the players account (!unlockall [TAG])\n"
+                + "!givepremium - gives premium to an account (!givepremium [TAG])\n"
                 + "!ban - ban an account (!ban [TAG])\n"
                 + "!unban - unban an account (!unban [TAG])\n"
                 + "!mute - mute a player (!mute [TAG])\n"
