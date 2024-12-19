@@ -35,7 +35,8 @@ why did I create this server? because all public v29 servers suck
 - !unban - unban an account (!unban [TAG])  
 - !mute - mute a player (!mute [TAG])  
 - !unmute - unmute a player (!unmute [TAG])  
-- !resetseason - resets the season  
+- !resetseason - resets the season
+- !changename - changes a players name (!changename [TAG] [newName])
 - !reports - sends a link to all reported messages  
 - !userinfo - show player info (!userinfo [TAG])  
 - !changecredentials - change username/password of an account (!changecredentials [TAG] [newUsername] [newPassword])  
