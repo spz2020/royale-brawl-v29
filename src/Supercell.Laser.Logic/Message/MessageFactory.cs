@@ -34,7 +34,7 @@ namespace Supercell.Laser.Logic.Message
                 {10110, typeof(AnalyticEventMessage)},
                 {10119, typeof(ReportAllianceStreamMessage)},
 
-                ///{10177, typeof(ClientInfoMessage)},
+                //{10177, typeof(ClientInfoMessage)},
                 {10212, typeof(ChangeAvatarNameMessage)},
 
                 {10501, typeof(AcceptFriendMessage)},
@@ -42,11 +42,6 @@ namespace Supercell.Laser.Logic.Message
                 {10504, typeof(AskForFriendListMessage)},
                 {10506, typeof(RemoveFriendMessage)},
                 {10576, typeof(SetBlockFriendRequestsMessage)},
-
-                //{11000, typeof(RequestSyncSSID)},
-
-                ///{10555, typeof(ClientInputMessage)},
-
                 {14101, typeof(GoHomeMessage)},
                 {14102, typeof(EndClientTurnMessage)},
                 ///{14103, typeof(MatchmakeRequestMessage)},

@@ -1211,11 +1211,6 @@ namespace Supercell.Laser.Server.Message
                 string[] cmd = message.Message.Substring(1).Split(' ');
                 if (cmd.Length == 0) return;
 
-                DebugOpenMessage debugopen = new()
-                {
-
-                };
-
                 AllianceStreamEntryMessage response = new()
                 {
                     Entry = new AllianceStreamEntry
