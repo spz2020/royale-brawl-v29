@@ -594,50 +594,8 @@ namespace Supercell.Laser.Server.Discord
                             if (starPower3 != null && !starPower3.LockedForChronos)
                                 account.Avatar.Starpowers.Add(starPower3.GetGlobalId());
 
-                            string[] gadgets =
-                            {
-                                "GrowBush",
-                                "Shield",
-                                "Heal",
-                                "Jump",
-                                "ShootAround",
-                                "DestroyPet",
-                                "PetSlam",
-                                "Slow",
-                                "Push",
-                                "Dash",
-                                "SpeedBoost",
-                                "BurstHeal",
-                                "Spin",
-                                "Teleport",
-                                "Immunity",
-                                "Trail",
-                                "Totem",
-                                "Grab",
-                                "Swing",
-                                "Vision",
-                                "Regen",
-                                "HandGun",
-                                "Promote",
-                                "Sleep",
-                                "Slow",
-                                "Reload",
-                                "Fake",
-                                "Trampoline",
-                                "Explode",
-                                "Blink",
-                                "PoisonTrigger",
-                                "Barrage",
-                                "Focus",
-                                "MineTrigger",
-                                "Reload",
-                                "Seeker",
-                                "Meteor",
-                                "HealPotion",
-                                "Stun",
-                                "TurretBuff",
-                                "StaticDamage"
-                            };
+                            string[] gadgets = { "GrowBush", "Shield", "Heal", "Jump", "ShootAround", "DestroyPet", "PetSlam", "Slow", "Push", "Dash", "SpeedBoost", "BurstHeal", "Spin", "Teleport", "Immunity", "Trail", "Totem", "Grab", "Swing", "Vision", "Regen", "HandGun", "Promote", "Sleep", "Slow", "Reload", "Fake", "Trampoline", "Explode", "Blink", "PoisonTrigger", "Barrage", "Focus", "MineTrigger", "Reload", "Seeker", "Meteor", "HealPotion", "Stun", "TurretBuff", "StaticDamage" };
+
                             string characterName =
                                 char.ToUpper(character.Name[0]) + character.Name.Substring(1);
                             foreach (string gadgetName in gadgets)
