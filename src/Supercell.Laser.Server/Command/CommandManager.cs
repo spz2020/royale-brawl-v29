@@ -554,7 +554,7 @@
                 if (command.ThumbnailInstanceId < 0) return false;
                 if (command.ThumbnailInstanceId > DataTables.Get(DataType.PlayerThumbnail).Count) return false;
 
-                if (command.ThumbnailInstanceId > 54)
+                if (command.ThumbnailInstanceId > 55)
                 {
                     AuthenticationFailedMessage loginFailed = new AuthenticationFailedMessage
                     {
