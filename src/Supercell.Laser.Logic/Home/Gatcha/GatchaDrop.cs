@@ -43,10 +43,7 @@
                     homeMode.Home.TokenDoublers += Count;
                     break;
                 case 4:
-                    if (!avatar.Starpowers.Contains(CardGlobalId))
-                    {
-                        avatar.Starpowers.Add(CardGlobalId);
-                    }
+                    avatar.Starpowers.Add(CardGlobalId);
                     break;
                 case 6: // Add power points
                     Hero hero = avatar.GetHero(DataGlobalId);
@@ -64,16 +61,10 @@
                     homeMode.Home.UnlockedSkins.Add(SkinGlobalId);
                     break;
                 case 10:
-                    if (!homeMode.Home.UnlockedEmotes.Contains(DataGlobalId))
-                    {
-                        homeMode.Home.UnlockedEmotes.Add(DataGlobalId);
-                    }
+                    homeMode.Home.UnlockedEmotes.Add(DataGlobalId);
                     break;
                 case 11:
-                    if (!homeMode.Home.UnlockedEmotes.Contains(DataGlobalId))
-                    {
-                        homeMode.Home.UnlockedEmotes.Add(DataGlobalId);
-                    }
+                    homeMode.Home.UnlockedEmotes.Add(DataGlobalId);
                     break;
             }
         }
