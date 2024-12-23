@@ -353,6 +353,21 @@ namespace Supercell.Laser.Logic.Home
                                 sps.Add(card3.GetGlobalId());
                             }
                         }
+                        if (hero.PowerLevel > 5)
+                        {
+                            string[] cards = { "GrowBush", "Shield", "Heal", "Jump", "ShootAround", "DestroyPet", "PetSlam", "Slow", "Push", "Dash", "SpeedBoost", "BurstHeal", "Spin", "Teleport", "Immunity", "Trail", "Totem", "Grab", "Swing", "Vision", "Regen", "HandGun", "Promote", "Sleep", "Slow", "Reload", "Fake", "Trampoline", "Explode", "Blink", "PoisonTrigger", "Barrage", "Focus", "MineTrigger", "Reload", "Seeker", "Meteor", "HealPotion", "Stun", "TurretBuff", "StaticDamage" };
+                            CharacterData cd = DataTables.Get(DataType.Character).GetDataByGlobalId<CharacterData>(hero.CharacterId);
+                            CardData WildCard = null;
+                            foreach (string cardname in cards)
+                            {
+                                string n = char.ToUpper(cd.Name[0]) + cd.Name.Substring(1);
+                                WildCard = DataTables.Get(DataType.Card).GetData<CardData>(n + "_" + cardname);
+                                if (WildCard != null && !Avatar.Starpowers.Contains(WildCard.GetGlobalId()))
+                                {
+                                    sps.Add(WildCard.GetGlobalId());
+                                }
+                            }
+                        }
                     }
 
                     if (ProcChance(rand, 11 * 1, "starpower", Avatar.ForcedDrops) && sps.Count > 0)
@@ -614,6 +629,21 @@ namespace Supercell.Laser.Logic.Home
                                 sps.Add(card3.GetGlobalId());
                             }
                         }
+                        if (hero.PowerLevel > 5)
+                        {
+                            string[] cards = { "GrowBush", "Shield", "Heal", "Jump", "ShootAround", "DestroyPet", "PetSlam", "Slow", "Push", "Dash", "SpeedBoost", "BurstHeal", "Spin", "Teleport", "Immunity", "Trail", "Totem", "Grab", "Swing", "Vision", "Regen", "HandGun", "Promote", "Sleep", "Slow", "Reload", "Fake", "Trampoline", "Explode", "Blink", "PoisonTrigger", "Barrage", "Focus", "MineTrigger", "Reload", "Seeker", "Meteor", "HealPotion", "Stun", "TurretBuff", "StaticDamage" };
+                            CharacterData cd = DataTables.Get(DataType.Character).GetDataByGlobalId<CharacterData>(hero.CharacterId);
+                            CardData WildCard = null;
+                            foreach (string cardname in cards)
+                            {
+                                string n = char.ToUpper(cd.Name[0]) + cd.Name.Substring(1);
+                                WildCard = DataTables.Get(DataType.Card).GetData<CardData>(n + "_" + cardname);
+                                if (WildCard != null && !Avatar.Starpowers.Contains(WildCard.GetGlobalId()))
+                                {
+                                    sps.Add(WildCard.GetGlobalId());
+                                }
+                            }
+                        }
                     }
                 }
                 if (canDropSp && sps.Count > 0)
@@ -841,6 +871,21 @@ namespace Supercell.Laser.Logic.Home
                             if (card3 != null && !Avatar.Starpowers.Contains(card3.GetGlobalId()))
                             {
                                 sps.Add(card3.GetGlobalId());
+                            }
+                        }
+                        if (hero.PowerLevel > 5)
+                        {
+                            string[] cards = { "GrowBush", "Shield", "Heal", "Jump", "ShootAround", "DestroyPet", "PetSlam", "Slow", "Push", "Dash", "SpeedBoost", "BurstHeal", "Spin", "Teleport", "Immunity", "Trail", "Totem", "Grab", "Swing", "Vision", "Regen", "HandGun", "Promote", "Sleep", "Slow", "Reload", "Fake", "Trampoline", "Explode", "Blink", "PoisonTrigger", "Barrage", "Focus", "MineTrigger", "Reload", "Seeker", "Meteor", "HealPotion", "Stun", "TurretBuff", "StaticDamage" };
+                            CharacterData cd = DataTables.Get(DataType.Character).GetDataByGlobalId<CharacterData>(hero.CharacterId);
+                            CardData WildCard = null;
+                            foreach (string cardname in cards)
+                            {
+                                string n = char.ToUpper(cd.Name[0]) + cd.Name.Substring(1);
+                                WildCard = DataTables.Get(DataType.Card).GetData<CardData>(n + "_" + cardname);
+                                if (WildCard != null && !Avatar.Starpowers.Contains(WildCard.GetGlobalId()))
+                                {
+                                    sps.Add(WildCard.GetGlobalId());
+                                }
                             }
                         }
                     }

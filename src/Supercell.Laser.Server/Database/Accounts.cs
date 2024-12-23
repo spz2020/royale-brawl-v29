@@ -141,7 +141,7 @@ namespace Supercell.Laser.Server.Database
             return null;
         }
 
-        public static Account LoadNoChache(long id)
+        public static Account LoadNoCache(long id)
         {
             if (AccountCache.IsAccountCached(id))
             {

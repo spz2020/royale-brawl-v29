@@ -14,7 +14,7 @@ namespace Supercell.Laser.Server.Discord.Commands
 
             for (int accountId = 1; accountId <= maxAccountId; accountId++)
             {
-                Account account = Accounts.LoadNoChache(accountId);
+                Account account = Accounts.LoadNoCache(accountId);
                 if (account == null)
                     continue;
 
