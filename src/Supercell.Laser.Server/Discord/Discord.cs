@@ -1,7 +1,5 @@
 namespace Supercell.Laser.Server.Discord
 {
-    using System;
-    using System.Threading.Tasks;
     using NetCord;
     using NetCord.Gateway;
     using NetCord.Services;
@@ -27,7 +25,7 @@ namespace Supercell.Laser.Server.Discord
 
     public class DiscordBot
     {
-        private readonly CustomLogger _logger = new CustomLogger();
+        private readonly CustomLogger _logger = new();
         private GatewayClient _client;
 
         public async Task StartAsync()
@@ -56,7 +54,7 @@ namespace Supercell.Laser.Server.Discord
                     if (!message.Content.StartsWith('!') || message.Author.IsBot)
                         return;
 
-                    var result = await commandService.ExecuteAsync(
+                    IExecutionResult result = await commandService.ExecuteAsync(
                         prefixLength: 1,
                         new CommandContext(message, _client)
                     ).ConfigureAwait(false);
