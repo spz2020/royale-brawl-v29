@@ -395,7 +395,7 @@ namespace Supercell.Laser.Logic.Home
                 if (o.Title == "<cff0800>У<cff1000>р<cff1800>а<cff2000>а<cff2900>а<cff3100>а<cff3900>а<cff4100>а<cff4a00>а<cff5200>а<cff5a00>а<cff6200>а<cff6a00>а<cff7300>а<cff7b00>а<cff8300>а<cff8b00>а<cff9400>а<cff9c00>а<cffa400>а<cffac00>а<cffb400>а<cffbd00>а<cffc500>а<cfecd00>а<cffd500>а<cffde00>а<cffe600>а<cffee00>а<cfff600>а<cfffe00>а<cf6ff00>а<ceeff00>а<ce6ff00>а<cdeff00>а<cd5ff00>!<ccdff00>!<cc5ff00>!<cbdff00>!<cb4ff00> <cacff00>С<ca4ff00>б<c9cff00>р<c94ff00>о<c8bff00>с<c83ff00> <c7bff00>С<c73ff00>е<c6aff00>з<c62ff00>о<c5aff00>н<c52ff00>а<c4aff00>!<c41ff00>!<c39ff00>!<c31fe00>!<c29ff00>!<c20ff00>!<c18ff00>!<c10ff00>!<c08ff00>!<c01ff00>!</c>")
                 {
                     WELCOME_OFFER = false;
-                }                
+                }
                 if (o.Title == "Congrats on 1000 trophies!")
                 {
                     TROPHIES_1000 = false;

@@ -4,11 +4,10 @@ namespace Supercell.Laser.Server.Discord
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Threading.Tasks;
+    using MySql.Data.MySqlClient;
     using NetCord.Services.Commands;
     using Supercell.Laser.Logic.Command.Home;
     using Supercell.Laser.Logic.Data;
-    using Supercell.Laser.Logic.Data.Helper;
-    using Supercell.Laser.Logic.Home;
     using Supercell.Laser.Logic.Home.Items;
     using Supercell.Laser.Logic.Home.Structures;
     using Supercell.Laser.Logic.Message.Account.Auth;
@@ -20,7 +19,6 @@ namespace Supercell.Laser.Server.Discord
     using Supercell.Laser.Server.Logic.Game;
     using Supercell.Laser.Server.Networking.Session;
     using Supercell.Laser.Server.Settings;
-    using MySql.Data.MySqlClient;
 
     public class DatabaseHelper
     {

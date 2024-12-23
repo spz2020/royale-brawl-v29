@@ -1,6 +1,7 @@
 ﻿namespace Supercell.Laser.Server.Networking
 {
     using System;
+    using System.IO;
     using System.Net.Sockets;
     using Supercell.Laser.Logic.Avatar;
     using Supercell.Laser.Logic.Home;
@@ -24,6 +25,8 @@
         public MatchmakingEntry MatchmakingEntry;
 
         public long UdpSessionId;
+
+        public DateTime LastActiveTime { get; private set; }
 
         public ClientHome Home
         {
@@ -63,6 +66,8 @@
             MatchmakeSlot = -1;
 
             UdpSessionId = -1;
+
+            LastActiveTime = DateTime.Now;
         }
 
         public void PingUpdated(int value)
@@ -92,6 +97,11 @@
                 Socket.BeginSend(stream, 0, stream.Length, SocketFlags.None, new AsyncCallback(TCPGateway.OnSend), Socket);
             }
             catch (Exception) { }
+        }
+
+        public void UpdateLastActiveTime()
+        {
+            LastActiveTime = DateTime.Now;
         }
     }
 }
