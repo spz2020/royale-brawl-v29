@@ -7,8 +7,7 @@
     {
         public static Configuration Instance;
 
-        [JsonProperty("udp_host")] public readonly string UdpHost;
-        [JsonProperty("udp_port")] public readonly int UdpPort;
+        [JsonProperty("port")] public readonly int Port;
         [JsonProperty("database_username")] public readonly string DatabaseUsername;
         [JsonProperty("database_password")] public readonly string DatabasePassword;
         [JsonProperty("database_name")] public readonly string DatabaseName;

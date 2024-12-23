@@ -46,7 +46,7 @@ namespace Supercell.Laser.Server
             Connections.Init();
             LogicServerListener.Instance = new ServerListener();
             //UDPGateway.Init("0.0.0.0", Configuration.Instance.UdpPort);
-            TCPGateway.Init("0.0.0.0", 9339);
+            TCPGateway.Init("0.0.0.0", Configuration.Instance.Port);
         }
 
         /// <summary>

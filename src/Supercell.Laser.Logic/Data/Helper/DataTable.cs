@@ -1,4 +1,7 @@
-﻿namespace Supercell.Laser.Logic.Data.Helper
+﻿using Supercell.Laser.Logic.Data.Reader;
+using System.Collections.Generic;
+
+namespace Supercell.Laser.Logic.Data.Helper
 {
     public class DataTable
     {
@@ -38,12 +41,24 @@
 
         public LogicData GetDataWithId(int id)
         {
-            return Datas[GlobalId.GetInstanceId(id)];
+            int index = GlobalId.GetInstanceId(id);
+            if (index < 0 || index >= Datas.Count)
+            {
+                return null;
+            }
+
+            return Datas[index];
         }
 
         public T GetDataWithId<T>(int id) where T : LogicData
         {
-            return Datas[GlobalId.GetInstanceId(id)] as T;
+            int index = GlobalId.GetInstanceId(id);
+            if (index < 0 || index >= Datas.Count)
+            {
+                return null;
+            }
+
+            return Datas[index] as T;
         }
 
         public T GetData<T>(string name) where T : LogicData
@@ -53,7 +68,10 @@
 
         public T GetData<T>(int id) where T : LogicData
         {
-            if (Datas.Count < id) return null;
+            if (id < 0 || id >= Datas.Count)
+            {
+                return null;
+            }
 
             return Datas[id] as T;
         }
@@ -61,14 +79,23 @@
         public T GetDataByGlobalId<T>(int id) where T : LogicData
         {
             id = GlobalId.GetInstanceId(id);
-            if (Datas.Count < id) return null;
+            if (id < 0 || id >= Datas.Count)
+            {
+                return null;
+            }
 
             return Datas[id] as T;
         }
 
         public int GetInstanceId(string name)
         {
-            return Datas.Find(data => data.GetName() == name).GetInstanceId();
+            var data = Datas.Find(d => d.GetName() == name);
+            if (data == null)
+            {
+                return -1;
+            }
+
+            return data.GetInstanceId();
         }
 
         public int GetIndex()

@@ -583,8 +583,7 @@ namespace Supercell.Laser.Server.Message
 
             UdpConnectionInfoMessage info = new UdpConnectionInfoMessage();
             info.SessionId = Connection.UdpSessionId;
-            info.ServerAddress = Configuration.Instance.UdpHost;
-            info.ServerPort = Configuration.Instance.UdpPort;
+            info.ServerPort = Configuration.Instance.Port;
             Connection.Send(info);
         }
 
@@ -2544,8 +2543,7 @@ namespace Supercell.Laser.Server.Message
         {
             UdpConnectionInfoMessage info = new UdpConnectionInfoMessage();
             info.SessionId = Connection.UdpSessionId;
-            info.ServerAddress = Configuration.Instance.UdpHost;
-            info.ServerPort = Configuration.Instance.UdpPort;
+            info.ServerPort = Configuration.Instance.Port;
             Connection.Send(info);
         }
 
