@@ -1,6 +1,7 @@
 namespace Supercell.Laser.Server.Discord
 {
     using System;
+    using System.Net;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Threading.Tasks;
@@ -104,6 +105,8 @@ namespace Supercell.Laser.Server.Discord
                 + "!unmute - unmute a player (!unmute [TAG])\n"
                 + "!resetseason - resets the season, duh\n"
                 + "!changename - changes a players name (!changename [TAG] [newName])\n"
+                + "!banip - adds an ip to the blacklist (!banip [IP])\n"
+                + "!unbanip - removes an ip from the blacklist (!unbanip [IP])\n"
                 + "!reports - sends a link to all reported messages\n"
                 + "!userinfo - show player info (!userinfo [TAG])\n"
                 + "!changecredentials - change username/password of an account (!changecredentials [TAG] [newUsername] [newPassword])\n"
@@ -1091,6 +1094,83 @@ namespace Supercell.Laser.Server.Discord
 
             string d = sc ? LogicLongCodeGenerator.ToCode(id) : parts[0];
             return $"Done: set vip status for {d} activated/extended to {account.Home.PremiumEndTime} UTC! ({formattedDate})";
+        }
+    }
+
+    public class IPBan : CommandModule<CommandContext>
+    {
+        [Command("banip")]
+        public static string BanIpCommand([CommandParameter(Remainder = true)] string ipAddress)
+        {
+            if (!Configuration.Instance.antiddos)
+            {
+                return "Anti-DDoS is disabled. Enable it in config.json to use this command.";
+            }
+
+            if (!IPAddress.TryParse(ipAddress, out _))
+            {
+                return "Invalid IP address format.";
+            }
+
+            if (IsIpBanned(ipAddress))
+            {
+                return $"IP address {ipAddress} is already banned.";
+            }
+
+            try
+            {
+                File.AppendAllText("ipblacklist.txt", ipAddress + Environment.NewLine);
+                return $"IP address {ipAddress} has been banned.";
+            }
+            catch (Exception ex)
+            {
+                return $"Failed to ban IP address: {ex.Message}";
+            }
+        }
+
+        public class UnbanIP : CommandModule<CommandContext>
+        {
+            [Command("unbanip")]
+            public static string UnbanIpCommand([CommandParameter(Remainder = true)] string ipAddress)
+            {
+                if (!Configuration.Instance.antiddos)
+                {
+                    return "Anti-DDoS is disabled. Enable it in config.json to use this command.";
+                }
+
+                if (!IPAddress.TryParse(ipAddress, out _))
+                {
+                    return "Invalid IP address format.";
+                }
+
+                if (!IsIpBanned(ipAddress))
+                {
+                    return $"IP address {ipAddress} is not banned.";
+                }
+
+                try
+                {
+                    var bannedIps = File.ReadAllLines("ipblacklist.txt");
+                    bannedIps = bannedIps.Where(ip => ip != ipAddress).ToArray();
+                    File.WriteAllLines("ipblacklist.txt", bannedIps);
+                    return $"IP address {ipAddress} has been unbanned.";
+                }
+                catch (Exception ex)
+                {
+                    return $"Failed to unban IP address: {ex.Message}";
+                }
+            }
+        }
+
+        private static bool IsIpBanned(string ipAddress)
+        {
+            if (!File.Exists("ipblacklist.txt"))
+            {
+                return false;
+            }
+
+            var bannedIps = File.ReadAllLines("ipblacklist.txt");
+            return bannedIps.Contains(ipAddress);
         }
     }
 
