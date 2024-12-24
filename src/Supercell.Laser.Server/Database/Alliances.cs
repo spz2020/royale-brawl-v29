@@ -12,14 +12,14 @@
         private static long AllianceIdCounter;
         private static string ConnectionString;
 
-        public static void Init(string user, string password)
+        public static void Init()
         {
             MySqlConnectionStringBuilder builder = new MySqlConnectionStringBuilder();
-            builder.Server = "127.0.0.1";
-            builder.UserID = user;
-            builder.Password = password;
+            builder.Server = Configuration.Instance.MysqlHost;
+            builder.UserID = Configuration.Instance.MysqlUsername;
+            builder.Password = Configuration.Instance.MysqlPassword;
             builder.SslMode = MySqlSslMode.Disabled;
-            builder.Database = Configuration.Instance.DatabaseName;
+            builder.Database = Configuration.Instance.MysqlDatabase;
             builder.CharacterSet = "utf8mb4";
 
             JsonConvert.DefaultSettings = () =>

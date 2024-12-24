@@ -7,11 +7,11 @@ namespace Supercell.Laser.Server.Utils
     {
         private static string GetConnectionString()
         {
-            return $"server=127.0.0.1;"
-                + $"user={Configuration.Instance.DatabaseUsername};"
-                + $"database={Configuration.Instance.DatabaseName};"
-                + $"port=3306;"
-                + $"password={Configuration.Instance.DatabasePassword}";
+            return $"server={Configuration.Instance.MysqlHost};"
+                + $"user={Configuration.Instance.MysqlUsername};"
+                + $"database={Configuration.Instance.MysqlDatabase};"
+                + $"port={Configuration.Instance.MysqlPort};"
+                + $"password={Configuration.Instance.MysqlPassword}";
         }
 
         public static string ExecuteScalar(string query, params (string, object)[] parameters)

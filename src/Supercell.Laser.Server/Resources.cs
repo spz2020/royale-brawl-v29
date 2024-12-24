@@ -18,8 +18,8 @@ namespace Supercell.Laser.Server
         /// </summary>
         public static void InitDatabase()
         {
-            Accounts.Init(Configuration.Instance.DatabaseUsername, Configuration.Instance.DatabasePassword);
-            Alliances.Init(Configuration.Instance.DatabaseUsername, Configuration.Instance.DatabasePassword);
+            Accounts.Init();
+            Alliances.Init();
         }
 
         /// <summary>

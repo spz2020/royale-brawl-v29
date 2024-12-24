@@ -8,9 +8,12 @@
         public static Configuration Instance;
 
         [JsonProperty("port")] public readonly int Port;
-        [JsonProperty("database_username")] public readonly string DatabaseUsername;
-        [JsonProperty("database_password")] public readonly string DatabasePassword;
-        [JsonProperty("database_name")] public readonly string DatabaseName;
+
+        [JsonProperty("mysql_host")] public readonly string MysqlHost;
+        [JsonProperty("mysql_port")] public readonly int MysqlPort;
+        [JsonProperty("mysql_username")] public readonly string MysqlUsername;
+        [JsonProperty("mysql_password")] public readonly string MysqlPassword;
+        [JsonProperty("mysql_database")] public readonly string MysqlDatabase;
         [JsonProperty("anti-ddos")] public readonly bool antiddos;
         [JsonProperty("BotToken")] public readonly string BotToken;
         [JsonProperty("ChannelId")] public readonly ulong ChannelId;

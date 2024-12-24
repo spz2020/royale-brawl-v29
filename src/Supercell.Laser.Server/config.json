@@ -1,8 +1,10 @@
 ﻿{
   "port": 9339,
-  "database_username": "root",
-  "database_password": "erder",
-  "database_name": "royale29",
+  "mysql_host": "127.0.0.1",
+  "mysql_port": 3306,
+  "mysql_username": "root",
+  "mysql_password": "erder",
+  "mysql_database": "royale29",
   "anti-ddos": false,
   "BotToken": "YOUR_BOT_TOKEN_HERE",
   "ChannelId": 1234567890123456789

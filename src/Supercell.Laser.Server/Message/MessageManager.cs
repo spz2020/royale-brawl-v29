@@ -1706,11 +1706,11 @@ namespace Supercell.Laser.Server.Message
 
             try
             {
-                string connectionString = $"server=127.0.0.1;" +
-                                          $"user={Configuration.Instance.DatabaseUsername};" +
-                                          $"database={Configuration.Instance.DatabaseName};" +
-                                          $"port=3306;" +
-                                          $"password={Configuration.Instance.DatabasePassword}";
+                string connectionString = $"server={Configuration.Instance.MysqlHost};" +
+                                          $"user={Configuration.Instance.MysqlUsername};" +
+                                          $"database={Configuration.Instance.MysqlDatabase};" +
+                                          $"port={Configuration.Instance.MysqlPort};" +
+                                          $"password={Configuration.Instance.MysqlPassword}";
 
                 using (MySqlConnection connection = new MySqlConnection(connectionString))
                 {
@@ -1744,11 +1744,11 @@ namespace Supercell.Laser.Server.Message
 
             try
             {
-                string connectionString = $"server=127.0.0.1;" +
-                                          $"user={Configuration.Instance.DatabaseUsername};" +
-                                          $"database={Configuration.Instance.DatabaseName};" +
-                                          $"port=3306;" +
-                                          $"password={Configuration.Instance.DatabasePassword}";
+                string connectionString = $"server={Configuration.Instance.MysqlHost};" +
+                                          $"user={Configuration.Instance.MysqlUsername};" +
+                                          $"database={Configuration.Instance.MysqlDatabase};" +
+                                          $"port={Configuration.Instance.MysqlPort};" +
+                                          $"password={Configuration.Instance.MysqlPassword}";
 
                 using (MySqlConnection connection = new MySqlConnection(connectionString))
                 {
