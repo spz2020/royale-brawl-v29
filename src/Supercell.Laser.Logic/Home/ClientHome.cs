@@ -809,14 +809,14 @@ namespace Supercell.Laser.Logic.Home
 
             encoder.WriteVInt(utcNow.Year * 1000 + utcNow.DayOfYear); // 0x78d4b8
             encoder.WriteVInt(utcNow.Hour * 3600 + utcNow.Minute * 60 + utcNow.Second); // 0x78d4cc
-            encoder.WriteVInt(HomeMode.Avatar.Trophies); // 0x78d4e0
-            encoder.WriteVInt(HomeMode.Avatar.HighestTrophies); // 0x78d4f4
+            encoder.WriteVInt(HomeMode.Avatar.Trophies); // 0x78d4e0 Player Trophies
+            encoder.WriteVInt(HomeMode.Avatar.HighestTrophies); // 0x78d4f4 highest trophy
             encoder.WriteVInt(HomeMode.Avatar.HighestTrophies); // highest trophy again?
-            encoder.WriteVInt(TrophyRoadProgress);
-            encoder.WriteVInt(Experience + 1909); // experience
+            encoder.WriteVInt(TrophyRoadProgress); // Trophy Road Reward
+            encoder.WriteVInt(Experience + 1909); // Player Experience
 
-            ByteStreamHelper.WriteDataReference(encoder, Thumbnail);
-            ByteStreamHelper.WriteDataReference(encoder, NameColorId);
+            ByteStreamHelper.WriteDataReference(encoder, Thumbnail); // Player Profile Icon
+            ByteStreamHelper.WriteDataReference(encoder, NameColorId); // Player Name Color
 
             encoder.WriteVInt(18); // Played game modes
             for (int i = 0; i < 18; i++)
@@ -852,7 +852,7 @@ namespace Supercell.Laser.Logic.Home
             encoder.WriteVInt(0); //tokens used in battles
             encoder.WriteVInt(0);
             encoder.WriteBoolean(true);
-            encoder.WriteVInt(TokenDoublers);
+            encoder.WriteVInt(TokenDoublers); // Remaining Token Doubler
             encoder.WriteVInt(5963600); // trophy league season timer
             encoder.WriteVInt(0);
             encoder.WriteVInt(5963600); //brawl pass season timer
@@ -865,7 +865,7 @@ namespace Supercell.Laser.Logic.Home
             encoder.WriteBoolean(false);
             encoder.WriteBoolean(true);
             encoder.WriteBoolean(false);
-            encoder.WriteVInt(2);
+            encoder.WriteVInt(2); // Shop Token Doubler Related
             encoder.WriteVInt(2);
             encoder.WriteVInt(2);
 
@@ -880,15 +880,15 @@ namespace Supercell.Laser.Logic.Home
 
             encoder.WriteVInt(0);
 
-            encoder.WriteVInt(BattleTokens); // 0x78e228
-            encoder.WriteVInt(GetbattleTokensRefreshSeconds()); // 0x78e23c
+            encoder.WriteVInt(BattleTokens); // 0x78e228 Battle tokens
+            encoder.WriteVInt(GetbattleTokensRefreshSeconds()); // 0x78e23c Time till Bonus Tokens
             encoder.WriteVInt(0); // 0x78e250
-            encoder.WriteVInt(0); // 0x78e3a4
+            encoder.WriteVInt(0); // 0x78e3a4 Tickets?
             encoder.WriteVInt(0); // 0x78e3a4
 
-            ByteStreamHelper.WriteDataReference(encoder, Character);
+            ByteStreamHelper.WriteDataReference(encoder, Character); // Selected Brawler
 
-            encoder.WriteString("US");
+            encoder.WriteString("US"); // Location
             encoder.WriteString("<cff2a00>e<cff5400>r<cff7f00>d<cffa900>e<cffd400>r<cfefe00> <cd4ff00>|<caaff00> <c7fff00>x<c55ff00>e<c2aff00>o<c04fe00>n</c>");
 
             encoder.WriteVInt(6); // IntValueEntry
@@ -956,7 +956,7 @@ namespace Supercell.Laser.Logic.Home
                 encoder.WriteVInt(0);
             }
 
-            encoder.WriteBoolean(true);
+            encoder.WriteBoolean(true); // Emojis Bool
             encoder.WriteVInt(UnlockedEmotes.Count);
             foreach (int i in UnlockedEmotes)
             {
@@ -970,9 +970,9 @@ namespace Supercell.Laser.Logic.Home
 
         public void LogicConfData(ByteStream encoder, DateTime utcNow)
         {
-            encoder.WriteVInt(utcNow.Year * 1000 + utcNow.DayOfYear);
-            encoder.WriteVInt(100);
-            encoder.WriteVInt(10);
+            encoder.WriteVInt(utcNow.Year * 1000 + utcNow.DayOfYear); // Shop Timestamp
+            encoder.WriteVInt(100); // Brawl Box Tokens
+            encoder.WriteVInt(10); // Big Box Tokens
             encoder.WriteVInt(30);
             encoder.WriteVInt(3);
             encoder.WriteVInt(80);
@@ -985,7 +985,7 @@ namespace Supercell.Laser.Logic.Home
 
             encoder.WriteVInt(0); // Array
 
-            encoder.WriteVInt(9); //event slot array
+            encoder.WriteVInt(9); // event slot array
             /*for (int i = 1; i <= 9; i++)
                 encoder.WriteVInt(i);*/
             encoder.WriteVInt(1); //gem grab
@@ -1037,14 +1037,14 @@ namespace Supercell.Laser.Logic.Home
                 encoder.WriteVInt(20);
             }
 
-            encoder.WriteVInt(3);
+            encoder.WriteVInt(3); // Tickets Price
             {
                 encoder.WriteVInt(10);
                 encoder.WriteVInt(30);
                 encoder.WriteVInt(80);
             }
 
-            encoder.WriteVInt(3);
+            encoder.WriteVInt(3); // Tickets Amount
             {
                 encoder.WriteVInt(6);
                 encoder.WriteVInt(20);
@@ -1055,8 +1055,8 @@ namespace Supercell.Laser.Logic.Home
             ByteStreamHelper.WriteIntList(encoder, GoldPacksAmount);
 
             encoder.WriteVInt(2);
-            encoder.WriteVInt(200);
-            encoder.WriteVInt(20);
+            encoder.WriteVInt(200); // Max Battle Tokens
+            encoder.WriteVInt(20); // Tokens Gained in Refresh
 
             encoder.WriteVInt(8640);
             encoder.WriteVInt(10);
@@ -1069,7 +1069,7 @@ namespace Supercell.Laser.Logic.Home
             encoder.WriteVInt(50);
             encoder.WriteVInt(604800);
 
-            encoder.WriteBoolean(true);
+            encoder.WriteBoolean(true); // Box boolean
 
             encoder.WriteVInt(0); // relase entry Array
 
