@@ -7,9 +7,9 @@
     {
         public static void Exit(object sender, ConsoleCancelEventArgs e)
         {
+            Logger.Print("Shutting down... Please wait.");
             Sessions.StartShutdown();
 
-            Logger.Print("Shutting down...");
             AccountCache.SaveAll();
             AllianceCache.SaveAll();
 

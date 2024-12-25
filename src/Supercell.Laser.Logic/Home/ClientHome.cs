@@ -486,7 +486,7 @@ namespace Supercell.Laser.Logic.Home
             {
                 ShouldUpdateDay = true;
             }
-            if (WELCOME_BP || WELCOME_100)
+            if (WELCOME_BP || WELCOME_100 || TROPHIES_1000)
             {
                 ShouldUpdateDay = false;
             }
