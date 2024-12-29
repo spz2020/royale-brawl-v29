@@ -34,6 +34,7 @@ namespace Supercell.Laser.Server.Discord.Commands
             string trophies = ConvertInfoToData(account.Avatar.Trophies);
             string banned = ConvertInfoToData(account.Avatar.Banned);
             string muted = ConvertInfoToData(account.Avatar.IsCommunityBanned);
+            string premium = ConvertInfoToData(account.Avatar.IsPremium);
             string username = DatabaseHelper.ExecuteScalar(
                 "SELECT username FROM users WHERE id = @id",
                 ("@id", lowID)
@@ -54,6 +55,7 @@ namespace Supercell.Laser.Server.Discord.Commands
                 + $"Solo Wins: {soloWins}\n"
                 + $"Duo Wins: {duoWins}\n"
                 + $"Trio Wins: {trioWins}\n"
+                + $"Premium: {premium}\n"
                 + $"Muted: {muted}\n"
                 + $"Banned: {banned}\n"
                 + $"# royale ID\n"

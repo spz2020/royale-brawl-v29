@@ -12,13 +12,13 @@ namespace Supercell.Laser.Server.Discord.Commands
     {
         [Command("givepremium")]
         public static string GivePremiumCommand(
-            [CommandParameter(Remainder = true)] string playerId
+            [CommandParameter(Remainder = true)] string parameters
         )
         {
-            string[] parts = playerId.Split(' ');
-            if (parts.Length != 1)
+            string[] parts = parameters.Split(' ');
+            if (parts.Length != 2)
             {
-                return "Usage: !givepremium [TAG]";
+                return "Usage: !givepremium [TAG] [DURATION_IN_MONTHS]";
             }
 
             long id = 0;
@@ -37,6 +37,11 @@ namespace Supercell.Laser.Server.Discord.Commands
                 }
             }
 
+            if (!int.TryParse(parts[1], out int durationMonths) || durationMonths <= 0)
+            {
+                return "Invalid duration. Please provide a positive number of months.";
+            }
+
             Account account = Accounts.Load(id);
             if (account == null)
             {
@@ -45,11 +50,11 @@ namespace Supercell.Laser.Server.Discord.Commands
 
             if (account.Home.PremiumEndTime < DateTime.UtcNow)
             {
-                account.Home.PremiumEndTime = DateTime.UtcNow.AddMonths(1);
+                account.Home.PremiumEndTime = DateTime.UtcNow.AddMonths(durationMonths);
             }
             else
             {
-                account.Home.PremiumEndTime = account.Home.PremiumEndTime.AddMonths(1);
+                account.Home.PremiumEndTime = account.Home.PremiumEndTime.AddMonths(durationMonths);
             }
 
             account.Avatar.PremiumLevel = 1;

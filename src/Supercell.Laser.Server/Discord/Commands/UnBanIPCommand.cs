@@ -3,10 +3,10 @@ namespace Supercell.Laser.Server.Discord.Commands
     using System.Net;
     using NetCord.Services.Commands;
     using Supercell.Laser.Server.Settings;
-    public class IPBan : CommandModule<CommandContext>
+    public class UnbanIP : CommandModule<CommandContext>
     {
-        [Command("banip")]
-        public static string BanIpCommand([CommandParameter(Remainder = true)] string ipAddress)
+        [Command("unbanip")]
+        public static string UnbanIpCommand([CommandParameter(Remainder = true)] string ipAddress)
         {
             if (!Configuration.Instance.antiddos)
             {
@@ -18,21 +18,24 @@ namespace Supercell.Laser.Server.Discord.Commands
                 return "Invalid IP address format.";
             }
 
-            if (IsIpBanned(ipAddress))
+            if (!IsIpBanned(ipAddress))
             {
-                return $"IP address {ipAddress} is already banned.";
+                return $"IP address {ipAddress} is not banned.";
             }
 
             try
             {
-                File.AppendAllText("ipblacklist.txt", ipAddress + Environment.NewLine);
-                return $"IP address {ipAddress} has been banned.";
+                string[] bannedIps = File.ReadAllLines("ipblacklist.txt");
+                bannedIps = bannedIps.Where(ip => ip != ipAddress).ToArray();
+                File.WriteAllLines("ipblacklist.txt", bannedIps);
+                return $"IP address {ipAddress} has been unbanned.";
             }
             catch (Exception ex)
             {
-                return $"Failed to ban IP address: {ex.Message}";
+                return $"Failed to unban IP address: {ex.Message}";
             }
         }
+
         private static bool IsIpBanned(string ipAddress)
         {
             if (!File.Exists("ipblacklist.txt"))
