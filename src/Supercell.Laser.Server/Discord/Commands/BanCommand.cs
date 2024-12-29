@@ -27,6 +27,7 @@ namespace Supercell.Laser.Server.Discord.Commands
 
             account.Avatar.Banned = true;
             account.Avatar.Name = "Brawler";
+            account.Avatar.ResetTrophies();
 
             if (Sessions.IsSessionActive(lowID))
             {
