@@ -1946,82 +1946,88 @@ namespace Supercell.Laser.Server.Message
                 {
                     if (message.BattleResult == 0)
                     {
+                        // star player
                         OwnPlayer.isStarplayer = true;
                         starExperienceResult = 4;
                         HomeMode.Home.Experience += starExperienceResult;
-                        /*if (Events.PlaySlot(HomeMode.Avatar.AccountId, slot))
+
+                        // Commented out code for adding star tokens
+                        /*
+                        if (Events.PlaySlot(HomeMode.Avatar.AccountId, slot))
                         {
                             starToken = true;
                             HomeMode.Avatar.AddStarTokens(1);
                             HomeMode.Home.StarTokensReward = 1;
-                        }*/
+                        }
+                        */
                     }
                     else
                     {
                         Random r = new();
                         message.BattlePlayers[r.Next(1, 5)].isStarplayer = true;
                     }
+
                     if (brawlerTrophies <= 49)
                     {
                         Trophies[0] = 8;
                         Trophies[1] = 0;
                     }
-                    else if (50 <= brawlerTrophies && brawlerTrophies <= 99)
+                    else if (brawlerTrophies <= 99)
                     {
                         Trophies[0] = 8;
                         Trophies[1] = -1;
                     }
-                    else if (100 <= brawlerTrophies && brawlerTrophies <= 199)
+                    else if (brawlerTrophies <= 199)
                     {
                         Trophies[0] = 8;
                         Trophies[1] = -2;
                     }
-                    else if (200 <= brawlerTrophies && brawlerTrophies <= 299)
+                    else if (brawlerTrophies <= 299)
                     {
                         Trophies[0] = 8;
                         Trophies[1] = -3;
                     }
-                    else if (300 <= brawlerTrophies && brawlerTrophies <= 399)
+                    else if (brawlerTrophies <= 399)
                     {
                         Trophies[0] = 8;
                         Trophies[1] = -4;
                     }
-                    else if (400 <= brawlerTrophies && brawlerTrophies <= 499)
+                    else if (brawlerTrophies <= 499)
                     {
                         Trophies[0] = 8;
                         Trophies[1] = -5;
                     }
-                    else if (500 <= brawlerTrophies && brawlerTrophies <= 599)
+                    else if (brawlerTrophies <= 599)
                     {
                         Trophies[0] = 8;
                         Trophies[1] = -6;
                     }
-                    else if (600 <= brawlerTrophies && brawlerTrophies <= 699)
+                    else if (brawlerTrophies <= 699)
                     {
                         Trophies[0] = 8;
                         Trophies[1] = -7;
                     }
-                    else if (700 <= brawlerTrophies && brawlerTrophies <= 799)
+                    else if (brawlerTrophies <= 799)
                     {
                         Trophies[0] = 8;
                         Trophies[1] = -8;
                     }
-                    else if (800 <= brawlerTrophies && brawlerTrophies <= 899)
+                    else if (brawlerTrophies <= 899)
                     {
                         Trophies[0] = 7;
                         Trophies[1] = -9;
                     }
-                    else if (900 <= brawlerTrophies && brawlerTrophies <= 999)
+                    else if (brawlerTrophies <= 999)
                     {
                         Trophies[0] = 6;
                         Trophies[1] = -10;
                     }
-                    else if (1000 <= brawlerTrophies && brawlerTrophies <= 1099)
+                    else if (brawlerTrophies <= 1099)
                     {
                         Trophies[0] = 5;
                         Trophies[1] = -11;
                     }
-                    else if (1100 <= brawlerTrophies && brawlerTrophies <= 1199)
+                    else if (brawlerTrophies <= 1199)
                     {
                         Trophies[0] = 4;
                         Trophies[1] = -12;
@@ -2033,12 +2039,14 @@ namespace Supercell.Laser.Server.Message
                     }
 
                     gameMode = 1;
+
                     trophiesResult = Trophies[message.BattleResult];
                     HomeMode.Home.TrophiesReward = Math.Max(trophiesResult, 0);
 
                     if (message.BattleResult == 0) // Win
                     {
                         HomeMode.Avatar.TrioWins++;
+
                         if (location.GameMode == "CoinRush")
                         {
                             if (DateTime.UtcNow.Subtract(HomeMode.Avatar.BattleStartTime).TotalSeconds <= 90)
@@ -2064,32 +2072,29 @@ namespace Supercell.Laser.Server.Message
                             }
                         }
 
+                        // quests
                         if (HomeMode.Home.Quests != null)
                         {
-                            if (location.GameMode == "BountyHunter")
+                            switch (location.GameMode)
                             {
-                                q = HomeMode.Home.Quests.UpdateQuestsProgress(3, OwnPlayer.CharacterId, 0, 0, 0, HomeMode.Home);
-                            }
-                            else if (location.GameMode == "CoinRush")
-                            {
-                                q = HomeMode.Home.Quests.UpdateQuestsProgress(0, OwnPlayer.CharacterId, 0, 0, 0, HomeMode.Home);
-                            }
-                            else if (location.GameMode == "AttackDefend")
-                            {
-                                q = HomeMode.Home.Quests.UpdateQuestsProgress(2, OwnPlayer.CharacterId, 0, 0, 0, HomeMode.Home);
-                            }
-                            else if (location.GameMode == "LaserBall")
-                            {
-                                q = HomeMode.Home.Quests.UpdateQuestsProgress(5, OwnPlayer.CharacterId, 0, 0, 0, HomeMode.Home);
-                            }
-                            else if (location.GameMode == "RoboWars")
-                            {
-                                q = HomeMode.Home.Quests.UpdateQuestsProgress(11, OwnPlayer.CharacterId, 0, 0, 0, HomeMode.Home);
+                                case "BountyHunter":
+                                    q = HomeMode.Home.Quests.UpdateQuestsProgress(3, OwnPlayer.CharacterId, 0, 0, 0, HomeMode.Home);
+                                    break;
+                                case "CoinRush":
+                                    q = HomeMode.Home.Quests.UpdateQuestsProgress(0, OwnPlayer.CharacterId, 0, 0, 0, HomeMode.Home);
+                                    break;
+                                case "AttackDefend":
+                                    q = HomeMode.Home.Quests.UpdateQuestsProgress(2, OwnPlayer.CharacterId, 0, 0, 0, HomeMode.Home);
+                                    break;
+                                case "LaserBall":
+                                    q = HomeMode.Home.Quests.UpdateQuestsProgress(5, OwnPlayer.CharacterId, 0, 0, 0, HomeMode.Home);
+                                    break;
+                                case "RoboWars":
+                                    q = HomeMode.Home.Quests.UpdateQuestsProgress(11, OwnPlayer.CharacterId, 0, 0, 0, HomeMode.Home);
+                                    break;
                             }
                         }
-
                     }
-
                     tokensResult = TokensRewards[message.BattleResult];
                     totalTokensResult = tokensResult;
 
@@ -2098,64 +2103,68 @@ namespace Supercell.Laser.Server.Message
                 }
                 else if (location.GameMode == "BattleRoyale")
                 {
+                    // star token logic
                     if (message.Rank < 5)
                     {
-                        /*if (Events.PlaySlot(HomeMode.Avatar.AccountId, slot))
+                        /*
+                        if (Events.PlaySlot(HomeMode.Avatar.AccountId, slot))
                         {
                             starToken = true;
                             HomeMode.Avatar.AddStarTokens(1);
                             HomeMode.Home.StarTokensReward = 1;
-                        }*/
+                        }
+                        */
                     }
+
                     if (brawlerTrophies >= 0 && brawlerTrophies <= 49)
                     {
                         Trophies = new[] { 10, 8, 7, 6, 4, 2, 2, 1, 0, 0 };
                     }
-                    else if (brawlerTrophies >= 50 && brawlerTrophies <= 99)
+                    else if (brawlerTrophies <= 99)
                     {
                         Trophies = new[] { 10, 8, 7, 6, 3, 2, 2, 0, -1, -2 };
                     }
-                    else if (brawlerTrophies >= 100 && brawlerTrophies <= 199)
+                    else if (brawlerTrophies <= 199)
                     {
                         Trophies = new[] { 10, 8, 7, 6, 3, 1, 0, -1, -2, -2 };
                     }
-                    else if (brawlerTrophies >= 200 && brawlerTrophies <= 299)
+                    else if (brawlerTrophies <= 299)
                     {
                         Trophies = new[] { 10, 8, 6, 5, 3, 1, 0, -2, -3, -3 };
                     }
-                    else if (brawlerTrophies >= 300 && brawlerTrophies <= 399)
+                    else if (brawlerTrophies <= 399)
                     {
                         Trophies = new[] { 10, 8, 6, 5, 2, 0, 0, -3, -4, -4 };
                     }
-                    else if (brawlerTrophies >= 400 && brawlerTrophies <= 499)
+                    else if (brawlerTrophies <= 499)
                     {
                         Trophies = new[] { 10, 8, 6, 5, 2, -1, -2, -3, -5, -5 };
                     }
-                    else if (brawlerTrophies >= 500 && brawlerTrophies <= 599)
+                    else if (brawlerTrophies <= 599)
                     {
                         Trophies = new[] { 10, 8, 6, 4, 2, -1, -2, -5, -6, -6 };
                     }
-                    else if (brawlerTrophies >= 600 && brawlerTrophies <= 699)
+                    else if (brawlerTrophies <= 699)
                     {
                         Trophies = new[] { 10, 8, 6, 4, 1, -2, -2, -5, -7, -8 };
                     }
-                    else if (brawlerTrophies >= 700 && brawlerTrophies <= 799)
+                    else if (brawlerTrophies <= 799)
                     {
                         Trophies = new[] { 10, 8, 6, 4, 1, -3, -4, -5, -8, -9 };
                     }
-                    else if (brawlerTrophies >= 800 && brawlerTrophies <= 899)
+                    else if (brawlerTrophies <= 899)
                     {
                         Trophies = new[] { 9, 7, 5, 2, 0, -3, -4, -7, -9, -10 };
                     }
-                    else if (brawlerTrophies >= 900 && brawlerTrophies <= 999)
+                    else if (brawlerTrophies <= 999)
                     {
                         Trophies = new[] { 8, 6, 4, 1, -1, -3, -6, -8, -10, -11 };
                     }
-                    else if (brawlerTrophies >= 1000 && brawlerTrophies <= 1099)
+                    else if (brawlerTrophies <= 1099)
                     {
                         Trophies = new[] { 6, 5, 3, 1, -2, -5, -6, -9, -11, -12 };
                     }
-                    else if (brawlerTrophies >= 1100 && brawlerTrophies <= 1199)
+                    else if (brawlerTrophies <= 1199)
                     {
                         Trophies = new[] { 5, 4, 1, 0, -2, -6, -7, -10, -12, -13 };
                     }
@@ -2170,16 +2179,18 @@ namespace Supercell.Laser.Server.Message
                     ExperienceRewards = new[] { 15, 12, 9, 6, 5, 4, 3, 2, 1, 0 };
                     TokensRewards = new[] { 30, 24, 21, 15, 12, 8, 6, 4, 2, 0 };
 
-
-
                     HomeMode.Home.TrophiesReward = Math.Max(trophiesResult, 0);
 
-                    if (message.Rank == 1) // Win
+                    if (message.Rank == 1)
                     {
                         HomeMode.Avatar.SoloWins++;
                     }
+
                     if (message.Rank < 5 && HomeMode.Home.Quests != null)
+                    {
                         q = HomeMode.Home.Quests.UpdateQuestsProgress(6, OwnPlayer.CharacterId, 0, 0, 0, HomeMode.Home);
+                    }
+
                     tokensResult = TokensRewards[message.Rank - 1];
                     totalTokensResult = tokensResult;
 
@@ -2188,15 +2199,19 @@ namespace Supercell.Laser.Server.Message
                 }
                 else if (location.GameMode == "BattleRoyaleTeam")
                 {
+                    // star token logic
                     if (message.Rank < 3)
                     {
-                        /*if (Events.PlaySlot(HomeMode.Avatar.AccountId, slot))
+                        /*
+                        if (Events.PlaySlot(HomeMode.Avatar.AccountId, slot))
                         {
                             starToken = true;
                             HomeMode.Avatar.AddStarTokens(1);
                             HomeMode.Home.StarTokensReward = 1;
-                        }*/
+                        }
+                        */
                     }
+
                     if (brawlerTrophies >= 0 && brawlerTrophies <= 49)
                     {
                         Trophies[0] = 9;
@@ -2240,19 +2255,22 @@ namespace Supercell.Laser.Server.Message
 
                     HomeMode.Home.TrophiesReward = Math.Max(trophiesResult, 0);
 
-                    if (message.Rank < 3) // Win
+                    if (message.Rank < 3)
                     {
                         HomeMode.Avatar.DuoWins++;
                     }
+
                     if (message.Rank < 3 && HomeMode.Home.Quests != null)
+                    {
                         q = HomeMode.Home.Quests.UpdateQuestsProgress(9, OwnPlayer.CharacterId, 0, 0, 0, HomeMode.Home);
+                    }
+
                     tokensResult = TokensRewards[message.Rank - 1];
                     totalTokensResult = tokensResult;
 
                     experienceResult = ExperienceRewards[message.Rank - 1];
                     HomeMode.Home.Experience += experienceResult;
                 }
-
                 else if (location.GameMode == "BossFight")
                 {
                     gameMode = 4;
@@ -2316,16 +2334,17 @@ namespace Supercell.Laser.Server.Message
 
                 if (HomeMode.Home.BattleTokens > 0)
                 {
-                    if (!(HomeMode.Home.BattleTokens - tokensResult >= 0))
+                    if (HomeMode.Home.BattleTokens - tokensResult < 0)
                     {
                         tokensResult = HomeMode.Home.BattleTokens;
-                        totalTokensResult += tokensResult;
                         HomeMode.Home.BattleTokens = 0;
                     }
                     else
                     {
                         HomeMode.Home.BattleTokens -= tokensResult;
                     }
+                    totalTokensResult += tokensResult;
+
                     if (HomeMode.Home.BattleTokensRefreshStart == new DateTime())
                     {
                         HomeMode.Home.BattleTokensRefreshStart = DateTime.UtcNow;
@@ -2337,58 +2356,61 @@ namespace Supercell.Laser.Server.Message
                     totalTokensResult = 0;
                     HasNoTokens = true;
                 }
-                int starteh = HomeMode.Home.Experience;
-                HomeMode.Home.Experience += experienceResult;
-                HomeMode.Home.Experience += starExperienceResult;
-                int endeh = HomeMode.Home.Experience;
+
+                int startExperience = HomeMode.Home.Experience;
+                HomeMode.Home.Experience += experienceResult + starExperienceResult;
+                int endExperience = HomeMode.Home.Experience;
 
                 for (int i = 34; i < 500; i++)
                 {
-                    MilestoneData m = DataTables.Get(DataType.Milestone).GetDataByGlobalId<MilestoneData>(GlobalId.CreateGlobalId(39, i));
-                    int trr = m.ProgressStart + m.Progress;
-                    if (starteh < trr && endeh >= trr)
+                    MilestoneData milestone = DataTables.Get(DataType.Milestone).GetDataByGlobalId<MilestoneData>(GlobalId.CreateGlobalId(39, i));
+                    int milestoneThreshold = milestone.ProgressStart + milestone.Progress;
+
+                    if (startExperience < milestoneThreshold && endExperience >= milestoneThreshold)
                     {
                         MilestoneReward = GlobalId.CreateGlobalId(39, i);
                         MilestoneRewards.Add(MilestoneReward);
-                        HomeMode.Avatar.StarPoints += m.SecondaryLvlUpRewardCount;
-                        HomeMode.Home.StarPointsGained += m.SecondaryLvlUpRewardCount;
-                        totalTokensResult += m.PrimaryLvlUpRewardCount;
+                        HomeMode.Avatar.StarPoints += milestone.SecondaryLvlUpRewardCount;
+                        HomeMode.Home.StarPointsGained += milestone.SecondaryLvlUpRewardCount;
+                        totalTokensResult += milestone.PrimaryLvlUpRewardCount;
                         break;
                     }
                 }
 
-                int starth = hero.HighestTrophies;
+                int startTrophies = hero.HighestTrophies;
                 HomeMode.Avatar.AddTrophies(trophiesResult);
                 hero.AddTrophies(trophiesResult);
-                int endh = hero.HighestTrophies;
+                int endTrophies = hero.HighestTrophies;
+
                 for (int i = 0; i < 34; i++)
                 {
-                    MilestoneData m = DataTables.Get(DataType.Milestone).GetDataByGlobalId<MilestoneData>(GlobalId.CreateGlobalId(39, i));
-                    int trr = m.ProgressStart + m.Progress;
-                    if (starth < trr && endh >= trr)
+                    MilestoneData milestone = DataTables.Get(DataType.Milestone).GetDataByGlobalId<MilestoneData>(GlobalId.CreateGlobalId(39, i));
+                    int milestoneThreshold = milestone.ProgressStart + milestone.Progress;
+
+                    if (startTrophies < milestoneThreshold && endTrophies >= milestoneThreshold)
                     {
                         MilestoneReward = GlobalId.CreateGlobalId(39, i);
                         MilestoneRewards.Add(MilestoneReward);
-                        HomeMode.Avatar.StarPoints += m.SecondaryLvlUpRewardCount;
-                        HomeMode.Home.StarPointsGained += m.SecondaryLvlUpRewardCount;
-                        totalTokensResult += m.PrimaryLvlUpRewardCount;
+                        HomeMode.Avatar.StarPoints += milestone.SecondaryLvlUpRewardCount;
+                        HomeMode.Home.StarPointsGained += milestone.SecondaryLvlUpRewardCount;
+                        totalTokensResult += milestone.PrimaryLvlUpRewardCount;
                         break;
                     }
                 }
 
-
+                // token doublers
                 if (HomeMode.Home.TokenDoublers > 0)
                 {
                     doubledTokensResult = Math.Min(totalTokensResult, HomeMode.Home.TokenDoublers);
                     HomeMode.Home.TokenDoublers -= doubledTokensResult;
                     totalTokensResult += doubledTokensResult;
                 }
+
                 HomeMode.Home.BrawlPassTokens += totalTokensResult;
                 HomeMode.Home.TokenReward += totalTokensResult;
-            }
-            else
-            {
-                if (location.GameMode == "BountyHunter" || location.GameMode == "CoinRush" || location.GameMode == "AttackDefend" || location.GameMode == "LaserBall" || location.GameMode == "RoboWars")
+
+                if (location.GameMode == "BountyHunter" || location.GameMode == "CoinRush" || location.GameMode == "AttackDefend" ||
+                    location.GameMode == "LaserBall" || location.GameMode == "RoboWars")
                 {
                     gameMode = 1;
                 }
@@ -2405,45 +2427,42 @@ namespace Supercell.Laser.Server.Message
                     gameMode = 4;
                 }
 
-            }
-            //string r = "";
-            string[] d = { "win", "lose", "draw" };
-            if (location.GameMode.StartsWith("BattleRoyale"))
-            {
-                Logger.BLog($"Player {LogicLongCodeGenerator.ToCode(HomeMode.Avatar.AccountId)} ended battle! Battle Rank: {message.BattleResult} in {DateTime.UtcNow.Subtract(HomeMode.Avatar.BattleStartTime).TotalSeconds}s gamemode: {location.GameMode}!");
-            }
-            else
-            {
-                Logger.BLog($"Player {LogicLongCodeGenerator.ToCode(HomeMode.Avatar.AccountId)} ended battle! Battle Result: {d[message.BattleResult]} in {DateTime.UtcNow.Subtract(HomeMode.Avatar.BattleStartTime).TotalSeconds}s gamemode: {location.GameMode}!");
-            }
-            HomeMode.Avatar.BattleStartTime = new();
+                // battle log
+                string[] battleResults = { "win", "lose", "draw" };
+                string logMessage = location.GameMode.StartsWith("BattleRoyale")
+                    ? $"Player {LogicLongCodeGenerator.ToCode(HomeMode.Avatar.AccountId)} ended battle! Battle Rank: {message.BattleResult} in {DateTime.UtcNow.Subtract(HomeMode.Avatar.BattleStartTime).TotalSeconds}s gamemode: {location.GameMode}!"
+                    : $"Player {LogicLongCodeGenerator.ToCode(HomeMode.Avatar.AccountId)} ended battle! Battle Result: {battleResults[message.BattleResult]} in {DateTime.UtcNow.Subtract(HomeMode.Avatar.BattleStartTime).TotalSeconds}s gamemode: {location.GameMode}!";
 
-            BattleEndMessage battleend = new()
-            {
-                GameMode = gameMode,
-                Result = message.BattleResult,
-                StarToken = starToken,
-                IsPowerPlay = isPowerPlay,
-                IsPvP = isPvP,
-                pp = message.BattlePlayers,
-                OwnPlayer = OwnPlayer,
-                TrophiesReward = trophiesResult,
-                ExperienceReward = experienceResult,
-                StarExperienceReward = starExperienceResult,
-                DoubledTokensReward = doubledTokensResult,
-                TokenDoublersLeft = HomeMode.Home.TokenDoublers,
-                TokensReward = tokensResult,
-                Experience = StartExperience,
-                MilestoneReward = MilestoneReward,
-                ProgressiveQuests = q,
-                UnderdogTrophies = underdogTrophiesResult,
-                PowerPlayScoreGained = powerPlayScoreGained,
-                PowerPlayEpicScoreGained = powerPlayEpicScoreGained,
-                HasNoTokens = HasNoTokens,
-                MilestoneRewards = MilestoneRewards,
-            };
+                Logger.BLog(logMessage);
+                HomeMode.Avatar.BattleStartTime = new DateTime();
 
-            Connection.Send(battleend);
+                BattleEndMessage battleend = new()
+                {
+                    GameMode = gameMode,
+                    Result = message.BattleResult,
+                    StarToken = starToken,
+                    IsPowerPlay = isPowerPlay,
+                    IsPvP = isPvP,
+                    pp = message.BattlePlayers,
+                    OwnPlayer = OwnPlayer,
+                    TrophiesReward = trophiesResult,
+                    ExperienceReward = experienceResult,
+                    StarExperienceReward = starExperienceResult,
+                    DoubledTokensReward = doubledTokensResult,
+                    TokenDoublersLeft = HomeMode.Home.TokenDoublers,
+                    TokensReward = tokensResult,
+                    Experience = StartExperience,
+                    MilestoneReward = MilestoneReward,
+                    ProgressiveQuests = q,
+                    UnderdogTrophies = underdogTrophiesResult,
+                    PowerPlayScoreGained = powerPlayScoreGained,
+                    PowerPlayEpicScoreGained = powerPlayEpicScoreGained,
+                    HasNoTokens = HasNoTokens,
+                    MilestoneRewards = MilestoneRewards,
+                };
+
+                Connection.Send(battleend);
+            }
         }
 
         private void GetLeaderboardReceived(GetLeaderboardMessage message)
@@ -2632,198 +2651,157 @@ namespace Supercell.Laser.Server.Message
 
         private void LoginReceived(AuthenticationMessage message)
         {
-            Account account = null;
+            Account account = GetAccount(message);
 
-            if (message.AccountId == 0)
+            if (account == null)
             {
-                account = Accounts.Create();
-            }
-            else
-            {
-                account = Accounts.Load(message.AccountId);
-                if (account.PassToken != message.PassToken)
-                {
-                    account = null;
-                }
+                SendAuthenticationFailed(1, "Unknown Error occurred while loading account");
+                return;
             }
 
-            if (Sessions.IsSessionActive(account.Avatar.AccountIdRedirect))
+            if (IsSessionActive((int)account.Avatar.AccountIdRedirect))
             {
-                var session = Sessions.GetSession(account.Avatar.AccountIdRedirect);
-                session.GameListener.SendTCPMessage(new AuthenticationFailedMessage()
-                {
-                    Message = "Another device has connected to this game!"
-                });
-                Sessions.Remove(account.Avatar.AccountIdRedirect);
+                HandleActiveSession((int)account.Avatar.AccountIdRedirect);
             }
 
-            if (Sessions.IsSessionActive(message.AccountId))
+            if (IsSessionActive((int)message.AccountId))
             {
-                var session = Sessions.GetSession(message.AccountId);
-                session.GameListener.SendTCPMessage(new AuthenticationFailedMessage()
-                {
-                    Message = "Another device has connected to this game!"
-                });
-                Sessions.Remove(message.AccountId);
+                HandleActiveSession((int)message.AccountId);
             }
 
             if (account.Avatar.AccountIdRedirect != 0)
             {
-                account = Accounts.Load(account.Avatar.AccountIdRedirect);
+                account = Accounts.Load((int)account.Avatar.AccountIdRedirect);
             }
 
-            if (account == null)
+            if (!ValidateClientVersion(message))
             {
-                AuthenticationFailedMessage loginFailed = new AuthenticationFailedMessage();
-                loginFailed.ErrorCode = 1;
-                loginFailed.Message = "Unknown Error occured while loading account";
-                Connection.Send(loginFailed);
-
-                return;
-            }
-
-            string GameVersion = "29.270";
-
-            if (message.ClientVersion != GameVersion)
-            {
-                AuthenticationFailedMessage loginFailed = new AuthenticationFailedMessage();
-                loginFailed.ErrorCode = 8;
-                loginFailed.Message = "wrong game version dumbass " + message.ClientVersion + " should be: " + GameVersion;
-                loginFailed.UpdateUrl = "https://github.com/erder00";
-                Connection.Send(loginFailed);
                 return;
             }
 
             if (account.Avatar.Banned)
             {
-                AuthenticationFailedMessage loginFailed = new AuthenticationFailedMessage();
-                loginFailed.ErrorCode = 11;
-                Connection.Send(loginFailed);
+                SendAuthenticationFailed(11, "Account is banned");
                 return;
             }
-            AuthenticationOkMessage loginOk = new AuthenticationOkMessage();
-            if (!account.Avatar.ShouldRedirect)
+
+            SendAuthenticationSuccess(account, message);
+
+            InitializeHomeMode(account, message);
+
+            HandleBattleState(account);
+
+            UpdateLastOnline(account);
+
+            InitializeSession(account);
+
+            SendFriendAndAllianceData(account);
+        }
+
+        private Account GetAccount(AuthenticationMessage message)
+        {
+            if (message.AccountId == 0)
             {
-                loginOk.AccountId = account.AccountId;
-                loginOk.PassToken = account.PassToken;
-                loginOk.Major = message.Major;
-                loginOk.Minor = message.Minor;
-                loginOk.Build = message.Build;
-                loginOk.ServerEnvironment = "prod";
-            }
-            else
-            {
-                //account.Avatar.ShouldRedirect = false;
-                Account t = Accounts.Load(account.Avatar.RedirectId);
-                account = t;
-                loginOk.AccountId = t.AccountId;
-                loginOk.PassToken = t.PassToken;
-                loginOk.Major = message.Major;
-                loginOk.Minor = message.Minor;
-                loginOk.Build = message.Build;
-                loginOk.ServerEnvironment = "prod";
+                return Accounts.Create();
             }
 
+            Account account = Accounts.Load((int)message.AccountId);
+            return account.PassToken == message.PassToken ? account : null;
+        }
+
+        private bool IsSessionActive(int accountId)
+        {
+            return Sessions.IsSessionActive(accountId);
+        }
+
+        private void HandleActiveSession(int accountId)
+        {
+            var session = Sessions.GetSession(accountId);
+            session.GameListener.SendTCPMessage(new AuthenticationFailedMessage
+            {
+                Message = "Another device has connected to this game!"
+            });
+            Sessions.Remove(accountId);
+        }
+
+        private bool ValidateClientVersion(AuthenticationMessage message)
+        {
+            string gameVersion = "29.270";
+            if (message.ClientVersion != gameVersion)
+            {
+                SendAuthenticationFailed(8, $"Wrong game version. Expected: {gameVersion}, Received: {message.ClientVersion}");
+                return false;
+            }
+            return true;
+        }
+
+        private void SendAuthenticationFailed(int errorCode, string message)
+        {
+            Connection.Send(new AuthenticationFailedMessage
+            {
+                ErrorCode = errorCode,
+                Message = message
+            });
+        }
+
+        private void SendAuthenticationSuccess(Account account, AuthenticationMessage message)
+        {
+            var loginOk = new AuthenticationOkMessage
+            {
+                AccountId = account.AccountId,
+                PassToken = account.PassToken,
+                Major = message.Major,
+                Minor = message.Minor,
+                Build = message.Build,
+                ServerEnvironment = "prod"
+            };
             Connection.Send(loginOk);
+        }
 
+        private void InitializeHomeMode(Account account, AuthenticationMessage message)
+        {
             HomeMode = HomeMode.LoadHomeState(new HomeGameListener(Connection), account.Home, account.Avatar, Events.GetEventsById(account.Home.PowerPlayGamesPlayed, account.Avatar.AccountId));
             HomeMode.CharacterChanged += OnChangeCharacter;
             HomeMode.Home.IpAddress = Connection.Socket.RemoteEndPoint.ToString().Split(" ")[0];
             HomeMode.Home.Device = message.DeviceId;
+
             if (HomeMode.Avatar.HighestTrophies == 0 && HomeMode.Avatar.Trophies != 0)
             {
                 HomeMode.Avatar.HighestTrophies = HomeMode.Avatar.Trophies;
             }
-            CommandManager = new(HomeMode, Connection);
 
+            CommandManager = new(HomeMode, Connection);
+        }
+
+        private void HandleBattleState(Account account)
+        {
             if (HomeMode.Avatar.BattleStartTime != new DateTime())
             {
-                Hero h = HomeMode.Avatar.GetHero(HomeMode.Home.CharacterId);
-                int lose = 0;
-                int brawlerTrophies = h.Trophies;
-                if (brawlerTrophies <= 49)
-                {
-                    lose = 0;
-                }
-                else if (50 <= brawlerTrophies && brawlerTrophies <= 99)
-                {
-                    lose = -1;
-                }
-                else if (100 <= brawlerTrophies && brawlerTrophies <= 199)
-                {
-                    lose = -2;
-                }
-                else if (200 <= brawlerTrophies && brawlerTrophies <= 299)
-                {
-                    lose = -3;
-                }
-                else if (300 <= brawlerTrophies && brawlerTrophies <= 399)
-                {
-                    lose = -4;
-                }
-                else if (400 <= brawlerTrophies && brawlerTrophies <= 499)
-                {
-                    lose = -5;
-                }
-                else if (500 <= brawlerTrophies && brawlerTrophies <= 599)
-                {
-                    lose = -6;
-                }
-                else if (600 <= brawlerTrophies && brawlerTrophies <= 699)
-                {
-                    lose = -7;
-                }
-                else if (700 <= brawlerTrophies && brawlerTrophies <= 799)
-                {
-                    lose = -8;
-                }
-                else if (800 <= brawlerTrophies && brawlerTrophies <= 899)
-                {
-                    lose = -9;
-                }
-                else if (900 <= brawlerTrophies && brawlerTrophies <= 999)
-                {
-                    lose = -10;
-                }
-                else if (1000 <= brawlerTrophies && brawlerTrophies <= 1099)
-                {
-                    lose = -11;
-                }
-                else if (1100 <= brawlerTrophies && brawlerTrophies <= 1199)
-                {
-                    lose = -12;
-                }
-                else if (brawlerTrophies >= 1200)
-                {
-                    lose = -12;
-                }
-                h.AddTrophies(lose);
+                Hero hero = HomeMode.Avatar.GetHero(HomeMode.Home.CharacterId);
+                int trophiesLost = CalculateTrophiesLost(hero.Trophies);
+                hero.AddTrophies(trophiesLost);
                 HomeMode.Home.PowerPlayGamesPlayed = Math.Max(0, HomeMode.Home.PowerPlayGamesPlayed - 1);
                 Connection.Home.Events = Events.GetEventsById(HomeMode.Home.PowerPlayGamesPlayed, Connection.Avatar.AccountId);
                 HomeMode.Avatar.BattleStartTime = new DateTime();
             }
 
-            BattleMode battle = null;
-            if (HomeMode.Avatar.BattleId > 0)
-            {
-                battle = Battles.Get(HomeMode.Avatar.BattleId);
-            }
+            BattleMode battle = HomeMode.Avatar.BattleId > 0 ? Battles.Get((int)HomeMode.Avatar.BattleId) : null;
 
             if (battle == null)
             {
-                OwnHomeDataMessage ohd = new OwnHomeDataMessage();
-                ohd.Home = HomeMode.Home;
-                ohd.Avatar = HomeMode.Avatar;
-                Connection.Send(ohd);
+                Connection.Send(new OwnHomeDataMessage { Home = HomeMode.Home, Avatar = HomeMode.Avatar });
             }
             else
             {
-                StartLoadingMessage startLoading = new StartLoadingMessage();
-                startLoading.LocationId = battle.Location.GetGlobalId();
-                startLoading.TeamIndex = HomeMode.Avatar.TeamIndex;
-                startLoading.OwnIndex = HomeMode.Avatar.OwnIndex;
-                startLoading.GameMode = battle.GetGameModeVariation() == 6 ? 6 : 1;
-                startLoading.Players.AddRange(battle.GetPlayers());
+                StartLoadingMessage startLoading = new StartLoadingMessage
+                {
+                    LocationId = battle.Location.GetGlobalId(),
+                    TeamIndex = HomeMode.Avatar.TeamIndex,
+                    OwnIndex = HomeMode.Avatar.OwnIndex,
+                    GameMode = battle.GetGameModeVariation() == 6 ? 6 : 1,
+                    Players = new List<Supercell.Laser.Logic.Battle.Structures.BattlePlayer>(battle.GetPlayers())
+                };
+
                 UDPSocket socket = UDPGateway.CreateSocket();
                 socket.TCPConnection = Connection;
                 socket.Battle = battle;
@@ -2832,57 +2810,72 @@ namespace Supercell.Laser.Server.Message
                 HomeMode.Avatar.UdpSessionId = socket.SessionId;
                 Connection.Send(startLoading);
             }
+        }
 
+        private int CalculateTrophiesLost(int brawlerTrophies)
+        {
+            if (brawlerTrophies <= 49) return 0;
+            if (brawlerTrophies <= 99) return -1;
+            if (brawlerTrophies <= 199) return -2;
+            if (brawlerTrophies <= 299) return -3;
+            if (brawlerTrophies <= 399) return -4;
+            if (brawlerTrophies <= 499) return -5;
+            if (brawlerTrophies <= 599) return -6;
+            if (brawlerTrophies <= 699) return -7;
+            if (brawlerTrophies <= 799) return -8;
+            if (brawlerTrophies <= 899) return -9;
+            if (brawlerTrophies <= 999) return -10;
+            if (brawlerTrophies <= 1099) return -11;
+            return -12;
+        }
+
+        private void UpdateLastOnline(Account account)
+        {
             Connection.Avatar.LastOnline = DateTime.UtcNow;
+        }
 
+        private void InitializeSession(Account account)
+        {
             Sessions.Create(HomeMode, Connection);
-            if (true)
+        }
+
+        private void SendFriendAndAllianceData(Account account)
+        {
+            Connection.Send(new FriendListMessage { Friends = HomeMode.Avatar.Friends.ToArray() });
+
+            if (HomeMode.Avatar.AllianceRole != AllianceRole.None && HomeMode.Avatar.AllianceId > 0)
             {
-                FriendListMessage friendList = new FriendListMessage();
-                friendList.Friends = HomeMode.Avatar.Friends.ToArray();
-                Connection.Send(friendList);
-
-
-
-                if (HomeMode.Avatar.AllianceRole != AllianceRole.None && HomeMode.Avatar.AllianceId > 0)
+                Alliance alliance = Alliances.Load((int)HomeMode.Avatar.AllianceId);
+                if (alliance != null)
                 {
-                    Alliance alliance = Alliances.Load(HomeMode.Avatar.AllianceId);
-
-                    if (alliance != null)
-                    {
-                        SendMyAllianceData(alliance);
-                        AllianceDataMessage data = new AllianceDataMessage();
-                        data.Alliance = alliance;
-                        data.IsMyAlliance = true;
-                        Connection.Send(data);
-                    }
-                }
-
-                foreach (Friend entry in HomeMode.Avatar.Friends.ToArray())
-                {
-                    if (LogicServerListener.Instance.IsPlayerOnline(entry.AccountId))
-                    {
-                        FriendOnlineStatusEntryMessage statusEntryMessage = new FriendOnlineStatusEntryMessage();
-                        statusEntryMessage.AvatarId = entry.AccountId;
-                        statusEntryMessage.PlayerStatus = entry.Avatar.PlayerStatus;
-                        Connection.Send(statusEntryMessage);
-                    }
-                }
-
-                if (HomeMode.Avatar.TeamId > 0)
-                {
-                    TeamMessage teamMessage = new TeamMessage();
-                    teamMessage.Team = Teams.Get(HomeMode.Avatar.TeamId);
-                    if (teamMessage.Team != null)
-                    {
-                        Connection.Send(teamMessage);
-                        TeamMember member = teamMessage.Team.GetMember(HomeMode.Avatar.AccountId);
-                        member.State = 0;
-                        teamMessage.Team.TeamUpdated();
-                    }
+                    SendMyAllianceData(alliance);
+                    Connection.Send(new AllianceDataMessage { Alliance = alliance, IsMyAlliance = true });
                 }
             }
-            //Connection.Send(new StartLatencyTestRequestMessage());
+
+            foreach (Friend entry in HomeMode.Avatar.Friends.ToArray())
+            {
+                if (LogicServerListener.Instance.IsPlayerOnline(entry.AccountId))
+                {
+                    Connection.Send(new FriendOnlineStatusEntryMessage
+                    {
+                        AvatarId = entry.AccountId,
+                        PlayerStatus = entry.Avatar.PlayerStatus
+                    });
+                }
+            }
+
+            if (HomeMode.Avatar.TeamId > 0)
+            {
+                TeamMessage teamMessage = new TeamMessage { Team = Teams.Get((int)HomeMode.Avatar.TeamId) };
+                if (teamMessage.Team != null)
+                {
+                    Connection.Send(teamMessage);
+                    TeamMember member = teamMessage.Team.GetMember(HomeMode.Avatar.AccountId);
+                    member.State = 0;
+                    teamMessage.Team.TeamUpdated();
+                }
+            }
         }
 
         private void ClientHelloReceived(ClientHelloMessage message)
