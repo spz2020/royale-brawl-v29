@@ -219,7 +219,7 @@ namespace Supercell.Laser.Logic.Home
         }
         public void SimulateGatcha(DeliveryUnit unit)
         {
-            List<int> Brawlers = new() { 4, 5, 6, 10, 11, 12, 13, 15, 16, 17, 18, 19, 20, 21, 23, 24, 25, 26, 28, 29, 31, 32, 34, 35, 36, 37 };
+            List<int> Brawlers = new() { 4, 5, 6, 10, 11, 12, 13, 15, 16, 17, 18, 19, 20, 21, 23, 24, 25, 26, 28, 29, 31, 32, 34, 35, 36, 37, 38 };
 
             List<int> UnlockedBrawlers = new List<int>();
             foreach (Hero hero in Avatar.Heroes)
@@ -237,7 +237,7 @@ namespace Supercell.Laser.Logic.Home
             Avatar.RollsSinceGoodDrop++;
             Random rand = new();
 
-            List<int> DiamondsReward = new() { 3, 5, 7, 12 };
+            List<int> DiamondsReward = new() { 3, 5, 7, 12, 15, 18, 21, 24, 27, 30, 50, 100 };
             int unlockedBrawlersCount = Avatar.GetUnlockedHeroesCount();
             List<int> possibleBonuses = new() { 0, 1 };
 

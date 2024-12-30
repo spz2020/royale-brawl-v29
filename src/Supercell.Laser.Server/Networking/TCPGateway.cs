@@ -262,7 +262,7 @@ namespace Supercell.Laser.Server.Networking
                 counter.PacketCount = 1;
             }
 
-            if (counter.PacketCount > 50)
+            if (counter.PacketCount > 100)
             {
                 IPBlacklist.BlockIP(clientIp);
                 Logger.Print($"IP {clientIp} banned for exceeding packet limit.");
