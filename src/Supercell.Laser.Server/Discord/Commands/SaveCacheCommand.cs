@@ -9,8 +9,8 @@ namespace Supercell.Laser.Server.Discord.Commands
         [Command("savecache")]
         public async Task<string> savecache()
         {
-            AccountCache.SaveAll();
-            AllianceCache.SaveAll();
+            await Task.Run(() => AccountCache.SaveAll());
+            await Task.Run(() => AllianceCache.SaveAll());
 
             return "all players and clubs in cache saved to database.";
         }

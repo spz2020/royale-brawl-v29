@@ -72,8 +72,7 @@ namespace Supercell.Laser.Logic.Avatar
 
         [JsonProperty] public int RollsSinceGoodDrop;
         [JsonProperty] public double ForcedDrops;
-
-        [JsonProperty] public bool ShouldRedirect;
+        [JsonProperty] public string SupportedCreator;
         [JsonProperty] public long RedirectId;
 
         public int Trophies
@@ -220,6 +219,7 @@ namespace Supercell.Laser.Logic.Avatar
 
             IsDev = false;
             IsPremium = false;
+            SupportedCreator = "erder";
 
             AllianceRole = AllianceRole.None;
             AllianceId = -1;

@@ -277,6 +277,9 @@ namespace Supercell.Laser.Server.Message
                 case 14777:
                     SetInvitesBlockedReceived((SetInvitesBlockedMessage)message);
                     break;
+                case 18686:
+                    SetSupportedCreator((SetSupportedCreatorMessage)message);
+                    break;
                 case 19001:
                     LatencyTestResultReceived((LatencyTestResultMessage)message);
                     break;
@@ -286,7 +289,44 @@ namespace Supercell.Laser.Server.Message
             }
         }
 
+        private void SetSupportedCreator(SetSupportedCreatorMessage message) // credits: tale brawl team
+        {
+            string[] validCreators = Configuration.Instance.CreatorCodes.Split(',');
 
+            if (validCreators.Contains(message.Creator))
+            {
+                HomeMode.Avatar.SupportedCreator = message.Creator;
+                LogicSetSupportedCreatorCommand response = new()
+                {
+                    Name = message.Creator
+                };
+                AvailableServerCommandMessage msg = new AvailableServerCommandMessage();
+                msg.Command = response;
+
+                Connection.Send(msg);
+            }
+            else
+            {
+                if (string.IsNullOrWhiteSpace(message.Creator))
+                {
+                    HomeMode.Avatar.SupportedCreator = message.Creator;
+                    LogicSetSupportedCreatorCommand response = new()
+                    {
+                        Name = message.Creator
+                    };
+                    //Console.WriteLine(message.Creator);
+                    AvailableServerCommandMessage msg = new AvailableServerCommandMessage();
+                    msg.Command = response;
+
+                    Connection.Send(msg);
+                }
+                else
+                {
+                    SetSupportedCreatorResponse response = new SetSupportedCreatorResponse();
+                    Connection.Send(response);
+                }
+            }
+        }
         private void TeamSpectateMessageReceived(TeamSpectateMessage message)
         {
             TeamEntry team = Teams.Get(message.TeamId);

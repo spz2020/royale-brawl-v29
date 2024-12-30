@@ -87,6 +87,8 @@ namespace Supercell.Laser.Logic.Message
 
                 {14777, typeof(SetInvitesBlockedMessage)},
 
+                {18686, typeof(SetSupportedCreatorMessage)},
+
                 {19001, typeof(LatencyTestResultMessage)},
 
                 //{14330, typeof(SendAllianceMailMessage)},

@@ -70,7 +70,6 @@ namespace Supercell.Laser.Logic.Home
         [JsonProperty] public List<string> OffersClaimed;
         [JsonProperty] public string Day;
 
-
         [JsonIgnore] public EventData[] Events;
 
         public PlayerThumbnailData Thumbnail => DataTables.Get(DataType.PlayerThumbnail).GetDataByGlobalId<PlayerThumbnailData>(ThumbnailId);
@@ -889,7 +888,7 @@ namespace Supercell.Laser.Logic.Home
             ByteStreamHelper.WriteDataReference(encoder, Character); // Selected Brawler
 
             encoder.WriteString("US"); // Location
-            encoder.WriteString("<cff2a00>e<cff5400>r<cff7f00>d<cffa900>e<cffd400>r<cfefe00> <cd4ff00>|<caaff00> <c7fff00>x<c55ff00>e<c2aff00>o<c04fe00>n</c>");
+            encoder.WriteString(HomeMode.Avatar.SupportedCreator);
 
             encoder.WriteVInt(6); // IntValueEntry
             {

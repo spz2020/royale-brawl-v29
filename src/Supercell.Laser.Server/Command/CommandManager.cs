@@ -13,6 +13,7 @@
     using Supercell.Laser.Logic.Home.Quest;
     using Supercell.Laser.Logic.Home.Structures;
     using Supercell.Laser.Logic.Listener;
+    using Supercell.Laser.Server.Message;
     using Supercell.Laser.Logic.Message.Account.Auth;
     using Supercell.Laser.Logic.Message.Club;
     using Supercell.Laser.Logic.Message.Friends;
@@ -45,6 +46,8 @@
             {
                 switch (command.GetCommandType())
                 {
+                    case 215:
+                        return LogicSetSupportedCreator((LogicSetSupportedCreatorCommand)command);
                     case 500:
                         return LogicGatchaReceived((LogicGatchaCommand)command);
                     case 503:
@@ -95,7 +98,10 @@
                 return false;
             }
         }
-
+        private bool LogicSetSupportedCreator(LogicSetSupportedCreatorCommand command)
+        {
+            return true;
+        }
         private bool LogicHeroSeenReceived(LogicHeroSeenCommand command)
         {
             if (command.CharacterId == 0) return false;

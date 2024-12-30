@@ -17,6 +17,7 @@
         [JsonProperty("anti-ddos")] public readonly bool antiddos;
         [JsonProperty("BotToken")] public readonly string BotToken;
         [JsonProperty("ChannelId")] public readonly ulong ChannelId;
+        [JsonProperty("CreatorCodes")] public readonly string CreatorCodes;
 
         public static Configuration LoadFromFile(string filename)
         {
