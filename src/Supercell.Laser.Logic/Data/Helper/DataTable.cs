@@ -1,7 +1,4 @@
-﻿using Supercell.Laser.Logic.Data.Reader;
-using System.Collections.Generic;
-
-namespace Supercell.Laser.Logic.Data.Helper
+﻿namespace Supercell.Laser.Logic.Data.Helper
 {
     public class DataTable
     {

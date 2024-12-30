@@ -10,6 +10,7 @@ namespace Supercell.Laser.Server.Commands
                 + "!help - shows all available commands\n"
                 + "!status - show server status\n"
                 + "!ping - will respond with pong\n"
+                + "!savecache - save players and clubs in cache\n"
                 + "!unlockall - will unlock EVERYTHING on the players account (!unlockall [TAG])\n"
                 + "!givepremium - gives premium to an account (!givepremium [TAG])\n"
                 + "!ban - ban an account (!ban [TAG])\n"
