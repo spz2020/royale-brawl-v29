@@ -7,7 +7,7 @@ namespace Supercell.Laser.Server.Discord.Commands
     public class SaveCache : CommandModule<CommandContext>
     {
         [Command("savecache")]
-        public async Task<string> SaveCache()
+        public async Task<string> savecache()
         {
             AccountCache.SaveAll();
             AllianceCache.SaveAll();
