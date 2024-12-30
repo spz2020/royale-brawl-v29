@@ -2448,82 +2448,58 @@ namespace Supercell.Laser.Server.Message
 
         private void GetLeaderboardReceived(GetLeaderboardMessage message)
         {
-            if (message.LeaderboardType == 1)
+            LeaderboardMessage leaderboard = new()
             {
-                Account[] rankingList = Leaderboards.GetAvatarRankingList();
+                LeaderboardType = message.LeaderboardType,
+                Region = message.IsRegional ? "US" : null
+            };
 
-                LeaderboardMessage leaderboard = new()
-                {
-                    LeaderboardType = 1,
-                    Region = message.IsRegional ? "US" : null
-                };
-                foreach (Account data in rankingList)
-                {
-                    leaderboard.Avatars.Add(new KeyValuePair<ClientHome, ClientAvatar>(data.Home, data.Avatar));
-                }
-                leaderboard.OwnAvatarId = Connection.Avatar.AccountId;
-
-                Connection.Send(leaderboard);
-            }
-            else if (message.LeaderboardType == 2)
+            switch (message.LeaderboardType)
             {
-                Alliance[] rankingList = Leaderboards.GetAllianceRankingList();
+                case 1: // main leaderboard
+                    ProcessAvatarLeaderboard(leaderboard, Leaderboards.GetAvatarRankingList());
+                    break;
 
-                LeaderboardMessage leaderboard = new()
-                {
-                    LeaderboardType = 2,
-                    Region = message.IsRegional ? "US" : null
-                };
-                leaderboard.AllianceList.AddRange(rankingList);
+                case 2: // club leaderboard
+                    ProcessAllianceLeaderboard(leaderboard, Leaderboards.GetAllianceRankingList());
+                    break;
 
-                Connection.Send(leaderboard);
+                case 0: // brawl leaderboard
+                    ProcessBrawlersLeaderboard(leaderboard, Leaderboards.GetBrawlersRankingList(), message.CharachterId);
+                    break;
             }
-            else if (message.LeaderboardType == 0)
+
+            leaderboard.OwnAvatarId = Connection.Avatar.AccountId;
+            Connection.Send(leaderboard);
+        }
+
+        private void ProcessAvatarLeaderboard(LeaderboardMessage leaderboard, Account[] rankingList)
+        {
+            foreach (Account data in rankingList)
             {
-                Dictionary<int, List<Account>> rankingList = Leaderboards.GetBrawlersRankingList();
-
-                LeaderboardMessage leaderboard = new()
-                {
-                    LeaderboardType = 0,
-                    Region = message.IsRegional ? "US" : null,
-                };
-                Dictionary<ClientHome, ClientAvatar> aaaa = new();
-                foreach (KeyValuePair<int, List<Account>> data in rankingList)
-                {
-                    if (data.Key == message.CharachterId)
-                    {
-                        foreach (Account account in data.Value)
-                        {
-                            aaaa.Add(account.Home, account.Avatar);
-                        }
-
-                    }
-                }
-
-                leaderboard.CharachterId = message.CharachterId;
-                aaaa = aaaa.OrderBy(x => x.Value.GetHero(message.CharachterId).Trophies).Reverse().ToDictionary(x => x.Key, x => x.Value);
-                aaaa = aaaa.Take(Math.Min(aaaa.Count, 200)).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-                leaderboard.Brawlers = aaaa;
-                leaderboard.OwnAvatarId = Connection.Avatar.AccountId;
-                Connection.Send(leaderboard);
+                leaderboard.Avatars.Add(new KeyValuePair<ClientHome, ClientAvatar>(data.Home, data.Avatar));
             }
-            else if (message.LeaderboardType == 3)
-            {
-                Account[] rankingList = Leaderboards.GetAvatarRankingList();
+        }
 
-                LeaderboardMessage leaderboard = new()
-                {
-                    LeaderboardType = 3,
-                    Region = message.IsRegional ? "US" : null
-                };
-                foreach (Account data in rankingList)
-                {
-                    leaderboard.Avatars.Add(new KeyValuePair<ClientHome, ClientAvatar>(data.Home, data.Avatar));
-                }
-                leaderboard.OwnAvatarId = Connection.Avatar.AccountId;
+        private void ProcessAllianceLeaderboard(LeaderboardMessage leaderboard, Alliance[] rankingList)
+        {
+            leaderboard.AllianceList.AddRange(rankingList);
+        }
 
-                Connection.Send(leaderboard);
-            }
+        private void ProcessBrawlersLeaderboard(LeaderboardMessage leaderboard, Dictionary<int, List<Account>> rankingList, int characterId)
+        {
+            var brawlersData = rankingList
+                .Where(data => data.Key == characterId)
+                .SelectMany(data => data.Value)
+                .ToDictionary(account => account.Home, account => account.Avatar);
+
+            var sortedBrawlers = brawlersData
+                .OrderByDescending(x => x.Value.GetHero(characterId).Trophies)
+                .Take(Math.Min(brawlersData.Count, 200))
+                .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+
+            leaderboard.CharachterId = characterId;
+            leaderboard.Brawlers = sortedBrawlers;
         }
 
         private void GoHomeReceived(GoHomeMessage message)
