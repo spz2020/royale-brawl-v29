@@ -13,6 +13,10 @@
             if (stream.WriteBoolean(Notification != null))
             {
                 //stream.WriteVInt(Notification.GetNotificationType());
+                long timestamp = DateTime.Now.Ticks / TimeSpan.TicksPerSecond;
+                int timestamps = Convert.ToInt32(timestamp % int.MaxValue);
+
+                Notification.TimePassed = Convert.ToInt32(timestamps);
                 Notification.Encode(stream);
             }
 

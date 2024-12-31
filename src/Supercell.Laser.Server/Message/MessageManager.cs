@@ -457,6 +457,7 @@ namespace Supercell.Laser.Server.Message
 
                 Notification nGems = new Notification
                 {
+                    //Sender = Accounts.Load(HomeMode.Avatar.AccountId).Avatar.Name,
                     Id = 81,
                     MessageEntry = $"{message}"
                 };

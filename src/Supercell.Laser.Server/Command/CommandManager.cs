@@ -13,7 +13,6 @@
     using Supercell.Laser.Logic.Home.Quest;
     using Supercell.Laser.Logic.Home.Structures;
     using Supercell.Laser.Logic.Listener;
-    using Supercell.Laser.Server.Message;
     using Supercell.Laser.Logic.Message.Account.Auth;
     using Supercell.Laser.Logic.Message.Club;
     using Supercell.Laser.Logic.Message.Friends;

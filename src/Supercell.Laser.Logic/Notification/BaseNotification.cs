@@ -11,7 +11,7 @@
             stream.WriteInt(1);
             stream.WriteBoolean(true);
             stream.WriteInt(1);
-            stream.WriteString("the test");
+            stream.WriteString(Text);
         }
 
         public abstract int GetNotificationType();

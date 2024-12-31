@@ -1,4 +1,10 @@
-﻿using Supercell.Laser.Titan.DataStream;
+﻿using Supercell.Laser.Logic.Home.Structures;
+using Supercell.Laser.Titan.DataStream;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Supercell.Laser.Logic.Home.Items
 {
@@ -15,6 +21,8 @@ namespace Supercell.Laser.Logic.Home.Items
         public string FileLocation { get; set; }
         public string FileSha { get; set; }
         public string ExtLint { get; set; }
+        public string Sender { get; set; }
+        public int skin { get; set; }
         public List<int> HeroesIds { get; set; }
         public List<int> HeroesTrophies { get; set; }
         public List<int> HeroesTrophiesReseted { get; set; }
@@ -25,8 +33,20 @@ namespace Supercell.Laser.Logic.Home.Items
             stream.WriteVInt(Id);
             stream.WriteInt(Index);
             stream.WriteBoolean(IsViewed);
-            stream.WriteInt(TimePassed);
+            long timestamp = DateTime.Now.Ticks / TimeSpan.TicksPerSecond;
+            int timestamps = Convert.ToInt32(timestamp % int.MaxValue);
+
+            stream.WriteInt(timestamps - TimePassed);
+
             stream.WriteString(MessageEntry);
+            if (Id == 82)
+            {
+                stream.WriteStringReference(Sender);
+                stream.WriteVInt(0);
+                stream.WriteVInt(28000000); // pfp?
+                stream.WriteVInt(43000000); // colorname
+                stream.WriteVInt(43000000); // colorname2?
+            }
             if (Id == 83)
             {
                 stream.WriteInt(0);
@@ -53,7 +73,7 @@ namespace Supercell.Laser.Logic.Home.Items
             }
             else
             {
-                stream.WriteVInt(0); // DisplayData???
+                stream.WriteVInt(29000000 + skin); // DisplayData???
             }
             if (Id == 89)
             {
