@@ -21,6 +21,7 @@ why did I create this server? because all public v29 servers suck
 - brawl pass and trophy road
 - global, club and brawler leaderboards
 - random events
+- creator codes
 - slash commands in clubs
 - anti-ddos
 

@@ -224,6 +224,9 @@ namespace Supercell.Laser.Server.Message
                 case 14316:
                     ChangeAllianceSettingsReceived((ChangeAllianceSettingsMessage)message);
                     break;
+                case 14330:
+                    SendAllianceMailMessage((SendAllianceMailMessage)message);
+                    break;
                 case 14350:
                     TeamCreateReceived((TeamCreateMessage)message);
                     break;
@@ -289,44 +292,6 @@ namespace Supercell.Laser.Server.Message
             }
         }
 
-        private void SetSupportedCreator(SetSupportedCreatorMessage message) // credits: tale brawl team
-        {
-            string[] validCreators = Configuration.Instance.CreatorCodes.Split(',');
-
-            if (validCreators.Contains(message.Creator))
-            {
-                HomeMode.Avatar.SupportedCreator = message.Creator;
-                LogicSetSupportedCreatorCommand response = new()
-                {
-                    Name = message.Creator
-                };
-                AvailableServerCommandMessage msg = new AvailableServerCommandMessage();
-                msg.Command = response;
-
-                Connection.Send(msg);
-            }
-            else
-            {
-                if (string.IsNullOrWhiteSpace(message.Creator))
-                {
-                    HomeMode.Avatar.SupportedCreator = message.Creator;
-                    LogicSetSupportedCreatorCommand response = new()
-                    {
-                        Name = message.Creator
-                    };
-                    //Console.WriteLine(message.Creator);
-                    AvailableServerCommandMessage msg = new AvailableServerCommandMessage();
-                    msg.Command = response;
-
-                    Connection.Send(msg);
-                }
-                else
-                {
-                    SetSupportedCreatorResponse response = new SetSupportedCreatorResponse();
-                    Connection.Send(response);
-                }
-            }
-        }
         private void TeamSpectateMessageReceived(TeamSpectateMessage message)
         {
             TeamEntry team = Teams.Get(message.TeamId);
@@ -466,7 +431,49 @@ namespace Supercell.Laser.Server.Message
         {
             Connection.Send(new SeasonRewardsMessage());
         }
+        private void addNotifToAllAccounts(string message, long club)
+        {
+            var allAccounts = Accounts.GetRankingList();
+            foreach (var account in allAccounts)
+            {
+                string accountId = LogicLongCodeGenerator.ToCode(account.AccountId);
+                addNotif(accountId, message, club);
+            }
+        }
 
+        private void addNotif(string id, string message, long club)
+        {
+            long player = LogicLongCodeGenerator.ToId(id);
+            Account targetAccount = Accounts.Load(player);
+            if (targetAccount.Avatar.AllianceId == club)
+            {
+                if (targetAccount == null)
+                {
+                    Logger.Error($"Fail: account not found for ID {id}!");
+                    return;
+                }
+
+                Account acc = new Account();
+
+                Notification nGems = new Notification
+                {
+                    Id = 81,
+                    MessageEntry = $"{message}"
+                };
+                targetAccount.Home.NotificationFactory.Add(nGems);
+                LogicAddNotificationCommand acmGems = new()
+                {
+                    Notification = nGems
+                };
+                AvailableServerCommandMessage asmGems = new AvailableServerCommandMessage();
+                asmGems.Command = acmGems;
+                if (Sessions.IsSessionActive(player))
+                {
+                    var sessionGems = Sessions.GetSession(player);
+                    sessionGems.GameListener.SendTCPMessage(asmGems);
+                }
+            }
+        }
         private void SetInvitesBlockedReceived(SetInvitesBlockedMessage message)
         {
             HomeMode.Avatar.DoNotDisturb = message.State;
@@ -486,6 +493,45 @@ namespace Supercell.Laser.Server.Message
                     IsMyAlliance = true,
                 };
                 a.SendToAlliance(dataMessage);
+            }
+        }
+
+        private void SetSupportedCreator(SetSupportedCreatorMessage message) // credits: tale brawl team
+        {
+            string[] validCreators = Configuration.Instance.CreatorCodes.Split(',');
+
+            if (validCreators.Contains(message.Creator))
+            {
+                HomeMode.Avatar.SupportedCreator = message.Creator;
+                LogicSetSupportedCreatorCommand response = new()
+                {
+                    Name = message.Creator
+                };
+                AvailableServerCommandMessage msg = new AvailableServerCommandMessage();
+                msg.Command = response;
+
+                Connection.Send(msg);
+            }
+            else
+            {
+                if (string.IsNullOrWhiteSpace(message.Creator))
+                {
+                    HomeMode.Avatar.SupportedCreator = message.Creator;
+                    LogicSetSupportedCreatorCommand response = new()
+                    {
+                        Name = message.Creator
+                    };
+                    //Console.WriteLine(message.Creator);
+                    AvailableServerCommandMessage msg = new AvailableServerCommandMessage();
+                    msg.Command = response;
+
+                    Connection.Send(msg);
+                }
+                else
+                {
+                    SetSupportedCreatorResponse response = new SetSupportedCreatorResponse();
+                    Connection.Send(response);
+                }
             }
         }
         private void LatencyTestResultReceived(LatencyTestResultMessage message)
@@ -688,7 +734,28 @@ namespace Supercell.Laser.Server.Message
             myAlliance.AllianceHeader = alliance.Header;
             Connection.Send(myAlliance);
         }
+        private void SendAllianceMailMessage(SendAllianceMailMessage message)
+        {
+            SendAllianceMailMessage sendAllianceMailMessage = message;
 
+            if (HomeMode.Avatar.AllianceRole != AllianceRole.Leader && HomeMode.Avatar.AllianceRole != AllianceRole.CoLeader) return;
+            if (!string.IsNullOrWhiteSpace(message.Text))
+            {
+                if (HomeMode.Avatar.AllianceRole != AllianceRole.Leader && HomeMode.Avatar.AllianceRole != AllianceRole.CoLeader) return;
+                if (message.Text.Length > 450) return;
+                addNotifToAllAccounts(message.Text, HomeMode.Avatar.AllianceId);
+
+                AllianceResponseMessage responseMessages = new AllianceResponseMessage();
+                responseMessages.ResponseType = 113;
+                Connection.Send(responseMessages);
+            }
+
+            AllianceResponseMessage responseMessage = new AllianceResponseMessage();
+            responseMessage.ResponseType = 114;
+            Connection.Send(responseMessage);
+
+            Connection.Send(sendAllianceMailMessage);
+        }
         private void KickAllianceMemberReceived(KickAllianceMemberMessage message)
         {
             if (HomeMode.Avatar.AllianceId <= 0) return;
