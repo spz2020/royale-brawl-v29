@@ -88,7 +88,7 @@ namespace Supercell.Laser.Logic.Home
             ThumbnailId = GlobalId.CreateGlobalId(28, 0);
             NameColorId = GlobalId.CreateGlobalId(43, 0);
             CharacterId = GlobalId.CreateGlobalId(16, 0);
-            SelectedSkins = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, };
+            SelectedSkins = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, };
 
             OfferBundles = new List<OfferBundle>();
             OffersClaimed = new List<string>();
@@ -610,6 +610,7 @@ namespace Supercell.Laser.Logic.Home
                         if (s.Name == "RocketGirlRanger") continue;
                         if (s.Name == "PowerLevelerKnight") continue;
                         if (s.Name == "BlowerTrader") continue;
+                        if (s.Name == "BlowerTrader") continue;
                         if (s.CostLegendaryTrophies > 1)
                         {
                             starss.Add(s.GetGlobalId());
@@ -762,8 +763,8 @@ namespace Supercell.Laser.Logic.Home
             bundle.EndTime = DateTime.UtcNow.Date.AddDays(1).AddHours(8); // tomorrow at 8:00 utc (11:00 MSK)
             bundle.Cost = 0;
 
-            Offer offer1 = new Offer(ShopItem.BrawlBox, 1);
-            bundle.Items.Add(offer1);
+            Offer offer = new Offer(ShopItem.FreeBox, 1);
+            bundle.Items.Add(offer);
 
             return bundle;
         }
@@ -867,9 +868,8 @@ namespace Supercell.Laser.Logic.Home
             encoder.WriteVInt(2); // Shop Token Doubler Related
             encoder.WriteVInt(2);
             encoder.WriteVInt(2);
-
-            encoder.WriteVInt(0); // change name cost
-            encoder.WriteVInt(0); //change name timer
+            encoder.WriteVInt(0); //name change cost
+            encoder.WriteVInt(0); //name change timer
 
             encoder.WriteVInt(OfferBundles.Count); // Shop offers at 0x78e0c4
             foreach (OfferBundle offerBundle in OfferBundles)

@@ -168,19 +168,13 @@
                 {
                     connection.Open();
 
-                    using (
-                        var cmd = new MySqlCommand(
-                            $"SELECT * FROM alliances ORDER BY `Trophies` DESC LIMIT 200",
-                            connection
-                        )
-                    )
+                    using (var cmd = new MySqlCommand($"SELECT * FROM alliances ORDER BY `Trophies` DESC LIMIT 200",
+                        connection))
                     {
                         var reader = cmd.ExecuteReader();
 
                         while (reader.Read())
-                            list.Add(
-                                JsonConvert.DeserializeObject<Alliance>((string)reader["Data"])
-                            );
+                            list.Add(JsonConvert.DeserializeObject<Alliance>((string)reader["Data"]));
                     }
 
                     connection.Close();
@@ -192,6 +186,7 @@
             {
                 return list;
             }
+
             #endregion
         }
 

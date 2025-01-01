@@ -6,7 +6,7 @@ namespace Supercell.Laser.Server
 
     static class Program
     {
-        public const string SERVER_VERSION = "29.270";
+        public const string SERVER_VERSION = "29.258";
         public const string BUILD_TYPE = "Beta";
 
         private static void Main(string[] args)

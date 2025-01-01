@@ -27,7 +27,7 @@
             while (Started)
             {
                 SaveAll();
-                Thread.Sleep(1000 * 45 * 10);
+                Thread.Sleep(1000 * 30);
             }
         }
 

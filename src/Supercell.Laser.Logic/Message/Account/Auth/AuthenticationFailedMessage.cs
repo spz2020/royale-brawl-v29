@@ -7,12 +7,13 @@
         public string Message;
         public string UpdateUrl;
         public string ContentUrl;
+        public string Redirect;
 
         public override void Encode()
         {
             Stream.WriteInt(ErrorCode);
             Stream.WriteString(FingerprintSha);
-            Stream.WriteString(null); // Redirect
+            Stream.WriteString(Redirect); // Redirect
             Stream.WriteString(ContentUrl); // content url
             Stream.WriteString(UpdateUrl); // update url
             Stream.WriteString(Message);

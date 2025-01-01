@@ -1348,7 +1348,7 @@ namespace Supercell.Laser.Server.Message
                         timeDifference.Seconds > 0 ? $"{timeDifference.Seconds} Seconds" : string.Empty);
 
                         response.Entry.Message = $"Server Status:\n" +
-                            $"Server Game Version: v29.270\n" +
+                            $"Server Game Version: v29.258\n" +
                             $"Server Build: v5.0 from 18.05.2024\n" +
                             $"Resources Sha: {Fingerprint.Sha}\n" +
                             $"Environment: Prod\n" +
@@ -2767,6 +2767,57 @@ namespace Supercell.Laser.Server.Message
                 return;
             }
 
+            if (message.AccountId == 0)
+            {
+                account = Accounts.Create();
+            }
+            else
+            {
+                account = Accounts.Load(message.AccountId);
+                if (account.PassToken != message.PassToken)
+                {
+                    account = null;
+                }
+            }
+
+            if (account == null)
+            {
+
+                AuthenticationFailedMessage loginFailed = new AuthenticationFailedMessage();
+                loginFailed.ErrorCode = 1;
+                loginFailed.Message = "clear appdata.";
+                Connection.Send(loginFailed);
+
+                return;
+            }
+
+            string combinedVersion = $"{message.Major}.{message.Minor}";
+            string gameVersion = "29.258";
+
+            if (combinedVersion != gameVersion)
+            {
+                AuthenticationFailedMessage loginFailed = new AuthenticationFailedMessage
+                {
+                    ErrorCode = 8,
+                    Message = $"Wrong game version. Expected: {gameVersion}, Received: {combinedVersion}",
+                    Redirect = "https://github.com/erder00/royale-brawl-v29" // redirect
+                };
+                Connection.Send(loginFailed);
+                return;
+            }
+
+            string[] androidVersionParts = message.Android.Split('.'); // check if android version is between 0 and 100 (if not then it's not an android device and login will be prevented)
+            if (androidVersionParts.Length == 0 || !int.TryParse(androidVersionParts[0], out int androidMajorVersion) || androidMajorVersion < 0 || androidMajorVersion > 100)
+            {
+                AuthenticationFailedMessage loginFailed = new AuthenticationFailedMessage
+                {
+                    ErrorCode = 8,
+                    Message = "Invalid Android version deteced, contact an admin if you think this is a mistake."
+                };
+                Connection.Send(loginFailed);
+                return;
+            }
+
             if (IsSessionActive((int)account.Avatar.AccountIdRedirect))
             {
                 HandleActiveSession((int)account.Avatar.AccountIdRedirect);
@@ -2780,11 +2831,6 @@ namespace Supercell.Laser.Server.Message
             if (account.Avatar.AccountIdRedirect != 0)
             {
                 account = Accounts.Load((int)account.Avatar.AccountIdRedirect);
-            }
-
-            if (!ValidateClientVersion(message))
-            {
-                return;
             }
 
             if (account.Avatar.Banned)
@@ -2832,16 +2878,6 @@ namespace Supercell.Laser.Server.Message
             Sessions.Remove(accountId);
         }
 
-        private bool ValidateClientVersion(AuthenticationMessage message)
-        {
-            string gameVersion = "29.270";
-            if (message.ClientVersion != gameVersion)
-            {
-                SendAuthenticationFailed(8, $"Wrong game version. Expected: {gameVersion}, Received: {message.ClientVersion}");
-                return false;
-            }
-            return true;
-        }
 
         private void SendAuthenticationFailed(int errorCode, string message)
         {
